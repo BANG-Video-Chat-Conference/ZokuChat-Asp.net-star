@@ -10,7 +10,8 @@ namespace ZokuChat.Controllers
 {
     public class ContactsController : Controller
     {
-        public IActionResult Contacts()
+        [HttpGet]
+        public IActionResult List()
         {
             return View();
         }

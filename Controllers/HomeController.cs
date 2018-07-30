@@ -10,11 +10,16 @@ namespace ZokuChat.Controllers
 {
     public class HomeController : Controller
     {
+        [Route("")]
+        [Route("Home")]
+        [Route("Home/Index")]
+        [HttpGet()]
         public IActionResult Index()
         {
             return View();
         }
 
+        [HttpGet]
         public IActionResult About()
         {
             return View();
