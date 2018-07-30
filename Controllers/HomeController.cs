@@ -19,6 +19,7 @@ namespace ZokuChat.Controllers
             return View();
         }
 
+        [Route("Home/About")]
         [HttpGet]
         public IActionResult About()
         {
