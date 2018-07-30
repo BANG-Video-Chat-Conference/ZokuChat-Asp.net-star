@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,20 +8,19 @@ using ZokuChat.Models;
 
 namespace ZokuChat.Controllers
 {
-    public class HomeController : Controller
+    [Route("Account")]
+    public class AccountController : Controller
     {
-        [Route("")]
-        [Route("Home")]
-        [Route("Home/Index")]
+        [Route("Login")]
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Login()
         {
             return View();
         }
 
-        [Route("Home/About")]
+        [Route("Register")]
         [HttpGet]
-        public IActionResult About()
+        public IActionResult Register()
         {
             return View();
         }

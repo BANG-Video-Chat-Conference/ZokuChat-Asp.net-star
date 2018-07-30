@@ -13,6 +13,7 @@ namespace ZokuChat.Controllers
     [Route("Contacts")]
     public class ContactsController : Controller
     {
+        [Route("")]
         [HttpGet]
         public IActionResult List()
         {
