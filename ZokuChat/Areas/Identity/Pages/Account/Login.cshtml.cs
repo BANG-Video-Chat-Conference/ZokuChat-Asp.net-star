@@ -18,10 +18,12 @@ namespace ZokuChat.Areas.Identity.Pages.Account
 
 		[StringLength(20, MinimumLength = 3)]
 		[Required]
+		[BindProperty]
 		public string Email { get; set; }
 
 		[StringLength(100, MinimumLength = 10)]
 		[Required]
+		[BindProperty]
 		public string Password { get; set; }
 
 		public void OnGet()
