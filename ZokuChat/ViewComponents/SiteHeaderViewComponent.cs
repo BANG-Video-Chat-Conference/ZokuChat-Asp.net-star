@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using ZokuChat.Data;
+using ZokuChat.Helpers;
 using ZokuChat.Models;
 
 namespace ViewComponents

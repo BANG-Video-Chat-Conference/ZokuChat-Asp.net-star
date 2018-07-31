@@ -13,5 +13,30 @@
 		{
 			return _CONTACTS_URL;
 		}
+
+		public static string GetAboutUrl()
+		{
+			return _ABOUT_URL;
+		}
+
+		public static string GetErrorUrl()
+		{
+			return _ERROR_URL;
+		}
+
+		public static string GetHomeUrl()
+		{
+			return _HOME_URL;
+		}
+
+		public static string GetLoginUrl()
+		{
+			return _LOGIN_URL;
+		}
+
+		public static string GetRegisterUrl()
+		{
+			return _REGISTER_URL;
+		}
     }
 }
