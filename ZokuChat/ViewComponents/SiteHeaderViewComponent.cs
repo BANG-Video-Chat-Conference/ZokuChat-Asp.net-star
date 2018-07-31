@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using ZokuChat.Data;
+using ZokuChat.Models;
 
 namespace ViewComponents
 {
 	public class SiteHeaderViewComponent : ViewComponent
 	{
-		private readonly ApplicationDbContext db;
+		private readonly ZokuChatContext db;
 
-		public SiteHeaderViewComponent(ApplicationDbContext context)
+		public SiteHeaderViewComponent(ZokuChatContext context)
 		{
 			db = context;
 		}
