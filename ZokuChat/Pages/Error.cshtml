@@ -1,0 +1,13 @@
+﻿@page
+@model ErrorModel
+@{
+	ViewData["Title"] = "Error";
+}
+
+@await Component.InvokeAsync("SiteHeader", new { })
+<div class="margin-lg">
+	<h3>Something Went Wrong...</h3>
+	<p>
+		An error occurred processing the request. Retry your action or contact the site admin.
+	</p>
+</div>
