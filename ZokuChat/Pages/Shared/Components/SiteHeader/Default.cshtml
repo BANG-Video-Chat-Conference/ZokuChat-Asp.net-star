@@ -1,4 +1,9 @@
-﻿@using ZokuChat.Helpers;
+﻿@using Microsoft.AspNetCore.Identity
+@using ZokuChat.Areas.Identity.Data
+@using ZokuChat.Helpers
+
+@inject SignInManager<ZokuChatUser> SignInManager
+@inject UserManager<ZokuChatUser> UserManager
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 	@Html.RouteLink("ZokuChat", "", new { }, new { @href = UrlHelper.GetHomeUrl(), @class = "navbar-brand" })
@@ -18,10 +23,27 @@
 				@Html.RouteLink("About", "", new { }, new { @href = UrlHelper.GetAboutUrl(), @class = "nav-link" })
 			</li>
 		</ul>
-		<ul class="navbar-nav my-2 my-lg-0">
-			<li class="nav-item active">
-				@Html.RouteLink("Sign In", "", new { }, new { @href = UrlHelper.GetLoginUrl(), @class = "nav-link" })
-			</li>
-		</ul>
+
+		@if (SignInManager.IsSignedIn(User))
+		{
+			<form asp-area="Identity" asp-page="@UrlHelper.GetLogoutUrl()" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })" method="post" id="logoutForm">
+				<ul class="navbar-nav my-2 my-lg-0">
+					<li class="nav-item active">
+						@Html.RouteLink(UserManager.GetUserAsync(User).Result.UserName, "", new { }, new { @href = UrlHelper.GetManageAccountUrl(), @class = "nav-link" })
+					</li>
+					<li>
+						<button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
+					</li>
+				</ul>
+			</form>
+		}
+		else
+		{
+			<ul class="navbar-nav my-2 my-lg-0">
+				<li class="nav-item active">
+					@Html.RouteLink("Sign In", "", new { }, new { @href = UrlHelper.GetLoginUrl(), @class = "nav-link" })
+				</li>
+			</ul>
+		}
 	</div>
 </nav>

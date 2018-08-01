@@ -4,6 +4,8 @@
     {
 		private const string _CONTACTS_URL = "/Contacts/List";
 		private const string _LOGIN_URL = "/Identity/Account/Login";
+		private const string _LOGOUT_URL = "/Identity/Account/Logout";
+		private const string _MANAGE_URL = "/Identity/Account/Manage";
 		private const string _REGISTER_URL = "/Identity/Account/Register";
 		private const string _HOME_URL = "/";
 		private const string _ABOUT_URL = "/About";
@@ -34,9 +36,19 @@
 			return _LOGIN_URL;
 		}
 
+		public static string GetLogoutUrl()
+		{
+			return _LOGOUT_URL;
+		}
+
 		public static string GetRegisterUrl()
 		{
 			return _REGISTER_URL;
+		}
+
+		public static string GetManageAccountUrl()
+		{
+			return _MANAGE_URL;
 		}
     }
 }
