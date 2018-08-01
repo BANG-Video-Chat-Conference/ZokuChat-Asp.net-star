@@ -9,14 +9,30 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ZokuChat.Areas.Identity.Data;
 using ZokuChat.Models;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using ZokuChat.Email;
+using WebPWrecover.Services;
 
 namespace ZokuChat
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
-            Configuration = configuration;
+			var builder = new ConfigurationBuilder()
+				.SetBasePath(env.ContentRootPath)
+				.AddJsonFile(
+					"appsettings.json",
+					optional: false,
+					reloadOnChange: true)
+				.AddEnvironmentVariables();
+
+			if (env.IsDevelopment())
+			{
+				builder.AddUserSecrets<Startup>();
+			}
+
+			Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -45,6 +61,7 @@ namespace ZokuChat
 
 				// User settings
 				options.User.RequireUniqueEmail = true;
+				options.SignIn.RequireConfirmedEmail = true;
 			});
 
 			services.ConfigureApplicationCookie(options =>
@@ -52,25 +69,24 @@ namespace ZokuChat
 				// Cookie settings
 				options.Cookie.HttpOnly = true;
 				options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-				// If the LoginPath isn't set, ASP.NET Core defaults 
-				// the path to /Account/Login.
 				options.LoginPath = "/Account/Login";
-				// If the AccessDeniedPath isn't set, ASP.NET Core defaults 
-				// the path to /Account/AccessDenied.
 				options.AccessDeniedPath = "/Account/AccessDenied";
 				options.SlidingExpiration = true;
 			});
 
+			// Configure service that sends email
+			services.AddSingleton<IEmailSender, EmailSender>();
+			services.Configure<AuthMessageSenderOptions>(Configuration);
 
 			services.AddMvc()
 				.AddRazorPagesOptions(options => {
 					options.Conventions.AuthorizeFolder("/Contacts");
 				})
 				.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-        }
+		}
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {

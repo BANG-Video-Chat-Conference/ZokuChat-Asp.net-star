@@ -47,6 +47,8 @@ namespace ZokuChat.Areas.Identity.Pages.Account
 				return Page();
 			}
 
+			
+
 			// We successfully registered the user so redirect to Contacts
 			return RedirectToPage(UrlHelper.GetContactsListUrl());
 		}
