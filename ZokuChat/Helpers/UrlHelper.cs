@@ -6,6 +6,7 @@
 		private const string _ROOMS_URL = "/Chat/Room/Index";
 		private const string _LOGIN_URL = "/Account/Login";
 		private const string _LOGOUT_URL = "/Account/Logout";
+		private const string _CONFIRM_EMAIL_URL = "/Account/ConfirmEmail";
 		private const string _MANAGE_URL = "/Account/Manage";
 		private const string _REGISTER_URL = "/Account/Register";
 		private const string _HOME_URL = "/";
@@ -45,6 +46,11 @@
 		public static string GetLogoutUrl()
 		{
 			return _LOGOUT_URL;
+		}
+
+		public static string GetConfirmEmailUrl()
+		{
+			return _CONFIRM_EMAIL_URL;
 		}
 
 		public static string GetRegisterUrl()

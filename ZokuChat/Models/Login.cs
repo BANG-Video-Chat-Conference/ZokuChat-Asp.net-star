@@ -8,7 +8,6 @@ namespace ZokuChat.Models
 		[Required]
 		public string Email { get; set; }
 
-		[StringLength(100, MinimumLength = 10)]
 		[Required]
 		public string Password { get; set; }
 	}

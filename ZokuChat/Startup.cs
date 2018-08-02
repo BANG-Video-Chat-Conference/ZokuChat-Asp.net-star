@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using ZokuChat.Email;
 using WebPWrecover.Services;
 using ZokuChat.Data;
+using ZokuChat.Services;
 
 namespace ZokuChat
 {
@@ -87,6 +88,9 @@ namespace ZokuChat
 			// Configure service that sends email
 			services.AddSingleton<IEmailSender, EmailSender>();
 			services.Configure<AuthMessageSenderOptions>(Configuration);
+
+			// Add injectable services
+			services.AddTransient<IEmailService, EmailService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
