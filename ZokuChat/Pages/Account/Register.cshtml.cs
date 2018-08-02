@@ -35,7 +35,7 @@ namespace ZokuChat.Pages.Account
 
 		public async Task<IActionResult> OnPostAsync(string returnUrl = null)
 		{
-			returnUrl = returnUrl ?? UrlHelper.GetContactsListUrl();
+			returnUrl = returnUrl ?? UrlHelper.GetContactsUrl();
 			if (ModelState.IsValid)
 			{
 				var user = new ZokuChatUser { UserName = Register.UserName, Email = Register.Email };
@@ -49,10 +49,9 @@ namespace ZokuChat.Pages.Account
 						values: new { userId = user.Id, code = code },
 						protocol: Request.Scheme);
 
-					await _emailSender.SendEmailAsync(Register.Email, "Confirm your email for RokuChat",
+					await _emailSender.SendEmailAsync(Register.Email, "Confirm your email for ZokuChat",
 						$"Please confirm your RokuChat account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-					await _signInManager.SignInAsync(user, isPersistent: false);
 					return LocalRedirect(returnUrl);
 				}
 				foreach (var error in result.Errors)

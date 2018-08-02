@@ -9,7 +9,7 @@ namespace ZokuChat.Models
 		public string Email { get; set; }
 
 		[StringLength(20, MinimumLength = 3)]
-		[Required]
+		[Required(ErrorMessage = "The Username field is required.")]
 		public string UserName { get; set; }
 
 		[StringLength(100, MinimumLength = 10)]
@@ -17,7 +17,7 @@ namespace ZokuChat.Models
 		public string Password { get; set; }
 
 		[StringLength(100, MinimumLength = 10)]
-		[Required]
+		[Required(ErrorMessage = "The Confirm Password field is required.")]
 		public string PasswordConfirm { get; set; }
 	}
 }

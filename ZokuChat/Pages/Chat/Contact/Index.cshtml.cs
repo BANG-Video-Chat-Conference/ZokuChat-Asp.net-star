@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace ZokuChat.Pages.Contacts
+namespace ZokuChat.Pages.Chat.Contact
 {
-    public class ListModel : PageModel
+    public class IndexModel : PageModel
     {
         public void OnGet()
         {
