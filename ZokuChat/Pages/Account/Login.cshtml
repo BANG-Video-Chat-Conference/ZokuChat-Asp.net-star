@@ -13,9 +13,9 @@
 		@Html.AntiForgeryToken()
 		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 		<div class="form-group">
-			<label for="email">Email</label>
-			<input id="email" asp-for="Login.Email" placeholder="Enter your email" class="form-control" />
-			<span asp-validation-for="Login.Email" class="text-danger"></span>
+			<label for="email">Username</label>
+			<input id="email" asp-for="Login.UserName" placeholder="Enter your email" class="form-control" />
+			<span asp-validation-for="Login.UserName" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label for="password">Password</label>

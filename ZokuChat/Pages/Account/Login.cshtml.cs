@@ -32,7 +32,7 @@ namespace ZokuChat.Pages.Account
 			if (ModelState.IsValid)
 			{
 				var result = await _signInManager.PasswordSignInAsync(
-					Login.Email,
+					Login.UserName,
 					Login.Password,
 					true,
 					lockoutOnFailure: true);

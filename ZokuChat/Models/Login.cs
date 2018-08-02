@@ -4,9 +4,8 @@ namespace ZokuChat.Models
 {
 	public class Login
 	{
-		[EmailAddress]
-		[Required]
-		public string Email { get; set; }
+		[Required(ErrorMessage = "The Username field is required.")]
+		public string UserName { get; set; }
 
 		[Required]
 		public string Password { get; set; }
