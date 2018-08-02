@@ -7,11 +7,18 @@ namespace ZokuChat.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {
+		private readonly UserManager<ZokuChatUser> _userManager;
+
 		public ZokuChatUser CurrentUser;
 
-        public async Task OnGetAsync(UserManager<ZokuChatUser> userManager)
+		public IndexModel(UserManager<ZokuChatUser> userManager)
+		{
+			_userManager = userManager;
+		}
+
+        public async void OnGetAsync()
         {
-			CurrentUser = await userManager.GetUserAsync(User);
+			CurrentUser = await _userManager.GetUserAsync(User);
         }
     }
 }
