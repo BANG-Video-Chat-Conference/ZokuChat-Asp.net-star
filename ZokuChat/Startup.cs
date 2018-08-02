@@ -2,16 +2,15 @@ using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ZokuChat.Areas.Identity.Data;
 using ZokuChat.Models;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using ZokuChat.Email;
 using WebPWrecover.Services;
+using ZokuChat.Data;
 
 namespace ZokuChat
 {
@@ -33,7 +32,7 @@ namespace ZokuChat
 			}
 
 			Configuration = builder.Build();
-        }
+		}
 
         public IConfiguration Configuration { get; }
 
@@ -43,6 +42,10 @@ namespace ZokuChat
             services.AddDbContext<ZokuChatContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("ZokuDatabase")));
+
+			services.AddIdentity<ZokuChatUser, IdentityRole>()
+				.AddEntityFrameworkStores<ZokuChatContext>()
+				.AddDefaultTokenProviders();
 
 			services.Configure<IdentityOptions>(options =>
 			{
@@ -77,6 +80,7 @@ namespace ZokuChat
 			services.AddMvc()
 				.AddRazorPagesOptions(options => {
 					options.Conventions.AuthorizeFolder("/Contacts");
+					options.Conventions.AuthorizeFolder("/Identity/Account/Manage");
 				})
 				.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 

@@ -1,0 +1,34 @@
+﻿@page
+@model ZokuChat.Pages.Account.LoginModel
+@{
+	ViewData["Title"] = "Login";
+}
+
+@using ZokuChat.Helpers
+
+@await Component.InvokeAsync("SiteHeader", new { })
+@*<div class="margin-lg">
+	<h3>Sign In</h3>
+	<form method="post">
+		@Html.AntiForgeryToken()
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<div class="form-group">
+			<label for="email">Email</label>
+			<input id="email" asp-for="Login.Email" placeholder="Enter your email" class="form-control" />
+			<span asp-validation-for="Login.Email" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label for="password">Password</label>
+			<input id="password" type="password" asp-for="Login.Password" placeholder="Enter your password" class="form-control" />
+			<span asp-validation-for="Password" class="text-danger"></span>
+		</div>
+		<input type="submit" value="Enter" class="btn btn-primary" />
+		<div>
+			<i>Not a user yet? <a href="@UrlHelper.GetRegisterUrl()">Register</a> today!</i>
+		</div>
+	</form>
+</div>*@
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
