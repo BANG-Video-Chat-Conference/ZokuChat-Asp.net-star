@@ -4,11 +4,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using WebPWrecover.Services;
 using ZokuChat.Data;
-using ZokuChat.Helpers;
 
 namespace ZokuChat.Services
 {
@@ -25,12 +23,15 @@ namespace ZokuChat.Services
 
 		public async void SendEmailConfirmation(ZokuChatUser user, string callbackUrl)
 		{
-			var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+			string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
+			StringBuilder constructedUrl = new StringBuilder(HtmlEncoder.Default.Encode($"{callbackUrl}?userId={user.Id}&code="));
+			constructedUrl.Append(UrlEncoder.Default.Encode(code).Replace("/", "%2F"));
+			
 			await _emailSender.SendEmailAsync(
 				user.Email,
 				"Confirm your email for ZokuChat",
-				$"Please confirm your RokuChat account by <a href='{HtmlEncoder.Default.Encode($"{callbackUrl}&userId={user.Id}&code={code}")}'>clicking here</a>.");
+				$"Please confirm your ZokuChat account by <a href='{constructedUrl.ToString()}'>clicking here</a>.");
 		}
     }
 }
