@@ -94,6 +94,7 @@ namespace ZokuChat
 			services.AddTransient<IEmailService, EmailService>();
 			services.AddTransient<IResolveUserService, ResolveUserService>();
 			services.AddTransient<IContactService, ContactService>();
+			services.AddTransient<IContactRequestService, ContactRequestService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
