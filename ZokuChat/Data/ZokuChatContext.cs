@@ -1,14 +1,36 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using ZokuChat.Data;
+using ZokuChat.Services;
 
 namespace ZokuChat.Models
 {
     public class ZokuChatContext : IdentityDbContext<ZokuChatUser>
     {
-        public ZokuChatContext(DbContextOptions<ZokuChatContext> options)
+		private readonly IResolveUserService _resolveUserService;
+
+		public DbSet<Contact> Contacts { get; set; }
+
+		private ZokuChatUser _currentUser;
+		public ZokuChatUser CurrentUser
+		{
+			get
+			{
+				if (_currentUser == null)
+				{
+					_currentUser = Users.Where(u => u.UserName.Equals(_resolveUserService.GetCurrentUserName())).FirstOrDefault();
+				}
+
+				return _currentUser;
+			}
+		}
+
+		public ZokuChatContext(DbContextOptions<ZokuChatContext> options, IResolveUserService resolveUserService)
             : base(options)
         {
+			_resolveUserService = resolveUserService;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

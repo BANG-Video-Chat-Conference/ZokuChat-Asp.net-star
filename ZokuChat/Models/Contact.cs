@@ -6,9 +6,9 @@ namespace ZokuChat.Models
     {
 		public int Id { get; set; }
 
-		public Guid UserUID { get; set; }
+		public string UserUID { get; set; }
 
-		public Guid ContactUID { get; set; }
+		public string ContactUID { get; set; }
 
 		public bool IsDeleted { get; set; }
     }

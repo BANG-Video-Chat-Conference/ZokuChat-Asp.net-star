@@ -11,11 +11,11 @@ namespace ZokuChat.Models
 		[Required]
 		public string Name { get; set; }
 
-		public Guid CreatorUID { get; set; }
+		public string CreatorUID { get; set; }
 
 		public DateTime CreatedDateUtc { get; set; }
 
-		public Guid ModifiedUID { get; set; }
+		public string ModifiedUID { get; set; }
 
 		public DateTime ModifiedDateUtc { get; set; }
 

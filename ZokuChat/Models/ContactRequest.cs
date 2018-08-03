@@ -6,15 +6,15 @@ namespace ZokuChat.Models
     {
 		public int Id { get; set; }
 
-		public Guid FromUID { get; set; }
+		public string FromUID { get; set; }
 
-		public Guid ToUID { get; set; }
+		public string ToUID { get; set; }
 
-		public Guid CreatedUID { get; set; }
+		public string CreatedUID { get; set; }
 	
 		public DateTime CreatedDateUtc { get; set; }
 
-		public Guid ModifiedUID { get; set; }
+		public string ModifiedUID { get; set; }
 
 		public DateTime ModifiedDateUtc { get; set; }
 
