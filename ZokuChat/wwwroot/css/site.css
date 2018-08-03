@@ -21,3 +21,8 @@
 .margin-lg {
   margin: 16px;
 }
+
+.btn-nav {
+	border-color: #fff;
+	color: #fff;
+}

@@ -1,0 +1,11 @@
+﻿@page
+@model AccessDeniedModel
+@{
+	ViewData["Title"] = "Access Denied";
+}
+
+@await Component.InvokeAsync("SiteHeader", new { })
+<div class="margin-lg">
+	<h3>Access Denied</h3>
+	<p>You do not have permission to view this page.</p>
+</div>

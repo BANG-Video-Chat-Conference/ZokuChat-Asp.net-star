@@ -81,7 +81,8 @@ namespace ZokuChat
 			services.AddMvc()
 				.AddRazorPagesOptions(options => {
 					options.Conventions.AuthorizeFolder("/Chat");
-					options.Conventions.AuthorizeFolder("/Identity/Account/Manage");
+					options.Conventions.AuthorizeFolder("/Account/Manage");
+					options.Conventions.AuthorizePage("/Account/Logout");
 				})
 				.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 

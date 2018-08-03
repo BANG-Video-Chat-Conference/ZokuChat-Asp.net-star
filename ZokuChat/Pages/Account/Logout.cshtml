@@ -1,0 +1,14 @@
+﻿@page
+@model LogoutModel
+@{
+	ViewData["Title"] = "Logout";
+}
+
+@await Component.InvokeAsync("SiteHeader", new { })
+<div class="margin-lg">
+	<h3>Sign Out</h3>
+	<form method="post">
+		@Html.AntiForgeryToken()
+		<input type="submit" value="Logout" class="btn btn-primary" />
+	</form>
+</div>
