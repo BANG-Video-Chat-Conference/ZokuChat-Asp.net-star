@@ -3,15 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ZokuChat.Models
 {
-    public class Room
+    public class RoomContact
     {
 		public int Id { get; set; }
 
-		[StringLength(200, MinimumLength = 1)]
-		[Required]
-		public string Name { get; set; }
+		public int RoomId { get; set; }
 
-		public Guid CreatorUID { get; set; }
+		public Guid ContactUid { get; set; }
+
+		public Guid CreatedUID { get; set; }
 
 		public DateTime CreatedDateUtc { get; set; }
 
@@ -19,6 +19,6 @@ namespace ZokuChat.Models
 
 		public DateTime ModifiedDateUtc { get; set; }
 
-		public bool IsDeleted { get; set; }
+		public bool IsKicked { get; set; }
     }
 }

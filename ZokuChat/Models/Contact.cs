@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
 
 namespace ZokuChat.Models
 {
@@ -6,8 +6,10 @@ namespace ZokuChat.Models
     {
 		public int Id { get; set; }
 
-		public int UserId { get; set; }
+		public Guid UserUID { get; set; }
 
-		public int ContactId { get; set; }
+		public Guid ContactUID { get; set; }
+
+		public bool IsDeleted { get; set; }
     }
 }
