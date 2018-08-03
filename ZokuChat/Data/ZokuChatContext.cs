@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Services;
@@ -12,6 +11,7 @@ namespace ZokuChat.Models
 		private readonly IResolveUserService _resolveUserService;
 
 		public DbSet<Contact> Contacts { get; set; }
+		public DbSet<ContactRequest> ContactRequests { get; set; }
 
 		private ZokuChatUser _currentUser;
 		public ZokuChatUser CurrentUser

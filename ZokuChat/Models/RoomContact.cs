@@ -9,14 +9,22 @@ namespace ZokuChat.Models
 
 		public int RoomId { get; set; }
 
+		[StringLength(450)]
+		[Required]
 		public string ContactUID { get; set; }
 
+		[StringLength(450)]
+		[Required]
 		public string CreatedUID { get; set; }
 
+		[Required]
 		public DateTime CreatedDateUtc { get; set; }
 
+		[StringLength(450)]
+		[Required]
 		public string ModifiedUID { get; set; }
 
+		[Required]
 		public DateTime ModifiedDateUtc { get; set; }
 
 		public bool IsKicked { get; set; }

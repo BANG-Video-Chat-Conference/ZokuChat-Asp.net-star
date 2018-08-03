@@ -13,12 +13,18 @@ namespace ZokuChat.Models
 		[Required]
 		public string Text { get; set; }
 
+		[StringLength(450)]
+		[Required]
 		public string CreatedUID { get; set; }
 
+		[Required]
 		public DateTime CreatedDateUtc { get; set; }
 
+		[StringLength(450)]
+		[Required]
 		public string ModifiedUID { get; set; }
 
+		[Required]
 		public DateTime ModifiedDateUtc { get; set; }
 
 		public bool IsDeleted { get; set; }
