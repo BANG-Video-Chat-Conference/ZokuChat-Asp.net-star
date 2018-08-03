@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
+using ZokuChat.Services;
 
 namespace ZokuChat.Pages.Chat.Contact
 {
@@ -12,18 +13,20 @@ namespace ZokuChat.Pages.Chat.Contact
     {
 		private readonly ZokuChatContext _context;
 		private readonly UserManager<ZokuChatUser> _userManager;
+		private readonly IContactService _contactService;
 
 		private List<Models.Contact> _contacts;
 
-		public IndexModel(ZokuChatContext context, UserManager<ZokuChatUser> userManager)
+		public IndexModel(ZokuChatContext context, UserManager<ZokuChatUser> userManager, IContactService contactService)
 		{
 			_context = context;
 			_userManager = userManager;
+			_contactService = contactService;
 		}
 
 		public void OnGet()
 		{
-			_contacts = _context.Contacts.Where(c => new Guid(c.UserUID).Equals(new Guid(_context.CurrentUser.Id))).ToList();
+			_contacts = _contactService.GetUserContacts(_context.CurrentUser);
 		}
     }
 }
