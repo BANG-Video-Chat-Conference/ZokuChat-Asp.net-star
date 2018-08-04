@@ -13,9 +13,9 @@ namespace ZokuChat.Services
 
 		void CreateContactRequest(Guid fromUID, Guid toUID);
 
-		void CancelContactRequest(int requestId);
+		void CancelContactRequest(ZokuChatUser actionUser, int requestId);
 
-		void ConfirmContactRequest(int requestId);
+		void ConfirmContactRequest(ZokuChatUser actionUser, int requestId);
 
 		ContactRequest GetContactRequest(int requestId);
 	}
