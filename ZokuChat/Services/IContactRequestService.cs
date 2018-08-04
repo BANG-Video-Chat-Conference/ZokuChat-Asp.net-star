@@ -18,5 +18,9 @@ namespace ZokuChat.Services
 		void ConfirmContactRequest(User actionUser, int requestId);
 
 		ContactRequest GetContactRequest(int requestId);
+
+		List<ContactRequest> GetUsersContactRequestsByUser(User fromUser, User toUser);
+
+		bool HasActiveContactRequest(User fromUser, User toUser);
 	}
 }

@@ -3,16 +3,19 @@ using System;
 using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
+using ZokuChat.Services;
 
 namespace ZokuChat.Helpers
 {
 	public class ContactRequestPermissionHelper
 	{
-		private readonly Context _context;	
+		private readonly Context _context;
+		private readonly IContactRequestService _contactRequestService;
 
-		public ContactRequestPermissionHelper(Context context)
+		public ContactRequestPermissionHelper(Context context, IContactRequestService contactRequestService)
 		{
 			_context = context;
+			_contactRequestService = contactRequestService;
 		}
 
 		public bool CanMakeContactRequest(User fromUser, User toUser)
@@ -23,11 +26,7 @@ namespace ZokuChat.Helpers
 
 			bool result;
 
-			if (_context.ContactRequests.Any(r => 
-				new Guid(r.FromUID).Equals(fromUser.Id) && 
-				new Guid(r.ToUID).Equals(toUser.Id) &&
-				!r.IsCancelled &&
-			    !r.IsConfirmed))
+			if (_contactRequestService.HasActiveContactRequest(fromUser, toUser))
 			{
 				// An active contact request already exists so return false
 				result = false;

@@ -8,6 +8,6 @@ namespace ZokuChat.Services
     {
 		List<Contact> GetUserContacts(User user);
 
-		void DeleteContact(int contactId);
+		void DeleteContact(Contact contact);
     }
 }

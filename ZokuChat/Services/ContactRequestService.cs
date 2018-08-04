@@ -62,20 +62,25 @@ namespace ZokuChat.Services
 				request.ModifiedUID = actionUser.Id;
 				request.ModifiedDateUtc = DateTime.UtcNow;
 
-				// Add contacts for each user
-				_context.Contacts.Add(new Contact
+				// Add contact and paired contact
+				Contact contact = new Contact
 				{
 					UserUID = request.FromUID,
 					ContactUID = request.ToUID
-				});
+				};
 
-				_context.Contacts.Add(new Contact
+				Contact pairedContact = new Contact
 				{
 					UserUID = request.ToUID,
 					ContactUID = request.FromUID
-				});
+				};
 
-				// Save
+				// Set the paired Ids
+				contact.PairedId = pairedContact.Id;
+				pairedContact.PairedId = contact.Id;
+
+				// Add contacts and save
+				_context.Contacts.AddRange(new Contact[] { contact, pairedContact });
 				_context.SaveChanges();
 			}
 		}
@@ -86,11 +91,7 @@ namespace ZokuChat.Services
 			fromUser.Should().NotBeNull();
 			toUser.Should().NotBeNull();
 
-			if (!_context.ContactRequests.Any(r =>
-				new Guid(r.FromUID).Equals(fromUser.Id) &&
-				new Guid(r.ToUID).Equals(toUser.Id) &&
-				!r.IsCancelled &&
-				!r.IsConfirmed))
+			if (!HasActiveContactRequest(fromUser, toUser))
 			{
 				// Active contact request does not already exist so create one
 				DateTime now = DateTime.UtcNow;
@@ -127,6 +128,29 @@ namespace ZokuChat.Services
 			user.Should().NotBeNull();
 
 			return _context.ContactRequests.Where(r => new Guid(r.ToUID).Equals(user.Id)).ToList();
+		}
+
+		public bool HasActiveContactRequest(User fromUser, User toUser)
+		{
+			// Validate
+			fromUser.Should().NotBeNull();
+			toUser.Should().NotBeNull();
+
+			// Get fromUser's contact requests for toUser
+			List<ContactRequest> requests = GetUsersContactRequestsByUser(fromUser, toUser);
+
+			// See if there are any active ones
+			return requests.Any(r => r.IsContactRequestActive());
+		}
+
+		public List<ContactRequest> GetUsersContactRequestsByUser(User fromUser, User toUser)
+		{
+			// Validate
+			fromUser.Should().NotBeNull();
+			toUser.Should().NotBeNull();
+
+			// Return fromUser's contact requests to toUser
+			return _context.ContactRequests.Where(r => new Guid(r.FromUID).Equals(fromUser.Id) && new Guid(r.ToUID).Equals(toUser.Id)).ToList();
 		}
 	}
 }

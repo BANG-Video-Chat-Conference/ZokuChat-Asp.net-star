@@ -32,5 +32,10 @@ namespace ZokuChat.Models
 		public bool IsConfirmed { get; set; }
 
 		public bool IsCancelled { get; set; }
-    }
+
+		public bool IsContactRequestActive()
+		{
+			return !IsCancelled && !IsConfirmed;
+		}
+	}
 }
