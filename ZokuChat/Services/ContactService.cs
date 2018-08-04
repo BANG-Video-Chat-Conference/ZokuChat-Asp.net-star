@@ -25,15 +25,14 @@ namespace ZokuChat.Services
 			return _context.Contacts.Where(c => new Guid(c.UserUID).Equals(new Guid(user.Id))).ToList();
 		}
 
-		public void DeleteContact(User actionUser, int contactId)
+		public void DeleteContact(int contactId)
 		{
 			Contact contact = _context.Contacts.Where(c => c.Id == contactId).FirstOrDefault();
 
 			if (contact != null)
 			{
 				// Retrieve the other contact in the pair
-				string contactUID = contact.ContactUID;
-				Contact pairedContact = _context.Contacts.Where(c => new Guid(c.UserUID).Equals(new Guid(contactUID))).FirstOrDefault();
+				Contact pairedContact = _context.Contacts.Where(c => new Guid(c.UserUID).Equals(contact.ContactUID)).FirstOrDefault();
 
 				if (pairedContact != null)
 				{

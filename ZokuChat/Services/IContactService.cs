@@ -7,5 +7,7 @@ namespace ZokuChat.Services
     public interface IContactService
     {
 		List<Contact> GetUserContacts(User user);
+
+		void DeleteContact(int contactId);
     }
 }
