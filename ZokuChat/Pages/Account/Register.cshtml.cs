@@ -14,13 +14,13 @@ namespace ZokuChat.Pages.Account
     public class RegisterModel : PageModel
     {
 		private readonly IEmailService _emailService;
-		private readonly UserManager<ZokuChatUser> _userManager;
-		private readonly SignInManager<ZokuChatUser> _signInManager;
+		private readonly UserManager<User> _userManager;
+		private readonly SignInManager<User> _signInManager;
 
 		public RegisterModel(
 			IEmailService emailService,
-			UserManager<ZokuChatUser> userManager,
-			SignInManager<ZokuChatUser> signInManager)
+			UserManager<User> userManager,
+			SignInManager<User> signInManager)
 		{
 			_emailService = emailService;
 			_userManager = userManager;
@@ -43,7 +43,7 @@ namespace ZokuChat.Pages.Account
 
 			if (ModelState.IsValid)
 			{
-				var user = new ZokuChatUser { UserName = Register.UserName, Email = Register.Email };
+				var user = new User { UserName = Register.UserName, Email = Register.Email };
 				var result = await _userManager.CreateAsync(user, Register.Password);
 				if (result.Succeeded)
 				{

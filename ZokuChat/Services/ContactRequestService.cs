@@ -9,9 +9,9 @@ namespace ZokuChat.Services
 {
 	public class ContactRequestService : IContactRequestService
 	{
-		private ZokuChatContext _context;
+		private Context _context;
 
-		public ContactRequestService(ZokuChatContext context)
+		public ContactRequestService(Context context)
 		{
 			_context = context;
 		}
@@ -25,9 +25,10 @@ namespace ZokuChat.Services
 			return _context.ContactRequests.Where(r => r.Id == requestId).FirstOrDefault();
 		}
 
-		public void CancelContactRequest(ZokuChatUser actionUser, int requestId)
+		public void CancelContactRequest(User actionUser, int requestId)
 		{
 			// Validate
+			actionUser.Should().NotBeNull();
 			requestId.Should().BeGreaterThan(0);
 
 			// Retrieve
@@ -45,9 +46,10 @@ namespace ZokuChat.Services
 			}
 		}
 
-		public void ConfirmContactRequest(ZokuChatUser actionUser, int requestId)
+		public void ConfirmContactRequest(User actionUser, int requestId)
 		{
 			// Validate
+			actionUser.Should().NotBeNull();
 			requestId.Should().BeGreaterThan(0);
 
 			// Retrieve
@@ -78,15 +80,15 @@ namespace ZokuChat.Services
 			}
 		}
 
-		public void CreateContactRequest(Guid fromUID, Guid toUID)
+		public void CreateContactRequest(User fromUser, User toUser)
 		{
 			// Validate
-			fromUID.Should().NotBeEmpty();
-			toUID.Should().NotBeEmpty();
+			fromUser.Should().NotBeNull();
+			toUser.Should().NotBeNull();
 
 			if (!_context.ContactRequests.Any(r =>
-				new Guid(r.FromUID).Equals(fromUID) &&
-				new Guid(r.ToUID).Equals(toUID) &&
+				new Guid(r.FromUID).Equals(fromUser.Id) &&
+				new Guid(r.ToUID).Equals(toUser.Id) &&
 				!r.IsCancelled &&
 				!r.IsConfirmed))
 			{
@@ -95,13 +97,13 @@ namespace ZokuChat.Services
 
 				ContactRequest request = new ContactRequest
 				{
-					FromUID = fromUID.ToString(),
-					ToUID = toUID.ToString(),
+					FromUID = fromUser.Id.ToString(),
+					ToUID = toUser.Id.ToString(),
 					IsCancelled = false,
 					IsConfirmed = false,
-					CreatedUID = fromUID.ToString(),
+					CreatedUID = fromUser.ToString(),
 					CreatedDateUtc = now,
-					ModifiedUID = fromUID.ToString(),
+					ModifiedUID = fromUser.Id.ToString(),
 					ModifiedDateUtc = now
 				};
 
@@ -111,20 +113,20 @@ namespace ZokuChat.Services
 			}
 		}
 
-		public List<ContactRequest> GetContactRequestsFromUser(ZokuChatUser user)
+		public List<ContactRequest> GetContactRequestsFromUser(User user)
 		{
 			// Validate
 			user.Should().NotBeNull();
 
-			return _context.ContactRequests.Where(r => new Guid(r.FromUID).Equals(new Guid(user.Id))).ToList();
+			return _context.ContactRequests.Where(r => new Guid(r.FromUID).Equals(user.Id)).ToList();
 		}
 
-		public List<ContactRequest> GetContactRequestsToUser(ZokuChatUser user)
+		public List<ContactRequest> GetContactRequestsToUser(User user)
 		{
 			// Validate
 			user.Should().NotBeNull();
 
-			return _context.ContactRequests.Where(r => new Guid(r.ToUID).Equals(new Guid(user.Id))).ToList();
+			return _context.ContactRequests.Where(r => new Guid(r.ToUID).Equals(user.Id)).ToList();
 		}
 	}
 }

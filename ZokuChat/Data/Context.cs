@@ -6,15 +6,15 @@ using ZokuChat.Services;
 
 namespace ZokuChat.Models
 {
-    public class ZokuChatContext : IdentityDbContext<ZokuChatUser>
+    public class Context : IdentityDbContext<User>
     {
 		private readonly IResolveUserService _resolveUserService;
 
 		public DbSet<Contact> Contacts { get; set; }
 		public DbSet<ContactRequest> ContactRequests { get; set; }
 
-		private ZokuChatUser _currentUser;
-		public ZokuChatUser CurrentUser
+		private User _currentUser;
+		public User CurrentUser
 		{
 			get
 			{
@@ -27,7 +27,7 @@ namespace ZokuChat.Models
 			}
 		}
 
-		public ZokuChatContext(DbContextOptions<ZokuChatContext> options, IResolveUserService resolveUserService)
+		public Context(DbContextOptions<Context> options, IResolveUserService resolveUserService)
             : base(options)
         {
 			_resolveUserService = resolveUserService;

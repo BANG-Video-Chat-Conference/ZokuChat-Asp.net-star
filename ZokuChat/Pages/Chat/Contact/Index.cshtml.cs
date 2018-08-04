@@ -11,13 +11,13 @@ namespace ZokuChat.Pages.Chat.Contact
 {
     public class IndexModel : PageModel
     {
-		private readonly ZokuChatContext _context;
-		private readonly UserManager<ZokuChatUser> _userManager;
+		private readonly Context _context;
+		private readonly UserManager<User> _userManager;
 		private readonly IContactService _contactService;
 
 		private List<Models.Contact> _contacts;
 
-		public IndexModel(ZokuChatContext context, UserManager<ZokuChatUser> userManager, IContactService contactService)
+		public IndexModel(Context context, UserManager<User> userManager, IContactService contactService)
 		{
 			_context = context;
 			_userManager = userManager;

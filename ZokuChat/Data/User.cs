@@ -3,7 +3,7 @@
 namespace ZokuChat.Data
 {
     // Add profile data for application users by adding properties to the ZokuChatUser class
-    public class ZokuChatUser : IdentityUser
+    public class User : IdentityUser
     {
     }
 }

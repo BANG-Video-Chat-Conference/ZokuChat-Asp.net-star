@@ -9,7 +9,7 @@ using ZokuChat.Models;
 
 namespace ZokuChat.Migrations
 {
-    [DbContext(typeof(ZokuChatContext))]
+    [DbContext(typeof(Context))]
     [Migration("20180804014257_DropIsDeletedFromContacts")]
     partial class DropIsDeletedFromContacts
     {

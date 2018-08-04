@@ -7,15 +7,15 @@ namespace ZokuChat.Services
 {
     public interface IContactRequestService
     {
-		List<ContactRequest> GetContactRequestsToUser(ZokuChatUser user);
+		List<ContactRequest> GetContactRequestsToUser(User user);
 
-		List<ContactRequest> GetContactRequestsFromUser(ZokuChatUser user);
+		List<ContactRequest> GetContactRequestsFromUser(User user);
 
-		void CreateContactRequest(Guid fromUID, Guid toUID);
+		void CreateContactRequest(User fromUser, User toUser);
 
-		void CancelContactRequest(ZokuChatUser actionUser, int requestId);
+		void CancelContactRequest(User actionUser, int requestId);
 
-		void ConfirmContactRequest(ZokuChatUser actionUser, int requestId);
+		void ConfirmContactRequest(User actionUser, int requestId);
 
 		ContactRequest GetContactRequest(int requestId);
 	}

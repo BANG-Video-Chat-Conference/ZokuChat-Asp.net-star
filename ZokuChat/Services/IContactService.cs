@@ -6,6 +6,6 @@ namespace ZokuChat.Services
 {
     public interface IContactService
     {
-		List<Contact> GetUserContacts(ZokuChatUser user);
+		List<Contact> GetUserContacts(User user);
     }
 }

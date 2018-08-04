@@ -15,10 +15,10 @@ namespace ZokuChat.Pages.Account
 {
     public class ConfirmEmailModel : PageModel
     {
-		private UserManager<ZokuChatUser> _userManager;
+		private UserManager<User> _userManager;
 		private IEmailService _emailService;
 
-		public ConfirmEmailModel(UserManager<ZokuChatUser> userManager, IEmailService emailService)
+		public ConfirmEmailModel(UserManager<User> userManager, IEmailService emailService)
 		{
 			_userManager = userManager;
 			_emailService = emailService;
@@ -36,7 +36,7 @@ namespace ZokuChat.Pages.Account
         {
 			if (!userId.Equals(Guid.Empty) && !String.IsNullOrWhiteSpace(code))
 			{
-				ZokuChatUser user = _userManager.Users.FirstOrDefault(u => new Guid(u.Id).Equals(userId));
+				User user = _userManager.Users.FirstOrDefault(u => new Guid(u.Id).Equals(userId));
 				
 				if (user != null)
 				{
@@ -55,7 +55,7 @@ namespace ZokuChat.Pages.Account
 		{
 			if (ModelState.IsValid)
 			{
-				ZokuChatUser user = _userManager.Users.FirstOrDefault(u => u.Email.Equals(EmailAddress));
+				User user = _userManager.Users.FirstOrDefault(u => u.Email.Equals(EmailAddress));
 
 				if (user != null && !user.EmailConfirmed)
 				{

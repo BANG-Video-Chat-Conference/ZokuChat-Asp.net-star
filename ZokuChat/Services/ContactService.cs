@@ -9,14 +9,14 @@ namespace ZokuChat.Services
 {
 	public class ContactService : IContactService
 	{
-		private ZokuChatContext _context;
+		private Context _context;
 
-		public ContactService(ZokuChatContext context)
+		public ContactService(Context context)
 		{
 			_context = context;
 		}
 
-		public List<Contact> GetUserContacts(ZokuChatUser user)
+		public List<Contact> GetUserContacts(User user)
 		{
 			// Validate
 			user.Should().NotBeNull();
@@ -25,7 +25,7 @@ namespace ZokuChat.Services
 			return _context.Contacts.Where(c => new Guid(c.UserUID).Equals(new Guid(user.Id))).ToList();
 		}
 
-		public void DeleteContact(ZokuChatUser actionUser, int contactId)
+		public void DeleteContact(User actionUser, int contactId)
 		{
 			Contact contact = _context.Contacts.Where(c => c.Id == contactId).FirstOrDefault();
 

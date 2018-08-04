@@ -4,6 +4,6 @@ namespace ZokuChat.Services
 {
     public interface IEmailService
     {
-		void SendEmailConfirmation(ZokuChatUser user, string callbackUrl);
+		void SendEmailConfirmation(User user, string callbackUrl);
     }
 }

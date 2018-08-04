@@ -7,11 +7,11 @@ namespace ZokuChat.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {
-		private readonly UserManager<ZokuChatUser> _userManager;
+		private readonly UserManager<User> _userManager;
 
-		public ZokuChatUser CurrentUser;
+		public User CurrentUser;
 
-		public IndexModel(UserManager<ZokuChatUser> userManager)
+		public IndexModel(UserManager<User> userManager)
 		{
 			_userManager = userManager;
 		}

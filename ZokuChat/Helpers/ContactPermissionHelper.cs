@@ -8,14 +8,14 @@ namespace ZokuChat.Helpers
 {
     public class ContactPermissionHelper
     {
-		private readonly ZokuChatContext _context;
+		private readonly Context _context;
 
-		public ContactPermissionHelper(ZokuChatContext context)
+		public ContactPermissionHelper(Context context)
 		{
 			_context = context;
 		}
 
-		public bool CanDeleteContact(ZokuChatUser actionUser, int contactId)
+		public bool CanDeleteContact(User actionUser, int contactId)
 		{
 			// Validate
 			actionUser.Should().NotBeNull();

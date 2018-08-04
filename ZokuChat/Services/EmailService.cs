@@ -13,15 +13,15 @@ namespace ZokuChat.Services
     public class EmailService : IEmailService
     {
 		private readonly IEmailSender _emailSender;
-		private readonly UserManager<ZokuChatUser> _userManager;
+		private readonly UserManager<User> _userManager;
 
-		public EmailService(IEmailSender emailSender, UserManager<ZokuChatUser> userManager)
+		public EmailService(IEmailSender emailSender, UserManager<User> userManager)
 		{
 			_emailSender = emailSender;
 			_userManager = userManager;
 		}
 
-		public async void SendEmailConfirmation(ZokuChatUser user, string callbackUrl)
+		public async void SendEmailConfirmation(User user, string callbackUrl)
 		{
 			string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 

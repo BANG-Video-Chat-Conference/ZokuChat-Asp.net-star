@@ -12,9 +12,9 @@ namespace ZokuChat.Pages.Account
 {
     public class LogoutModel : PageModel
     {
-		private readonly SignInManager<ZokuChatUser> _signInManager;
+		private readonly SignInManager<User> _signInManager;
 
-		public LogoutModel(SignInManager<ZokuChatUser> signInManager)
+		public LogoutModel(SignInManager<User> signInManager)
 		{
 			_signInManager = signInManager;
 		}

@@ -9,7 +9,7 @@ using ZokuChat.Models;
 
 namespace ZokuChat.Migrations
 {
-    [DbContext(typeof(ZokuChatContext))]
+    [DbContext(typeof(Context))]
     [Migration("20180803221740_AddContactRequestsTable")]
     partial class AddContactRequestsTable
     {

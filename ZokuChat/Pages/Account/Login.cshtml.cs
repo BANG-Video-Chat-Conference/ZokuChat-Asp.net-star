@@ -10,13 +10,13 @@ namespace ZokuChat.Pages.Account
 {
     public class LoginModel : PageModel
     {
-		private readonly ZokuChatContext _context;
-		private readonly SignInManager<ZokuChatUser> _signInManager;
+		private readonly Context _context;
+		private readonly SignInManager<User> _signInManager;
 
 		[BindProperty]
 		public Login Login { get; set; }
 
-		public LoginModel(ZokuChatContext context, SignInManager<ZokuChatUser> userManager)
+		public LoginModel(Context context, SignInManager<User> userManager)
 		{
 			_context = context;
 			_signInManager = userManager;

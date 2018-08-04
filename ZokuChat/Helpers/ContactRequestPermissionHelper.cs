@@ -1,30 +1,31 @@
 ﻿using FluentAssertions;
 using System;
 using System.Linq;
+using ZokuChat.Data;
 using ZokuChat.Models;
 
 namespace ZokuChat.Helpers
 {
 	public class ContactRequestPermissionHelper
 	{
-		private readonly ZokuChatContext _context;	
+		private readonly Context _context;	
 
-		public ContactRequestPermissionHelper(ZokuChatContext context)
+		public ContactRequestPermissionHelper(Context context)
 		{
 			_context = context;
 		}
 
-		public bool CanMakeContactRequest(Guid fromUID, Guid toUID)
+		public bool CanMakeContactRequest(User fromUser, User toUser)
 		{
 			// Validate
-			fromUID.Should().NotBeEmpty();
-			toUID.Should().NotBeEmpty();
+			fromUser.Should().NotBeNull();
+			toUser.Should().NotBeNull();
 
 			bool result;
 
 			if (_context.ContactRequests.Any(r => 
-				new Guid(r.FromUID).Equals(fromUID) && 
-				new Guid(r.ToUID).Equals(toUID) &&
+				new Guid(r.FromUID).Equals(fromUser.Id) && 
+				new Guid(r.ToUID).Equals(toUser.Id) &&
 				!r.IsCancelled &&
 			    !r.IsConfirmed))
 			{
