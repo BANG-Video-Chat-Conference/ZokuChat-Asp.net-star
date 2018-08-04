@@ -13,7 +13,5 @@ namespace ZokuChat.Models
 		[StringLength(450)]
 		[Required]
 		public string ContactUID { get; set; }
-
-		public bool IsDeleted { get; set; }
     }
 }

@@ -22,9 +22,13 @@ namespace ZokuChat.Helpers
 
 			bool result;
 
-			if (_context.ContactRequests.Any(r => new Guid(r.FromUID).Equals(fromUID) && new Guid(r.ToUID).Equals(toUID)))
+			if (_context.ContactRequests.Any(r => 
+				new Guid(r.FromUID).Equals(fromUID) && 
+				new Guid(r.ToUID).Equals(toUID) &&
+				!r.IsCancelled &&
+			    !r.IsConfirmed))
 			{
-				// The contact request already exists so return false
+				// An active contact request already exists so return false
 				result = false;
 			}
 			else

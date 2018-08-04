@@ -64,15 +64,13 @@ namespace ZokuChat.Services
 				_context.Contacts.Add(new Contact
 				{
 					UserUID = request.FromUID,
-					ContactUID = request.ToUID,
-					IsDeleted = false
+					ContactUID = request.ToUID
 				});
 
 				_context.Contacts.Add(new Contact
 				{
 					UserUID = request.ToUID,
-					ContactUID = request.FromUID,
-					IsDeleted = false
+					ContactUID = request.FromUID
 				});
 
 				// Save
@@ -86,9 +84,13 @@ namespace ZokuChat.Services
 			fromUID.Should().NotBeEmpty();
 			toUID.Should().NotBeEmpty();
 
-			if(!_context.ContactRequests.Any(r => new Guid(r.FromUID).Equals(fromUID) && new Guid(r.ToUID).Equals(toUID)))
+			if (!_context.ContactRequests.Any(r =>
+				new Guid(r.FromUID).Equals(fromUID) &&
+				new Guid(r.ToUID).Equals(toUID) &&
+				!r.IsCancelled &&
+				!r.IsConfirmed))
 			{
-				// Contact request does not already exist so create it
+				// Active contact request does not already exist so create one
 				DateTime now = DateTime.UtcNow;
 
 				ContactRequest request = new ContactRequest
