@@ -9,6 +9,7 @@
 		private const string _LOGOUT_URL = "/Account/Logout";
 		private const string _CONFIRM_EMAIL_URL = "/Account/ConfirmEmail";
 		private const string _MANAGE_URL = "/Account/Manage";
+		private const string _BLOCKED_USERS_URL = "/Account/Manage/BlockedUsers";
 		private const string _REGISTER_URL = "/Account/Register";
 		private const string _HOME_URL = "/";
 		private const string _ABOUT_URL = "/About";
@@ -68,5 +69,10 @@
 		{
 			return _MANAGE_URL;
 		}
-    }
+
+		public static string GetManageBlockedUsersUrl()
+		{
+			return _BLOCKED_USERS_URL;
+		}
+	}
 }
