@@ -27,6 +27,6 @@ namespace ZokuChat.Models
 		[Required]
 		public DateTime ModifiedDateUtc { get; set; }
 
-		public bool IsKicked { get; set; }
+		public bool AddedByCreator { get; set; }
     }
 }

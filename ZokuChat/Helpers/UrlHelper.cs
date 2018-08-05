@@ -3,6 +3,7 @@
     public class UrlHelper
     {
 		private const string _CONTACTS_URL = "/Chat/Contact/Index";
+		private const string _CONTACT_REQUESTS_URL = "/Chat/Request/Index";
 		private const string _ROOMS_URL = "/Chat/Room/Index";
 		private const string _LOGIN_URL = "/Account/Login";
 		private const string _LOGOUT_URL = "/Account/Logout";
@@ -16,6 +17,11 @@
 		public static string GetContactsUrl()
 		{
 			return _CONTACTS_URL;
+		}
+
+		public static string GetContactRequestsUrl()
+		{
+			return _CONTACT_REQUESTS_URL;
 		}
 
 		public static string GetRoomsUrl()
