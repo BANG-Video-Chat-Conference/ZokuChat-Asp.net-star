@@ -9,11 +9,11 @@ namespace ZokuChat.Models
 
 		[StringLength(450)]
 		[Required]
-		public string FromUID { get; set; }
+		public string RequestorUID { get; set; }
 
 		[StringLength(450)]
 		[Required]
-		public string ToUID { get; set; }
+		public string RequestedUID { get; set; }
 
 		[StringLength(450)]
 		[Required]

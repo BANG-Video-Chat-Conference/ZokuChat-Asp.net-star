@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using System;
-using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
 using ZokuChat.Services;
@@ -18,15 +16,15 @@ namespace ZokuChat.Helpers
 			_contactRequestService = contactRequestService;
 		}
 
-		public bool CanMakeContactRequest(User fromUser, User toUser)
+		public bool CanMakeContactRequest(User requestor, User requested)
 		{
 			// Validate
-			fromUser.Should().NotBeNull();
-			toUser.Should().NotBeNull();
+			requestor.Should().NotBeNull();
+			requested.Should().NotBeNull();
 
 			bool result;
 
-			if (_contactRequestService.HasActiveContactRequest(fromUser, toUser))
+			if (_contactRequestService.HasActiveContactRequest(requestor, requested))
 			{
 				// An active contact request already exists so return false
 				result = false;
