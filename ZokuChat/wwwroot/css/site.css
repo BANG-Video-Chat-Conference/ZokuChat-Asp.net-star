@@ -34,6 +34,10 @@ a.navbar-brand:hover {
 	color: #db94b9 !important;
 }
 
+button.btn-outline-success:hover {
+	background-color: #db94b9 !important;
+}
+
 .btn-nav {
 	border-color: #fff;
 	color: #fff;
