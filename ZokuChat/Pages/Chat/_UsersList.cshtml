@@ -1,0 +1,43 @@
+﻿@model List<ZokuChat.Data.User>
+@using ZokuChat.Helpers
+@using ZokuChat.Services
+@using ZokuChat.Models
+
+@inject IContactService ContactService
+@inject IContactRequestService ContactRequestService
+@inject Context Context
+
+<div class="container-fluid">
+	@foreach (User user in Model)
+	{
+		@if (!user.Equals(Context.CurrentUser))
+		{
+			<div class="row">
+				<div class="col-sm">
+					<a href="@UrlHelper.GetViewUserUrl(user.Id)">@user.UserName</a>
+				</div>
+				@if (ContactService.IsUserContact(Context.CurrentUser, user))
+				{
+					<div class="col-sm">
+						<button class="btn btn-danger">Remove Contact</button>
+					</div>
+				}
+				else if (ContactRequestService.HasActiveContactRequest(Context.CurrentUser, user))
+				{
+					<div class="col-sm">
+						<button class="btn btn-success" disabled>Request Sent</button>
+					</div>
+				}
+				else
+				{
+					<div class="col-sm">
+						<button class="btn btn-primary">Send Request</button>
+					</div>
+				}
+				<div class="col-sm">
+					<button class="btn btn-primary">Block User</button>
+				</div>
+			</div>
+		}
+	}
+</div>

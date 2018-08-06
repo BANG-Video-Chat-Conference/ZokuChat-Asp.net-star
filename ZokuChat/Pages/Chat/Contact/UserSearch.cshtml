@@ -1,0 +1,20 @@
+﻿@page
+@model ZokuChat.Pages.Chat.Contact.UserSearchModel
+@{
+	ViewData["Title"] = "User Search";
+}
+
+<partial name="_SiteHeader" />
+<div class="content-container">
+	<partial name="_ChatSidebar" />
+	<div class="content">
+		<h3>User Search</h3>
+		<form method="post">
+			<div class="form-group">
+				<input asp-for="SearchText" class="form-control" />
+			</div>
+			<input class="btn btn-primary" type="submit" value="Search" />
+		</form>
+		<partial name="_UsersList" for="Users" />
+	</div>
+</div>

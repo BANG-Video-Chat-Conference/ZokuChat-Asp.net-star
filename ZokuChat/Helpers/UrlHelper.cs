@@ -4,6 +4,7 @@
     {
 		private const string _CONTACTS_URL = "/Chat/Contact/Index";
 		private const string _CONTACT_REQUESTS_URL = "/Chat/Request/Index";
+		private const string _USER_SEARCH_URL = "/Chat/Contact/UserSearch";
 		private const string _ROOMS_URL = "/Chat/Room/Index";
 		private const string _LOGIN_URL = "/Account/Login";
 		private const string _LOGOUT_URL = "/Account/Logout";
@@ -14,6 +15,8 @@
 		private const string _HOME_URL = "/";
 		private const string _ABOUT_URL = "/About";
 		private const string _ERROR_URL = "/Error";
+		private const string _ACCESS_DENIED_URL = "/Account/AccessDenied";
+		private const string _VIEW_USER_URL = "/Chat/Contact/View";
 
 		public static string GetContactsUrl()
 		{
@@ -23,6 +26,11 @@
 		public static string GetContactRequestsUrl()
 		{
 			return _CONTACT_REQUESTS_URL;
+		}
+
+		public static string GetUserSearchUrl()
+		{
+			return _USER_SEARCH_URL;
 		}
 
 		public static string GetRoomsUrl()
@@ -73,6 +81,16 @@
 		public static string GetManageBlockedUsersUrl()
 		{
 			return _BLOCKED_USERS_URL;
+		}
+
+		public static string GetAccessDeniedUrl()
+		{
+			return _ACCESS_DENIED_URL;
+		}
+
+		public static string GetViewUserUrl(string UID)
+		{
+			return $"{_VIEW_USER_URL}?userId={UID}";
 		}
 	}
 }

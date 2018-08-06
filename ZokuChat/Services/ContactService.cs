@@ -37,5 +37,14 @@ namespace ZokuChat.Services
 			_context.Contacts.RemoveRange(contacts);
 			_context.SaveChanges();
 		}
+
+		public bool IsUserContact(User user, User contact)
+		{
+			// Validate
+			user.Should().NotBeNull();
+			contact.Should().NotBeNull();
+
+			return _context.Contacts.Any(c => new Guid(c.UserUID).Equals(user.Id) && new Guid(c.ContactUID).Equals(contact.Id));
+		}
 	}
 }

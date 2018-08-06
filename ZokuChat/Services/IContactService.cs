@@ -9,5 +9,7 @@ namespace ZokuChat.Services
 		List<Contact> GetUserContacts(User user);
 
 		void DeleteContact(Contact contact);
+
+		bool IsUserContact(User user, User contact);
     }
 }

@@ -4,7 +4,7 @@ using ZokuChat.Models;
 
 namespace ZokuChat.Services
 {
-    interface IBlockedUserService
+    public interface IBlockedUserService
     {
 		void BlockUser(User blocker, User blocked);
 

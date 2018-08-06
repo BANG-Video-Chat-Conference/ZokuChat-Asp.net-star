@@ -17,6 +17,8 @@ namespace ZokuChat
 {
     public class Startup
     {
+		private bool _isDevEnvironment;
+
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
 			var builder = new ConfigurationBuilder()
@@ -29,6 +31,7 @@ namespace ZokuChat
 
 			if (env.IsDevelopment())
 			{
+				_isDevEnvironment = true;
 				builder.AddUserSecrets<Startup>();
 			}
 
@@ -65,7 +68,10 @@ namespace ZokuChat
 
 				// User settings
 				options.User.RequireUniqueEmail = true;
-				options.SignIn.RequireConfirmedEmail = true;
+				if (!_isDevEnvironment)
+				{
+					options.SignIn.RequireConfirmedEmail = true;
+				}
 			});
 
 			services.ConfigureApplicationCookie(options =>
@@ -93,6 +99,8 @@ namespace ZokuChat
 			// Add injectable services
 			services.AddTransient<IEmailService, EmailService>();
 			services.AddTransient<IResolveUserService, ResolveUserService>();
+			services.AddTransient<IUserService, UserService>();
+			services.AddTransient<IBlockedUserService, BlockedUserService>();
 			services.AddTransient<IContactService, ContactService>();
 			services.AddTransient<IContactRequestService, ContactRequestService>();
 		}
