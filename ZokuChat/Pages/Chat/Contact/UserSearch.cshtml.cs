@@ -32,7 +32,7 @@ namespace ZokuChat.Pages.Chat.Contact
         {
 			if (!String.IsNullOrWhiteSpace(searchText))
 			{
-				Users = _userService.GetUsers(new UserSearch { SearchText = searchText, EmailConfirmed = true, MaxResults = 10 });
+				Users = _userService.GetUsers(new UserSearch { SearchText = searchText, MaxResults = 10 });
 			}
 			else
 			{
@@ -44,7 +44,7 @@ namespace ZokuChat.Pages.Chat.Contact
 		{
 			if (!String.IsNullOrWhiteSpace(SearchText))
 			{
-				Users = _userService.GetUsers(new UserSearch { SearchText = SearchText, EmailConfirmed = true, MaxResults = 10 });
+				Users = _userService.GetUsers(new UserSearch { SearchText = SearchText, MaxResults = 10 });
 			}
 			else
 			{

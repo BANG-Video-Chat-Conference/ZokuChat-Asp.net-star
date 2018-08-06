@@ -40,7 +40,7 @@ namespace ZokuChat.Services
 			search.SearchText.Should().NotBeNullOrWhiteSpace();
 
 			return _context.Users
-				.Where(u => u.UserName.Contains(search.SearchText) && u.EmailConfirmed == search.EmailConfirmed)
+				.Where(u => u.UserName.Contains(search.SearchText))
 				.Take(search.MaxResults)
 				.ToList();
 		}

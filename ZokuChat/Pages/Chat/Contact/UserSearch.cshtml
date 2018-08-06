@@ -10,10 +10,18 @@
 	<div class="content">
 		<h3>User Search</h3>
 		<form method="post">
-			<div class="form-group">
-				<input asp-for="SearchText" class="form-control" />
+			<div class="container-fluid margin-lg-top">
+				<div class="row">
+					<div class="col-200">
+						<div class="input-group">
+							<input asp-for="SearchText" class="form-control" />
+							<div class="input-group-append">
+								<input class="btn btn-primary" type="submit" value="Search" />
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-			<input class="btn btn-primary" type="submit" value="Search" />
 		</form>
 		<partial name="_UsersList" for="Users" />
 	</div>

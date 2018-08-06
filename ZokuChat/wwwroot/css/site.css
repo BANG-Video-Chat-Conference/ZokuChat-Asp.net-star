@@ -27,6 +27,22 @@ html, body {
 	margin: 16px;
 }
 
+.margin-lg-top {
+	margin-top: 16px;
+}
+
+.margin-lg-right {
+	margin-right: 16px;
+}
+
+.margin-lg-bottom {
+	margin-bottom: 16px;
+}
+
+.margin-lg-left {
+	margin-left: 16px;
+}
+
 a.nav-link:hover {
 	color: #db94b9 !important;
 }

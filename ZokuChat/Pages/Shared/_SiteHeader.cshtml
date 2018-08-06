@@ -23,12 +23,12 @@
 		@if (SignInManager.IsSignedIn(User))
 		{
 			<form asp-page="@UrlHelper.GetLogoutUrl()" asp-route-returnUrl="@Url.Page(UrlHelper.GetHomeUrl(), new { area = "" })" method="post">
-				<ul class="navbar-nav my-2 my-lg-0">
+				<ul class="navbar-nav my-lg-0">
 					<li class="nav-item active">
-						@Html.RouteLink(UserManager.GetUserAsync(User).Result.UserName, "", new { }, new { @href = UrlHelper.GetManageAccountUrl(), @class = "nav-link" })
+						@Html.RouteLink(UserManager.GetUserAsync(User).Result.UserName, "", new { }, new { @href = UrlHelper.GetManageAccountUrl(), @class = "nav-link margin-right" })
 					</li>
 					<li class="nav-item active">
-						<button type="submit" class="btn btn-outline-success btn-nav my-2 my-sm-0 margin-left">Logout</button>
+						<button type="submit" class="btn btn-outline-success btn-nav my-2 my-sm-0">Logout</button>
 					</li>
 				</ul>
 			</form>

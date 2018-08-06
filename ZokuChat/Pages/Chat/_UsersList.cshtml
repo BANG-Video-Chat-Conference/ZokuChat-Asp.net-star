@@ -7,37 +7,29 @@
 @inject IContactRequestService ContactRequestService
 @inject Context Context
 
-<div class="container-fluid">
-	@foreach (User user in Model)
+@foreach (User user in Model)
+{
+	@if (!user.Equals(Context.CurrentUser))
 	{
-		@if (!user.Equals(Context.CurrentUser))
-		{
-			<div class="row">
-				<div class="col-sm">
-					<a href="@UrlHelper.GetViewUserUrl(user.Id)">@user.UserName</a>
-				</div>
+		<div class="card margin-lg-top" style="width: 500px;">
+			<div class="card-body">
+				@user.UserName
+			</div>
+			<div class="card-footer">
 				@if (ContactService.IsUserContact(Context.CurrentUser, user))
 				{
-					<div class="col-sm">
-						<button class="btn btn-danger">Remove Contact</button>
-					</div>
+					<button class="btn btn-danger">Remove Contact</button>
 				}
 				else if (ContactRequestService.HasActiveContactRequest(Context.CurrentUser, user))
 				{
-					<div class="col-sm">
-						<button class="btn btn-success" disabled>Request Sent</button>
-					</div>
+					<button class="btn btn-success" disabled>Request Sent</button>
 				}
 				else
 				{
-					<div class="col-sm">
-						<button class="btn btn-primary">Send Request</button>
-					</div>
+					<button class="btn btn-primary">Send Request</button>
 				}
-				<div class="col-sm">
-					<button class="btn btn-primary">Block User</button>
-				</div>
+				<button class="btn btn-danger float-right">Block User</button>
 			</div>
-		}
+		</div>
 	}
-</div>
+}
