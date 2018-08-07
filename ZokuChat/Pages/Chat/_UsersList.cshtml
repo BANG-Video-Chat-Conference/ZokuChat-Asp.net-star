@@ -1,6 +1,6 @@
 ﻿@model List<ZokuChat.Data.User>
-@using ZokuChat.Services
 @using ZokuChat.Models
+@using ZokuChat.Services
 
 @inject IContactService ContactService
 @inject IContactRequestService ContactRequestService
@@ -17,17 +17,13 @@
 			<div class="card-footer">
 				@if (ContactService.IsUserContact(DbContext.CurrentUser, user))
 				{
-					<button class="btn btn-danger">Remove Contact</button>
-				}
-				else if (ContactRequestService.HasActiveContactRequest(DbContext.CurrentUser, user))
-				{
-					<button class="btn btn-success" disabled>Request Sent</button>
+					@ZokuChat.Helpers.HtmlHelper.GetContactRemoveButton(ContactService.GetUserContact(DbContext.CurrentUser, user))
 				}
 				else
 				{
-					<button class="btn btn-primary">Send Request</button>
+					@ZokuChat.Helpers.HtmlHelper.GetContactRequestButton(DbContext, ContactRequestService, user)
 				}
-				<button class="btn btn-danger float-right">Block User</button>
+				@ZokuChat.Helpers.HtmlHelper.GetUserBlockButton(user, "float-right")
 			</div>
 		</div>
 	}
