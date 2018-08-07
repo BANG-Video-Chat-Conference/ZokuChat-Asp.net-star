@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using System;
 using ZokuChat.Data;
 using ZokuChat.Models;
 using ZokuChat.Services;
@@ -37,6 +38,15 @@ namespace ZokuChat.Helpers
 			}
 
 			return result;
+		}
+
+		public bool CanModifyContactRequest(User user, ContactRequest request)
+		{
+			// Validate
+			user.Should().NotBeNull();
+			request.Should().NotBeNull();
+
+			return request.IsContactRequestActive() && new Guid(request.RequestedUID).Equals(user.Id);
 		}
     }
 }

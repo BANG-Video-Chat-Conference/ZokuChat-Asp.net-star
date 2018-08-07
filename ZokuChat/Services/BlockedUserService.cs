@@ -76,5 +76,17 @@ namespace ZokuChat.Services
 
 			return _context.BlockedUsers.Any(b => new Guid(b.BlockerUID).Equals(blocker.Id) && new Guid(b.BlockedUID).Equals(user.Id));
 		}
+
+		public bool AreUsersBlocked(User user, User otherUser)
+		{
+			// Validate
+			user.Should().NotBeNull();
+			otherUser.Should().NotBeNull();
+
+			return _context.BlockedUsers
+				.Where(b => new Guid(b.BlockerUID).Equals(user.Id) && new Guid(b.BlockedUID).Equals(otherUser.Id))
+				.Where(b => new Guid(b.BlockerUID).Equals(otherUser.Id) && new Guid(b.BlockedUID).Equals(user.Id))
+				.Any();
+		}
 	}
 }

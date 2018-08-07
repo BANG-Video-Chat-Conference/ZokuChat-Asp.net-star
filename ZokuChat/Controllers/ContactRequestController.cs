@@ -32,7 +32,7 @@ namespace ZokuChat.Controllers
 		}
 
         [Route("Create")]
-        public JsonResult Create(Guid requestedUID)
+        public JsonResult CreateRequest(Guid requestedUID)
         {
 			GenericResponse result = new GenericResponse() { IsSuccessful = false };
 
@@ -65,5 +65,75 @@ namespace ZokuChat.Controllers
 
 			return new JsonResult(result);
         }
-    }
+
+		[Route("Accept")]
+		public JsonResult AcceptRequest(int requestId)
+		{
+			GenericResponse result = new GenericResponse() { IsSuccessful = false };
+
+			try
+			{
+				// Validate
+				requestId.Should().BeGreaterThan(0);
+
+				// Retrieve the requested user
+				ContactRequest request = _contactRequestService.GetContactRequest(requestId);
+
+				if (request != null && _contactRequestPermissionHelper.CanModifyContactRequest(_context.CurrentUser, request))
+				{
+					// Confirm the request
+					_contactRequestService.ConfirmContactRequest(_context.CurrentUser, request);
+
+					// If we got this far we're successful
+					result.IsSuccessful = true;
+				}
+				else
+				{
+					result.ErrorMessage = "You do not have permission to modify this contact request.";
+				}
+			}
+			catch (Exception e)
+			{
+				// Something went wrong, log the exception's message
+				result.ErrorMessage = e.Message;
+			}
+
+			return new JsonResult(result);
+		}
+
+		[Route("Cancel")]
+		public JsonResult CancelRequest(int requestId)
+		{
+			GenericResponse result = new GenericResponse() { IsSuccessful = false };
+
+			try
+			{
+				// Validate
+				requestId.Should().BeGreaterThan(0);
+
+				// Retrieve the requested user
+				ContactRequest request = _contactRequestService.GetContactRequest(requestId);
+
+				if (request != null && _contactRequestPermissionHelper.CanModifyContactRequest(_context.CurrentUser, request))
+				{
+					// Cancel the request
+					_contactRequestService.CancelContactRequest(_context.CurrentUser, request);
+
+					// If we got this far we're successful
+					result.IsSuccessful = true;
+				}
+				else
+				{
+					result.ErrorMessage = "You do not have permission to modify this contact request.";
+				}
+			}
+			catch (Exception e)
+			{
+				// Something went wrong, log the exception's message
+				result.ErrorMessage = e.Message;
+			}
+
+			return new JsonResult(result);
+		}
+	}
 }

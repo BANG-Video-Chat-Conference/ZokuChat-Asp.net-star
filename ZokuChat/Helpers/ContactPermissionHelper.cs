@@ -15,25 +15,14 @@ namespace ZokuChat.Helpers
 			_context = context;
 		}
 
-		public bool CanDeleteContact(User actionUser, int contactId)
+		public bool CanDeleteContact(User actionUser, Contact contact)
 		{
 			// Validate
 			actionUser.Should().NotBeNull();
-			contactId.Should().BeGreaterThan(0);
+			contact.Should().NotBeNull();
 
-			bool result;
-
-			if(_context.Contacts.Any(c => c.Id == contactId && new Guid(c.UserUID).Equals(new Guid(actionUser.Id))))
-			{
-				// The contact exists and is the action user's so return true
-				result = true;
-			}
-			else
-			{
-				result = false;
-			}
-
-			return result;
+			// Return whether or not the action user is part of the contact pair
+			return new Guid(contact.UserUID).Equals(actionUser.Id) || new Guid(contact.ContactUID).Equals(actionUser.Id);
 		}
     }
 }

@@ -1,26 +1,25 @@
 ﻿@model List<ZokuChat.Data.User>
-@using ZokuChat.Helpers
 @using ZokuChat.Services
 @using ZokuChat.Models
 
 @inject IContactService ContactService
 @inject IContactRequestService ContactRequestService
-@inject Context Context
+@inject Context DbContext
 
 @foreach (User user in Model)
 {
-	@if (!user.Equals(Context.CurrentUser))
+	@if (!user.Equals(DbContext.CurrentUser))
 	{
 		<div class="card margin-lg-top" style="width: 500px;">
 			<div class="card-body">
 				@user.UserName
 			</div>
 			<div class="card-footer">
-				@if (ContactService.IsUserContact(Context.CurrentUser, user))
+				@if (ContactService.IsUserContact(DbContext.CurrentUser, user))
 				{
 					<button class="btn btn-danger">Remove Contact</button>
 				}
-				else if (ContactRequestService.HasActiveContactRequest(Context.CurrentUser, user))
+				else if (ContactRequestService.HasActiveContactRequest(DbContext.CurrentUser, user))
 				{
 					<button class="btn btn-success" disabled>Request Sent</button>
 				}

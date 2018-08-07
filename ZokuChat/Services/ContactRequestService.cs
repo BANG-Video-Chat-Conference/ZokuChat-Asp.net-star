@@ -25,64 +25,52 @@ namespace ZokuChat.Services
 			return _context.ContactRequests.Where(r => r.Id == requestId).FirstOrDefault();
 		}
 
-		public void CancelContactRequest(User actionUser, int requestId)
+		public void CancelContactRequest(User actionUser, ContactRequest request)
 		{
 			// Validate
 			actionUser.Should().NotBeNull();
-			requestId.Should().BeGreaterThan(0);
+			request.Should().NotBeNull();
 
-			// Retrieve
-			ContactRequest request = GetContactRequest(requestId);
+			// Cancel
+			request.IsCancelled = true;
+			request.ModifiedUID = actionUser.Id;
+			request.ModifiedDateUtc = DateTime.UtcNow;
 
-			if (request != null)
-			{
-				// Cancel
-				request.IsCancelled = true;
-				request.ModifiedUID = actionUser.Id;
-				request.ModifiedDateUtc = DateTime.UtcNow;
-
-				// Save
-				_context.SaveChanges();
-			}
+			// Save
+			_context.SaveChanges();
 		}
 
-		public void ConfirmContactRequest(User actionUser, int requestId)
+		public void ConfirmContactRequest(User actionUser, ContactRequest request)
 		{
 			// Validate
 			actionUser.Should().NotBeNull();
-			requestId.Should().BeGreaterThan(0);
+			request.Should().NotBeNull();
 
-			// Retrieve
-			ContactRequest request = GetContactRequest(requestId);
+			// Confirm
+			request.IsConfirmed = true;
+			request.ModifiedUID = actionUser.Id;
+			request.ModifiedDateUtc = DateTime.UtcNow;
 
-			if (request != null)
+			// Add contact and paired contact
+			Contact contact = new Contact
 			{
-				// Confirm
-				request.IsConfirmed = true;
-				request.ModifiedUID = actionUser.Id;
-				request.ModifiedDateUtc = DateTime.UtcNow;
+				UserUID = request.RequestorUID,
+				ContactUID = request.RequestedUID
+			};
 
-				// Add contact and paired contact
-				Contact contact = new Contact
-				{
-					UserUID = request.RequestorUID,
-					ContactUID = request.RequestedUID
-				};
+			Contact pairedContact = new Contact
+			{
+				UserUID = request.RequestedUID,
+				ContactUID = request.RequestorUID
+			};
 
-				Contact pairedContact = new Contact
-				{
-					UserUID = request.RequestedUID,
-					ContactUID = request.RequestorUID
-				};
+			// Set the paired Ids
+			contact.PairedId = pairedContact.Id;
+			pairedContact.PairedId = contact.Id;
 
-				// Set the paired Ids
-				contact.PairedId = pairedContact.Id;
-				pairedContact.PairedId = contact.Id;
-
-				// Add contacts and save
-				_context.Contacts.AddRange(new Contact[] { contact, pairedContact });
-				_context.SaveChanges();
-			}
+			// Add contacts and save
+			_context.Contacts.AddRange(new Contact[] { contact, pairedContact });
+			_context.SaveChanges();
 		}
 
 		public void CreateContactRequest(User requestor, User requested)
