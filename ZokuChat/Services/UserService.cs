@@ -38,9 +38,10 @@ namespace ZokuChat.Services
 			// Validate
 			search.Should().NotBeNull();
 			search.SearchText.Should().NotBeNullOrWhiteSpace();
+			search.FilteredIds.Should().NotBeNull();
 
 			return _context.Users
-				.Where(u => u.UserName.Contains(search.SearchText))
+				.Where(u => u.UserName.Contains(search.SearchText) && !search.FilteredIds.Contains(new Guid(u.Id)))
 				.Take(search.MaxResults)
 				.ToList();
 		}

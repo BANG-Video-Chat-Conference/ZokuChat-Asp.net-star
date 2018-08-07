@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZokuChat.Data;
@@ -30,24 +29,37 @@ namespace ZokuChat.Pages.Chat.Contact
 
 		public void OnGet(string searchText)
         {
-			if (!String.IsNullOrWhiteSpace(searchText))
-			{
-				Users = _userService.GetUsers(new UserSearch { SearchText = searchText, MaxResults = 10 });
-			}
-			else
-			{
-				Users = new List<User>();
-			}
+			// Bind the search text to what was passed in before searching for users
+			SearchText = searchText;
+			RetrieveUsers();
         }
 
 		public void OnPost()
 		{
+			RetrieveUsers();
+		}
+
+		private void RetrieveUsers()
+		{
 			if (!String.IsNullOrWhiteSpace(SearchText))
 			{
-				Users = _userService.GetUsers(new UserSearch { SearchText = SearchText, MaxResults = 10 });
+				// Create search
+				List<Guid> blockedIds = _blockedUserService.GetUsersWhoBlockedUser(_context.CurrentUser).Select(u => new Guid(u.Id)).ToList();
+				blockedIds.AddRange(_blockedUserService.GetUsersBlockedUsers(_context.CurrentUser).Select(u => new Guid(u.BlockedUID)).ToList());
+
+				UserSearch search = new UserSearch
+				{
+					SearchText = SearchText,
+					MaxResults = 10,
+					FilteredIds = blockedIds
+				};
+
+				// Retrieve and set users
+				Users = _userService.GetUsers(search);
 			}
 			else
 			{
+				// Search text is empty or whitespace so set empty list
 				Users = new List<User>();
 			}
 		}

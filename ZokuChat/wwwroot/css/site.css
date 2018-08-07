@@ -89,3 +89,7 @@ button.btn-outline-success:hover {
 	color: #007bff;
 	text-decoration: none;
 }
+
+.card-user {
+	width: 500px;
+}

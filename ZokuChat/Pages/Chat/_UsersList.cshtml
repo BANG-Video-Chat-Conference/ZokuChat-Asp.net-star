@@ -10,7 +10,7 @@
 {
 	@if (!user.Equals(DbContext.CurrentUser))
 	{
-		<div class="card margin-lg-top" style="width: 500px;">
+		<div class="card card-user margin-lg-top">
 			<div class="card-body">
 				@user.UserName
 			</div>
@@ -23,7 +23,7 @@
 				{
 					@ZokuChat.Helpers.HtmlHelper.GetContactRequestButton(DbContext, ContactRequestService, user)
 				}
-				@ZokuChat.Helpers.HtmlHelper.GetUserBlockButton(user, "float-right")
+				@ZokuChat.Helpers.HtmlHelper.GetBlockUserButton(user, "float-right")
 			</div>
 		</div>
 	}

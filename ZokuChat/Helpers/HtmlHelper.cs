@@ -28,9 +28,14 @@ namespace ZokuChat.Helpers
 			return new HtmlString($"<button class='btn btn-danger {cssClasses}' onclick=''>Remove Contact</button>");
 		}
 
-		public static HtmlString GetUserBlockButton(User user, string cssClasses = "")
+		public static HtmlString GetBlockUserButton(User user, string cssClasses = "")
 		{
 			return new HtmlString($"<button class='btn btn-danger {cssClasses}' onclick=''>Block User</button>");
 		}
-    }
+
+		public static HtmlString GetUnblockUserButton(User user, string cssClasses = "")
+		{
+			return new HtmlString($"<button class='btn btn-danger {cssClasses}' onclick=''>Unblock User</button>");
+		}
+	}
 }
