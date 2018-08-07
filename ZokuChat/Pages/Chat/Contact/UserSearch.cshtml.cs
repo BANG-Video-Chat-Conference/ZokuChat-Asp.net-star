@@ -55,7 +55,7 @@ namespace ZokuChat.Pages.Chat.Contact
 				};
 
 				// Retrieve and set users
-				Users = _userService.GetUsers(search);
+				Users = _userService.GetUsers(search).ToList();
 			}
 			else
 			{

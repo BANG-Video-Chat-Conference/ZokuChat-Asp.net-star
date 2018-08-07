@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZokuChat.Models;
 using ZokuChat.Services;
@@ -20,7 +21,7 @@ namespace ZokuChat.Pages.Chat.Request
 
         public void OnGet()
         {
-			ContactRequests = _contactRequestService.GetContactRequestsToUser(_context.CurrentUser);
+			ContactRequests = _contactRequestService.GetContactRequestsToUser(_context.CurrentUser).ToList();
         }
     }
 }

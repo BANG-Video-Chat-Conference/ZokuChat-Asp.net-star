@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
 
@@ -11,6 +12,6 @@ namespace ZokuChat.Services
 
 		User GetUserByUserName(string userName);
 
-		List<User> GetUsers(UserSearch search);
+		IQueryable<User> GetUsers(UserSearch search);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
@@ -49,23 +48,23 @@ namespace ZokuChat.Services
 			_context.SaveChanges();
 		}
 
-		public List<BlockedUser> GetUsersBlockedUsers(User user)
+		public IQueryable<BlockedUser> GetUsersBlockedUsers(User user)
 		{
 			// Validate
 			user.Should().NotBeNull();
 
 			// Return the user's blocked users
-			return _context.BlockedUsers.Where(b => new Guid(b.BlockerUID).Equals(user.Id)).ToList();
+			return _context.BlockedUsers.Where(b => new Guid(b.BlockerUID).Equals(user.Id));
 		}
 
-		public List<User> GetUsersWhoBlockedUser(User user)
+		public IQueryable<User> GetUsersWhoBlockedUser(User user)
 		{
 			// Validate
 			user.Should().NotBeNull();
 
 			// Return list of users who blocked the user
-			List<Guid> blockerUIDs = _context.BlockedUsers.Where(b => new Guid(b.BlockedUID).Equals(user.Id)).Select(b => new Guid(b.BlockerUID)).ToList();
-			return _context.Users.Where(u => blockerUIDs.Contains(new Guid(u.Id))).ToList();
+			IQueryable<Guid> blockerUIDs = _context.BlockedUsers.Where(b => new Guid(b.BlockedUID).Equals(user.Id)).Select(b => new Guid(b.BlockerUID));
+			return _context.Users.Where(u => blockerUIDs.Contains(new Guid(u.Id)));
 		}
 
 		public bool IsUserBlocked(User user, User blocker)

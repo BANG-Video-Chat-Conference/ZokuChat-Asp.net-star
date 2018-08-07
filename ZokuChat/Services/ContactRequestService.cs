@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
@@ -99,20 +98,20 @@ namespace ZokuChat.Services
 			_context.SaveChanges();
 		}
 
-		public List<ContactRequest> GetContactRequestsFromUser(User user)
+		public IQueryable<ContactRequest> GetContactRequestsFromUser(User user)
 		{
 			// Validate
 			user.Should().NotBeNull();
 
-			return _context.ContactRequests.Where(r => new Guid(r.RequestorUID).Equals(user.Id)).ToList();
+			return _context.ContactRequests.Where(r => new Guid(r.RequestorUID).Equals(user.Id));
 		}
 
-		public List<ContactRequest> GetContactRequestsToUser(User user)
+		public IQueryable<ContactRequest> GetContactRequestsToUser(User user)
 		{
 			// Validate
 			user.Should().NotBeNull();
 
-			return _context.ContactRequests.Where(r => new Guid(r.RequestedUID).Equals(user.Id)).ToList();
+			return _context.ContactRequests.Where(r => new Guid(r.RequestedUID).Equals(user.Id));
 		}
 
 		public bool HasActiveContactRequest(User requestor, User requested)
@@ -122,20 +121,20 @@ namespace ZokuChat.Services
 			requested.Should().NotBeNull();
 
 			// Get fromUser's contact requests for toUser
-			List<ContactRequest> requests = GetUsersContactRequestsByUser(requestor, requested);
+			IQueryable<ContactRequest> requests = GetUsersContactRequestsByUser(requestor, requested);
 
 			// See if there are any active ones
 			return requests.Any(r => r.IsContactRequestActive());
 		}
 
-		public List<ContactRequest> GetUsersContactRequestsByUser(User requestor, User requested)
+		public IQueryable<ContactRequest> GetUsersContactRequestsByUser(User requestor, User requested)
 		{
 			// Validate
 			requestor.Should().NotBeNull();
 			requested.Should().NotBeNull();
 
 			// Return fromUser's contact requests to toUser
-			return _context.ContactRequests.Where(r => new Guid(r.RequestorUID).Equals(requestor.Id) && new Guid(r.RequestedUID).Equals(requested.Id)).ToList();
+			return _context.ContactRequests.Where(r => new Guid(r.RequestorUID).Equals(requestor.Id) && new Guid(r.RequestedUID).Equals(requested.Id));
 		}
 	}
 }

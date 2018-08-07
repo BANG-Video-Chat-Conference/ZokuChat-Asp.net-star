@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
 
@@ -14,8 +15,8 @@ namespace ZokuChat.Services
 
 		bool AreUsersBlocked(User user, User otherUser);
 
-		List<BlockedUser> GetUsersBlockedUsers(User user);
+		IQueryable<BlockedUser> GetUsersBlockedUsers(User user);
 
-		List<User> GetUsersWhoBlockedUser(User user);
+		IQueryable<User> GetUsersWhoBlockedUser(User user);
     }
 }

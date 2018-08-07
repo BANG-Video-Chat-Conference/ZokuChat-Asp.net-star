@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
 
@@ -7,9 +6,9 @@ namespace ZokuChat.Services
 {
     public interface IContactRequestService
     {
-		List<ContactRequest> GetContactRequestsToUser(User user);
+		IQueryable<ContactRequest> GetContactRequestsToUser(User user);
 
-		List<ContactRequest> GetContactRequestsFromUser(User user);
+		IQueryable<ContactRequest> GetContactRequestsFromUser(User user);
 
 		void CreateContactRequest(User fromUser, User toUser);
 
@@ -19,7 +18,7 @@ namespace ZokuChat.Services
 
 		ContactRequest GetContactRequest(int requestId);
 
-		List<ContactRequest> GetUsersContactRequestsByUser(User fromUser, User toUser);
+		IQueryable<ContactRequest> GetUsersContactRequestsByUser(User fromUser, User toUser);
 
 		bool HasActiveContactRequest(User fromUser, User toUser);
 	}

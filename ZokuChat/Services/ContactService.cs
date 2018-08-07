@@ -35,13 +35,13 @@ namespace ZokuChat.Services
 			return _context.Contacts.Where(c => new Guid(c.UserUID).Equals(user.Id) && new Guid(c.ContactUID).Equals(contact.Id)).FirstOrDefault();
 		}
 
-		public List<Contact> GetUserContacts(User user)
+		public IQueryable<Contact> GetUserContacts(User user)
 		{
 			// Validate
 			user.Should().NotBeNull();
 
 			// Retrieve the user's contacts
-			return _context.Contacts.Where(c => new Guid(c.UserUID).Equals(user.Id)).ToList();
+			return _context.Contacts.Where(c => new Guid(c.UserUID).Equals(user.Id));
 		}
 
 		public void DeleteContact(Contact contact)

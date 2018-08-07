@@ -26,7 +26,7 @@ namespace ZokuChat.Pages.Chat.Contact
 
 		public void OnGet()
 		{
-			_contacts = _contactService.GetUserContacts(_context.CurrentUser);
+			_contacts = _contactService.GetUserContacts(_context.CurrentUser).ToList();
 		}
     }
 }

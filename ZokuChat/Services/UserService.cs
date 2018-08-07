@@ -33,7 +33,7 @@ namespace ZokuChat.Services
 			return _context.Users.Where(u => u.UserName.Equals(userName)).FirstOrDefault();
 		}
 
-		public List<User> GetUsers(UserSearch search)
+		public IQueryable<User> GetUsers(UserSearch search)
 		{
 			// Validate
 			search.Should().NotBeNull();
@@ -42,8 +42,7 @@ namespace ZokuChat.Services
 
 			return _context.Users
 				.Where(u => u.UserName.Contains(search.SearchText) && !search.FilteredIds.Contains(new Guid(u.Id)))
-				.Take(search.MaxResults)
-				.ToList();
+				.Take(search.MaxResults);
 		}
 	}
 }
