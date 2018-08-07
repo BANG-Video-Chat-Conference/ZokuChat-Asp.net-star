@@ -1,2 +1,1 @@
-﻿window.ZokuChat = window.ZokuChat | {};
-
+﻿window.ZokuChat = window.ZokuChat || {};

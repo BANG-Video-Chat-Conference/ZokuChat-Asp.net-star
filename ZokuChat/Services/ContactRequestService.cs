@@ -91,27 +91,24 @@ namespace ZokuChat.Services
 			requestor.Should().NotBeNull();
 			requested.Should().NotBeNull();
 
-			if (!HasActiveContactRequest(requestor, requested))
+			// Active contact request does not already exist so create one
+			DateTime now = DateTime.UtcNow;
+
+			ContactRequest request = new ContactRequest
 			{
-				// Active contact request does not already exist so create one
-				DateTime now = DateTime.UtcNow;
+				RequestorUID = requestor.Id.ToString(),
+				RequestedUID = requested.Id.ToString(),
+				IsCancelled = false,
+				IsConfirmed = false,
+				CreatedUID = requestor.ToString(),
+				CreatedDateUtc = now,
+				ModifiedUID = requestor.Id.ToString(),
+				ModifiedDateUtc = now
+			};
 
-				ContactRequest request = new ContactRequest
-				{
-					RequestorUID = requestor.Id.ToString(),
-					RequestedUID = requested.Id.ToString(),
-					IsCancelled = false,
-					IsConfirmed = false,
-					CreatedUID = requestor.ToString(),
-					CreatedDateUtc = now,
-					ModifiedUID = requestor.Id.ToString(),
-					ModifiedDateUtc = now
-				};
-
-				// Save
-				_context.ContactRequests.Add(request);
-				_context.SaveChanges();
-			}
+			// Save
+			_context.ContactRequests.Add(request);
+			_context.SaveChanges();
 		}
 
 		public List<ContactRequest> GetContactRequestsFromUser(User user)

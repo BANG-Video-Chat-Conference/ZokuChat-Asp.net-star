@@ -8,11 +8,13 @@ namespace ZokuChat.Helpers
 	public class ContactRequestPermissionHelper
 	{
 		private readonly Context _context;
+		private readonly IContactService _contactService;
 		private readonly IContactRequestService _contactRequestService;
 
-		public ContactRequestPermissionHelper(Context context, IContactRequestService contactRequestService)
+		public ContactRequestPermissionHelper(Context context, IContactService contactService, IContactRequestService contactRequestService)
 		{
 			_context = context;
+			_contactService = contactService;
 			_contactRequestService = contactRequestService;
 		}
 
@@ -24,9 +26,9 @@ namespace ZokuChat.Helpers
 
 			bool result;
 
-			if (_contactRequestService.HasActiveContactRequest(requestor, requested))
+			if (_contactRequestService.HasActiveContactRequest(requestor, requested) || _contactService.IsUserContact(requestor, requested))
 			{
-				// An active contact request already exists so return false
+				// The contact or active request already exists so return false
 				result = false;
 			}
 			else
