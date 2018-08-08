@@ -13,29 +13,33 @@ namespace ZokuChat.Helpers
 			User user,
 			string cssClasses = "")
 		{
-			if (contactRequestService.HasActiveContactRequest(context.CurrentUser, user))
+			if (contactRequestService.HasActiveContactRequest(user, context.CurrentUser))
 			{
-				return new HtmlString($"<button class='btn btn-success {cssClasses}' onclick='' disabled>Request Sent</button>");
+				return new HtmlString($"<button class='btn btn-success {cssClasses}' onclick=\"window.ZokuChat.AcceptRequestButtonClick($(this), '{user.Id}');\">Accept Request</button>");
+			}
+			else if (contactRequestService.HasActiveContactRequest(context.CurrentUser, user))
+			{
+				return new HtmlString($"<button class='btn btn-success {cssClasses}' disabled>Request Sent</button>");
 			}
 			else
 			{
-				return new HtmlString($"<button class='btn btn-primary {cssClasses}' onclick=''>Send Request</button>");
+				return new HtmlString($"<button class='btn btn-primary {cssClasses}' onclick=\"window.ZokuChat.SendRequestButtonClick($(this), '{user.Id}');\">Send Request</button>");
 			}
 		}
 
 		public static HtmlString GetContactRemoveButton(Contact contact, string cssClasses = "")
 		{
-			return new HtmlString($"<button class='btn btn-danger {cssClasses}' onclick=''>Remove Contact</button>");
+			return new HtmlString($"<button class='btn btn-danger {cssClasses}' onclick=\"\">Remove Contact</button>");
 		}
 
 		public static HtmlString GetBlockUserButton(User user, string cssClasses = "")
 		{
-			return new HtmlString($"<button class='btn btn-danger {cssClasses}' onclick=''>Block User</button>");
+			return new HtmlString($"<button class='btn btn-danger {cssClasses}' onclick=\"window.ZokuChat.BlockUserButtonClick($(this), '{user.Id}');\">Block User</button>");
 		}
 
 		public static HtmlString GetUnblockUserButton(User user, string cssClasses = "")
 		{
-			return new HtmlString($"<button class='btn btn-danger {cssClasses}' onclick=''>Unblock User</button>");
+			return new HtmlString($"<button class='btn btn-danger {cssClasses}' onclick=\"window.ZokuChat.UnblockUserButtonClick($(this), '{user.Id}');\">Unblock User</button>");
 		}
 	}
 }
