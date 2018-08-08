@@ -1,0 +1,18 @@
+﻿@model BlockedUser
+@using ZokuChat.Models
+@using ZokuChat.Services
+
+@inject IUserService UserService
+@inject Context DbContext
+
+<div class="card card-user">
+	<div class="card-body">
+		<div>
+			@UserService.GetUserByUID(new Guid(Model.BlockedUID)).UserName
+		</div>
+		<i>Blocked on @Model.CreatedDateUtc</i>
+	</div>
+	<div class="card-footer">
+		@ZokuChat.Helpers.HtmlHelper.GetUnblockUserButton(UserService.GetUserByUID(new Guid(Model.BlockedUID)), "float-right")
+	</div>
+</div>

@@ -4,9 +4,24 @@
 	ViewData["Title"] = "Blocked Users";
 }
 
-<partial name="_SiteHeader" />
-<partial name="_ManageSidebar" />
-<div class="content">
-	<h3>Blocked Users</h3>
+@using ZokuChat.Models
 
+<partial name="_SiteHeader" />
+<div class="content-container">
+	<partial name="_ManageSidebar" />
+	<div class="content">
+		<h3>Blocked Users</h3>
+		@foreach (BlockedUser blockedUser in Model.BlockedUsers)
+		{
+			<div class="margin-lg-top">
+				<partial name="_BlockedUserCard" model="blockedUser" />
+			</div>
+		}
+		@if (!Model.BlockedUsers.Any())
+		{
+			<div class="alert alert-primary margin-lg-top">
+				You do not currently have any blocked users.
+			</div>
+		}
+	</div>
 </div>
