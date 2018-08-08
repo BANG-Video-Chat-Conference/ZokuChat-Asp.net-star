@@ -1,0 +1,24 @@
+﻿@model User
+@using ZokuChat.Models
+@using ZokuChat.Services
+
+@inject IContactService ContactService
+@inject IContactRequestService ContactRequestService
+@inject Context DbContext
+
+<div class="card card-user">
+	<div class="card-body">
+		@Model.UserName
+	</div>
+	<div class="card-footer">
+		@if (ContactService.IsUserContact(DbContext.CurrentUser, Model))
+		{
+			@ZokuChat.Helpers.HtmlHelper.GetContactRemoveButton(ContactService.GetUserContact(DbContext.CurrentUser, Model))
+		}
+		else
+		{
+			@ZokuChat.Helpers.HtmlHelper.GetContactRequestButton(DbContext, ContactRequestService, Model)
+		}
+		@ZokuChat.Helpers.HtmlHelper.GetBlockUserButton(Model, "float-right")
+	</div>
+</div>

@@ -44,11 +44,11 @@ html, body {
 }
 
 .nav-link:hover {
-	color: #db94b9;
+	color: #db94b9 !important;
 }
 
 .navbar-brand:hover {
-	color: #db94b9;
+	color: #db94b9 !important;
 }
 
 .btn-outline-success:hover {
@@ -92,4 +92,5 @@ html, body {
 
 .card-user {
 	width: 500px;
+	border-radius: 0;
 }

@@ -48,7 +48,7 @@ namespace ZokuChat.Services
 			_context.SaveChanges();
 		}
 
-		public IQueryable<BlockedUser> GetUsersBlockedUsers(User user)
+		public IQueryable<BlockedUser> GetBlockedUsersForUser(User user)
 		{
 			// Validate
 			user.Should().NotBeNull();

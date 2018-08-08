@@ -15,7 +15,7 @@ namespace ZokuChat.Services
 
 		bool AreUsersBlocked(User user, User otherUser);
 
-		IQueryable<BlockedUser> GetUsersBlockedUsers(User user);
+		IQueryable<BlockedUser> GetBlockedUsersForUser(User user);
 
 		IQueryable<User> GetUsersWhoBlockedUser(User user);
     }

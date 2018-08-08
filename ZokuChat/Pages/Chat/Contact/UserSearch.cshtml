@@ -23,6 +23,17 @@
 				</div>
 			</div>
 		</form>
-		<partial name="_UsersList" for="Users" />
+		@foreach (User user in Model.Users)
+		{
+			<div class="margin-lg-top">
+				<partial name="_UserCard" model="user" />
+			</div>
+		}
+		@if (!String.IsNullOrWhiteSpace(Model.SearchMessage))
+		{
+			<div class="alert alert-primary margin-lg-top">
+				@Model.SearchMessage
+			</div>
+		}
 	</div>
 </div>

@@ -26,41 +26,53 @@ namespace ZokuChat.Pages.Chat.Contact
 		public string SearchText { get; set; }
 
 		public List<User> Users;
+		public string SearchMessage;
 
 		public void OnGet(string searchText)
         {
 			// Bind the search text to what was passed in before searching for users
 			SearchText = searchText;
-			RetrieveUsers();
+			Search();
         }
 
 		public void OnPost()
 		{
-			RetrieveUsers();
+			Search();
 		}
 
-		private void RetrieveUsers()
+		private void Search()
 		{
 			if (!String.IsNullOrWhiteSpace(SearchText))
 			{
-				// Create search
-				List<Guid> blockedIds = _blockedUserService.GetUsersWhoBlockedUser(_context.CurrentUser).Select(u => new Guid(u.Id)).ToList();
-				blockedIds.AddRange(_blockedUserService.GetUsersBlockedUsers(_context.CurrentUser).Select(u => new Guid(u.BlockedUID)).ToList());
+				// Create a query for blocked Ids (current user's blocked users and users who blocked current user) 
+				List<Guid> filteredIds =
+					_blockedUserService.GetUsersWhoBlockedUser(_context.CurrentUser).Select(u => new Guid(u.Id))
+					.Union(_blockedUserService.GetBlockedUsersForUser(_context.CurrentUser).Select(u => new Guid(u.BlockedUID))).ToList();
 
+				// Add the curernt user's id to filtered Ids
+				filteredIds.Add(new Guid(_context.CurrentUser.Id));
+
+				// Create the search
 				UserSearch search = new UserSearch
 				{
 					SearchText = SearchText,
 					MaxResults = 10,
-					FilteredIds = blockedIds
+					FilteredIds = filteredIds
 				};
 
 				// Retrieve and set users
 				Users = _userService.GetUsers(search).ToList();
+
+				if (!Users.Any())
+				{
+					SearchMessage = "No users could be found matching the search criteria.";
+				}
 			}
 			else
 			{
 				// Search text is empty or whitespace so set empty list
 				Users = new List<User>();
+				SearchMessage = "Search for users by entering a username or part of one and clicking the Search button.";
 			}
 		}
     }
