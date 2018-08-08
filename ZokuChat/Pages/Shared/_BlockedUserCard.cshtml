@@ -1,4 +1,5 @@
 ﻿@model BlockedUser
+@using ZokuChat.Extensions
 @using ZokuChat.Models
 @using ZokuChat.Services
 
@@ -10,7 +11,7 @@
 		<div>
 			@UserService.GetUserByUID(Model.BlockedUID).UserName
 		</div>
-		<i>Blocked on @Model.CreatedDateUtc</i>
+		<i class="text-muted">Blocked on @Model.CreatedDateUtc.ToZokuChatDateTimeString()</i>
 	</div>
 	<div class="card-footer">
 		@ZokuChat.Helpers.HtmlHelper.GetUnblockUserButton(UserService.GetUserByUID(Model.BlockedUID))
