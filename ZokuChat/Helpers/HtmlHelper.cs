@@ -15,7 +15,10 @@ namespace ZokuChat.Helpers
 		{
 			if (contactRequestService.HasActiveContactRequest(user, context.CurrentUser))
 			{
-				return new HtmlString($"<button class='btn btn-success {cssClasses}' onclick=\"window.ZokuChat.AcceptRequestButtonClick($(this), '{user.Id}');\">Accept Request</button>");
+				return new HtmlString(
+					$"<button class='btn btn-success {cssClasses} margin-right' onclick=\"window.ZokuChat.AcceptRequestButtonClick($(this), '{user.Id}');\">Accept Request</button>" +
+					$"<button class='btn btn-success {cssClasses}' onclick=\"window.ZokuChat.CancelRequestButtonClick($(this), '{user.Id}');\">Accept Request</button>"
+				);
 			}
 			else if (contactRequestService.HasActiveContactRequest(context.CurrentUser, user))
 			{
@@ -29,7 +32,7 @@ namespace ZokuChat.Helpers
 
 		public static HtmlString GetContactRemoveButton(Contact contact, string cssClasses = "")
 		{
-			return new HtmlString($"<button class='btn btn-danger {cssClasses}' onclick=\"\">Remove Contact</button>");
+			return new HtmlString($"<button class='btn btn-danger {cssClasses}' onclick=\"window.ZokuChat.RemoveContactButtonClick($(this), '{contact.Id}')\">Remove Contact</button>");
 		}
 
 		public static HtmlString GetBlockUserButton(User user, string cssClasses = "")
@@ -39,7 +42,7 @@ namespace ZokuChat.Helpers
 
 		public static HtmlString GetUnblockUserButton(User user, string cssClasses = "")
 		{
-			return new HtmlString($"<button class='btn btn-danger {cssClasses}' onclick=\"window.ZokuChat.UnblockUserButtonClick($(this), '{user.Id}');\">Unblock User</button>");
+			return new HtmlString($"<button class='btn btn-primary {cssClasses}' onclick=\"window.ZokuChat.UnblockUserButtonClick($(this), '{user.Id}');\">Unblock User</button>");
 		}
 	}
 }

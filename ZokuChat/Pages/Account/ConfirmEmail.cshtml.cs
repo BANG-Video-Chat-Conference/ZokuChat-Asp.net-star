@@ -36,7 +36,7 @@ namespace ZokuChat.Pages.Account
         {
 			if (!userId.Equals(Guid.Empty) && !String.IsNullOrWhiteSpace(code))
 			{
-				User user = _userManager.Users.FirstOrDefault(u => new Guid(u.Id).Equals(userId));
+				User user = _userManager.Users.FirstOrDefault(u => u.Id.Equals(userId));
 				
 				if (user != null)
 				{

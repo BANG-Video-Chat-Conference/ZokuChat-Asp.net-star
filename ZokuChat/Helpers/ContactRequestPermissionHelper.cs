@@ -46,7 +46,7 @@ namespace ZokuChat.Helpers
 			user.Should().NotBeNull();
 			request.Should().NotBeNull();
 
-			return request.IsContactRequestActive() && new Guid(request.RequestedUID).Equals(user.Id);
+			return request.IsContactRequestActive() && request.RequestedUID.Equals(user.Id);
 		}
     }
 }

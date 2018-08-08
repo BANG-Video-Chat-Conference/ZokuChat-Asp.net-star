@@ -17,34 +17,31 @@ namespace ZokuChat.Controllers
 		private readonly Context _context;
 		private readonly IUserService _userService;
 		private readonly IBlockedUserService _blockedUserService;
-		private readonly BlockedUserPermissionHelper _blockedUserPermissionHelper;
 
 		public BlockedUserController(
 			Context context,
 			IUserService userService,
-			IBlockedUserService blockedUserService,
-			BlockedUserPermissionHelper blockedUserPermissionHelper)
+			IBlockedUserService blockedUserService)
 		{
 			_context = context;
 			_userService = userService;
 			_blockedUserService = blockedUserService;
-			_blockedUserPermissionHelper = blockedUserPermissionHelper;
 		}
 
         [Route("Block")]
-        public JsonResult BlockUser(Guid blockedUID)
+        public JsonResult BlockUser(string blockedUID)
         {
 			GenericResponse result = new GenericResponse() { IsSuccessful = false };
 
 			try
 			{
 				// Validate
-				blockedUID.Should().NotBeEmpty();
+				blockedUID.Should().NotBeNullOrWhiteSpace();
 
 				// Retrieve the requested user
 				User blocked = _userService.GetUserByUID(blockedUID);
 
-				if (blocked != null && _blockedUserPermissionHelper.CanBlockUser(_context.CurrentUser, blocked))
+				if (blocked != null && BlockedUserPermissionHelper.CanBlockUser(_blockedUserService, _context.CurrentUser, blocked))
 				{
 					// Block the user
 					_blockedUserService.BlockUser(_context.CurrentUser, blocked);
@@ -67,19 +64,19 @@ namespace ZokuChat.Controllers
         }
 
 		[Route("Unblock")]
-		public JsonResult UnblockUser(Guid blockedUID)
+		public JsonResult UnblockUser(string blockedUID)
 		{
 			GenericResponse result = new GenericResponse() { IsSuccessful = false };
 
 			try
 			{
 				// Validate
-				blockedUID.Should().NotBeEmpty();
+				blockedUID.Should().NotBeNullOrWhiteSpace();
 
 				// Retrieve the requested user
 				User blocked = _userService.GetUserByUID(blockedUID);
 
-				if (blocked != null && _blockedUserPermissionHelper.CanUnblockUser(_context.CurrentUser, blocked))
+				if (blocked != null && BlockedUserPermissionHelper.CanUnblockUser(_blockedUserService, _context.CurrentUser, blocked))
 				{
 					// Ublock the user
 					_blockedUserService.UnblockUser(_context.CurrentUser, blocked);

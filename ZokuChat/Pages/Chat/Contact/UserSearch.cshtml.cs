@@ -45,12 +45,12 @@ namespace ZokuChat.Pages.Chat.Contact
 			if (!String.IsNullOrWhiteSpace(SearchText))
 			{
 				// Create a query for blocked Ids (current user's blocked users and users who blocked current user) 
-				List<Guid> filteredIds =
-					_blockedUserService.GetUsersWhoBlockedUser(_context.CurrentUser).Select(u => new Guid(u.Id))
-					.Union(_blockedUserService.GetBlockedUsersForUser(_context.CurrentUser).Select(u => new Guid(u.BlockedUID))).ToList();
+				List<string> filteredIds =
+					_blockedUserService.GetUsersWhoBlockedUser(_context.CurrentUser).Select(u => u.Id)
+					.Union(_blockedUserService.GetBlockedUsersForUser(_context.CurrentUser).Select(u => u.BlockedUID)).ToList();
 
 				// Add the curernt user's id to filtered Ids
-				filteredIds.Add(new Guid(_context.CurrentUser.Id));
+				filteredIds.Add(_context.CurrentUser.Id);
 
 				// Create the search
 				UserSearch search = new UserSearch

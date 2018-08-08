@@ -31,7 +31,9 @@ namespace ZokuChat.Services
 					BlockerUID = blocker.Id,
 					BlockedUID = blocked.Id,
 					CreatedUID = blocker.Id,
-					CreatedDateUtc = now
+					CreatedDateUtc = now,
+					ModifiedUID = blocker.Id,
+					ModifiedDateUtc = now
 				});
 				_context.SaveChanges();
 			}
@@ -44,7 +46,7 @@ namespace ZokuChat.Services
 			blocked.Should().NotBeNull();
 
 			// Unblock user and save
-			_context.BlockedUsers.RemoveRange(_context.BlockedUsers.Where(b => new Guid(b.BlockerUID).Equals(blocker.Id) && new Guid(b.BlockedUID).Equals(blocked.Id)));
+			_context.BlockedUsers.RemoveRange(_context.BlockedUsers.Where(b => b.BlockerUID.Equals(blocker.Id) && b.BlockedUID.Equals(blocked.Id)));
 			_context.SaveChanges();
 		}
 
@@ -54,7 +56,7 @@ namespace ZokuChat.Services
 			user.Should().NotBeNull();
 
 			// Return the user's blocked users
-			return _context.BlockedUsers.Where(b => new Guid(b.BlockerUID).Equals(user.Id));
+			return _context.BlockedUsers.Where(b => b.BlockerUID.Equals(user.Id));
 		}
 
 		public IQueryable<User> GetUsersWhoBlockedUser(User user)
@@ -63,8 +65,8 @@ namespace ZokuChat.Services
 			user.Should().NotBeNull();
 
 			// Return list of users who blocked the user
-			IQueryable<Guid> blockerUIDs = _context.BlockedUsers.Where(b => new Guid(b.BlockedUID).Equals(user.Id)).Select(b => new Guid(b.BlockerUID));
-			return _context.Users.Where(u => blockerUIDs.Contains(new Guid(u.Id)));
+			IQueryable<string> blockerUIDs = _context.BlockedUsers.Where(b => b.BlockedUID.Equals(user.Id)).Select(b => b.BlockerUID);
+			return _context.Users.Where(u => blockerUIDs.Contains(u.Id));
 		}
 
 		public bool IsUserBlocked(User user, User blocker)
@@ -73,7 +75,7 @@ namespace ZokuChat.Services
 			user.Should().NotBeNull();
 			blocker.Should().NotBeNull();
 
-			return _context.BlockedUsers.Any(b => new Guid(b.BlockerUID).Equals(blocker.Id) && new Guid(b.BlockedUID).Equals(user.Id));
+			return _context.BlockedUsers.Any(b => b.BlockerUID.Equals(blocker.Id) && b.BlockedUID.Equals(user.Id));
 		}
 
 		public bool AreUsersBlocked(User user, User otherUser)
@@ -83,8 +85,8 @@ namespace ZokuChat.Services
 			otherUser.Should().NotBeNull();
 
 			return _context.BlockedUsers
-				.Where(b => new Guid(b.BlockerUID).Equals(user.Id) && new Guid(b.BlockedUID).Equals(otherUser.Id))
-				.Where(b => new Guid(b.BlockerUID).Equals(otherUser.Id) && new Guid(b.BlockedUID).Equals(user.Id))
+				.Where(b => b.BlockerUID.Equals(user.Id) && b.BlockedUID.Equals(otherUser.Id))
+				.Where(b => b.BlockerUID.Equals(otherUser.Id) && b.BlockedUID.Equals(user.Id))
 				.Any();
 		}
 	}

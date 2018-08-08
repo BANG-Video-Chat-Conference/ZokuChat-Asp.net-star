@@ -17,12 +17,12 @@ namespace ZokuChat.Services
 			_context = context;
 		}
 
-		public User GetUserByUID(Guid UID)
+		public User GetUserByUID(string UID)
 		{
 			// Validate
 			UID.Should().NotBeEmpty();
 
-			return _context.Users.Where(u => new Guid(u.Id).Equals(UID)).FirstOrDefault();
+			return _context.Users.Where(u => u.Id.Equals(UID)).FirstOrDefault();
 		}
 
 		public User GetUserByUserName(string userName)
@@ -41,7 +41,7 @@ namespace ZokuChat.Services
 			search.FilteredIds.Should().NotBeNull();
 
 			return _context.Users
-				.Where(u => u.UserName.Contains(search.SearchText) && !search.FilteredIds.Contains(new Guid(u.Id)))
+				.Where(u => u.UserName.Contains(search.SearchText) && !search.FilteredIds.Contains(u.Id))
 				.Take(search.MaxResults);
 		}
 	}

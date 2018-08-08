@@ -8,7 +8,7 @@ namespace ZokuChat.Services
 {
     public interface IUserService
     {
-		User GetUserByUID(Guid UID);
+		User GetUserByUID(string UID);
 
 		User GetUserByUserName(string userName);
 

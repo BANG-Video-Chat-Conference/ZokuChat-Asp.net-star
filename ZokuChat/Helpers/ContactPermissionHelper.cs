@@ -22,7 +22,7 @@ namespace ZokuChat.Helpers
 			contact.Should().NotBeNull();
 
 			// Return whether or not the action user is part of the contact pair
-			return new Guid(contact.UserUID).Equals(actionUser.Id) || new Guid(contact.ContactUID).Equals(actionUser.Id);
+			return contact.UserUID.Equals(actionUser.Id) || contact.ContactUID.Equals(actionUser.Id);
 		}
     }
 }

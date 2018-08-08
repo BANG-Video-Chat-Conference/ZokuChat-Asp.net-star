@@ -7,7 +7,7 @@ namespace ZokuChat.Models
 	{
 		public string SearchText { get; set; } = string.Empty;
 
-		public List<Guid> FilteredIds { get; set; } = new List<Guid>();
+		public List<string> FilteredIds { get; set; } = new List<string>();
 
 		public int MaxResults { get; set; } = 20;
     }

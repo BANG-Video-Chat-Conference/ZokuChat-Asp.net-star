@@ -32,14 +32,14 @@ namespace ZokuChat.Controllers
 		}
 
         [Route("Create")]
-        public JsonResult CreateRequest(Guid requestedUID)
+        public JsonResult CreateRequest(string requestedUID)
         {
 			GenericResponse result = new GenericResponse() { IsSuccessful = false };
 
 			try
 			{
 				// Validate
-				requestedUID.Should().NotBeEmpty();
+				requestedUID.Should().NotBeNullOrWhiteSpace();
 
 				// Retrieve the requested user
 				User requested = _userService.GetUserByUID(requestedUID);

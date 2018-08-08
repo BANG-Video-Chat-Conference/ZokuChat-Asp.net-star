@@ -21,5 +21,12 @@ namespace ZokuChat.Models
 
 		[Required]
 		public DateTime CreatedDateUtc { get; set; }
+
+		[StringLength(450)]
+		[Required]
+		public string ModifiedUID { get; set; }
+
+		[Required]
+		public DateTime ModifiedDateUtc { get; set; }
 	}
 }

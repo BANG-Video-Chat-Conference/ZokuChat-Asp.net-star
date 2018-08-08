@@ -32,7 +32,7 @@ namespace ZokuChat.Services
 			contact.Should().NotBeNull();
 
 			// Retrieve the contact
-			return _context.Contacts.Where(c => new Guid(c.UserUID).Equals(user.Id) && new Guid(c.ContactUID).Equals(contact.Id)).FirstOrDefault();
+			return _context.Contacts.Where(c => c.UserUID.Equals(user.Id) && c.ContactUID.Equals(contact.Id)).FirstOrDefault();
 		}
 
 		public IQueryable<Contact> GetUserContacts(User user)
@@ -41,7 +41,7 @@ namespace ZokuChat.Services
 			user.Should().NotBeNull();
 
 			// Retrieve the user's contacts
-			return _context.Contacts.Where(c => new Guid(c.UserUID).Equals(user.Id));
+			return _context.Contacts.Where(c => c.UserUID.Equals(user.Id));
 		}
 
 		public void DeleteContact(Contact contact)
@@ -63,7 +63,7 @@ namespace ZokuChat.Services
 			user.Should().NotBeNull();
 			contact.Should().NotBeNull();
 
-			return _context.Contacts.Any(c => new Guid(c.UserUID).Equals(user.Id) && new Guid(c.ContactUID).Equals(contact.Id));
+			return _context.Contacts.Any(c => c.UserUID.Equals(user.Id) && c.ContactUID.Equals(contact.Id));
 		}
 	}
 }

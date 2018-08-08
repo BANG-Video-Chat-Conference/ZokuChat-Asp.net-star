@@ -27,11 +27,7 @@ namespace ZokuChat.Pages.Chat.Contact
 
         public void OnGet(string userId)
         {
-			Guid parsedGuid;
-			if (Guid.TryParse(userId, out parsedGuid))
-			{
-				ViewedUser = _userService.GetUserByUID(parsedGuid);
-			}
+			ViewedUser = _userService.GetUserByUID(userId);
 
 			if (ViewedUser == null || _blockedUserService.IsUserBlocked(_context.CurrentUser, ViewedUser))
 			{

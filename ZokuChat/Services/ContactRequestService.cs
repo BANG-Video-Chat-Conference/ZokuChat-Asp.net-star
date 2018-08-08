@@ -103,7 +103,7 @@ namespace ZokuChat.Services
 			// Validate
 			user.Should().NotBeNull();
 
-			return _context.ContactRequests.Where(r => new Guid(r.RequestorUID).Equals(user.Id));
+			return _context.ContactRequests.Where(r => r.RequestorUID.Equals(user.Id));
 		}
 
 		public IQueryable<ContactRequest> GetContactRequestsToUser(User user)
@@ -111,7 +111,7 @@ namespace ZokuChat.Services
 			// Validate
 			user.Should().NotBeNull();
 
-			return _context.ContactRequests.Where(r => new Guid(r.RequestedUID).Equals(user.Id));
+			return _context.ContactRequests.Where(r => r.RequestedUID.Equals(user.Id));
 		}
 
 		public bool HasActiveContactRequest(User requestor, User requested)
@@ -134,7 +134,7 @@ namespace ZokuChat.Services
 			requested.Should().NotBeNull();
 
 			// Return fromUser's contact requests to toUser
-			return _context.ContactRequests.Where(r => new Guid(r.RequestorUID).Equals(requestor.Id) && new Guid(r.RequestedUID).Equals(requested.Id));
+			return _context.ContactRequests.Where(r => r.RequestorUID.Equals(requestor.Id) && r.RequestedUID.Equals(requested.Id));
 		}
 	}
 }
