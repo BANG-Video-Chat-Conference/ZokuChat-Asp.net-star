@@ -3,9 +3,9 @@
 window.ZokuChat.AcceptRequestButtonClick = function (clickedButton, id) {
 	// Change button to indicate request sent
 	clickedButton.removeClass('btn-primary')
-	.addClass('btn-success')
-	.html('Request Accepted')
-	.attr('disabled', 'disabled');
+		.addClass('btn-success')
+		.html('Request Accepted')
+		.attr('disabled', 'disabled');
 
 	// Send ajax request to ContactRequestController
 	window.ZokuChat.SendAjaxRequest(`/ContactRequests/Accept?requestId=${id}`);
