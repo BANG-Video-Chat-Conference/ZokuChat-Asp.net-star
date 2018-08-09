@@ -63,12 +63,13 @@ namespace ZokuChat.Services
 				ContactUID = request.RequestorUID
 			};
 
-			// Add contacts and then set paired ids
+			// Add contacts and save
 			_context.Contacts.AddRange(new Contact[] { contact, pairedContact });
+			_context.SaveChanges();
+
+			// Now set the paired ids for potential deletion perf
 			contact.PairedId = pairedContact.Id;
 			pairedContact.PairedId = contact.Id;
-
-			// Now we are ready to save
 			_context.SaveChanges();
 		}
 
