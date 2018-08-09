@@ -124,7 +124,7 @@ namespace ZokuChat.Services
 			IQueryable<ContactRequest> requests = GetContactRequestsFromUserToUser(requestor, requested);
 
 			// See if there are any active ones
-			return requests.Any(r => r.IsContactRequestActive());
+			return requests.Any(r => r.IsActive());
 		}
 
 		public IQueryable<ContactRequest> GetContactRequestsFromUserToUser(User requestor, User requested)

@@ -17,7 +17,7 @@ namespace ZokuChat.Helpers
 		{
 			if (contactRequestService.HasActiveContactRequest(user, context.CurrentUser))
 			{
-				int contactId = contactRequestService.GetContactRequestsFromUserToUser(user, context.CurrentUser).Select(c => c.Id).First();
+				int contactId = contactRequestService.GetContactRequestsFromUserToUser(user, context.CurrentUser).Where(r => r.IsActive()).Select(c => c.Id).First();
 
 				return new HtmlString(
 					$"<button class='btn btn-success {cssClasses} margin-right' onclick=\"window.ZokuChat.AcceptRequestButtonClick($(this), '{contactId}');\">Accept Request</button>" +
