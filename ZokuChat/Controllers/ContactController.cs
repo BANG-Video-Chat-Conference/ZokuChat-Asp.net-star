@@ -3,7 +3,6 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZokuChat.Controllers.Responses;
-using ZokuChat.Data;
 using ZokuChat.Helpers;
 using ZokuChat.Models;
 using ZokuChat.Services;

@@ -21,7 +21,7 @@ namespace ZokuChat.Pages.Chat.Request
 
         public void OnGet()
         {
-			ContactRequests = _contactRequestService.GetContactRequestsToUser(_context.CurrentUser).ToList();
+			ContactRequests = _contactRequestService.GetContactRequestsToUser(_context.CurrentUser).Where(r => r.IsContactRequestActive()).ToList();
         }
     }
 }

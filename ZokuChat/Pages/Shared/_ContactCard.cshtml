@@ -1,0 +1,17 @@
+﻿@model Contact
+@using ZokuChat.Models
+@using ZokuChat.Services
+
+@inject IContactService ContactService
+@inject IUserService UserService
+@inject Context DbContext
+
+<div class="card card-user">
+	<div class="card-body">
+		@UserService.GetUserByUID(Model.ContactUID).UserName
+	</div>
+	<div class="card-footer">
+		@ZokuChat.Helpers.HtmlHelper.GetContactRemoveButton(Model)
+		@ZokuChat.Helpers.HtmlHelper.GetBlockUserButton(UserService.GetUserByUID(Model.ContactUID), "float-right")
+	</div>
+</div>
