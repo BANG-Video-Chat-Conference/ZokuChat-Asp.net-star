@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using System.Collections.Generic;
 using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
@@ -49,7 +48,7 @@ namespace ZokuChat.Services
 			contact.Should().NotBeNull();
 
 			// Find the paired contacts
-			List<Contact> contacts = _context.Contacts.Where(c => c.Id == contact.Id || c.Id == contact.PairedId).ToList();
+			IQueryable<Contact> contacts = _context.Contacts.Where(c => c.Id == contact.Id || c.Id == contact.PairedId);
 
 			// Delete and save
 			_context.Contacts.RemoveRange(contacts);

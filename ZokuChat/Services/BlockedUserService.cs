@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
@@ -9,10 +10,17 @@ namespace ZokuChat.Services
 	public class BlockedUserService : IBlockedUserService
 	{
 		private readonly Context _context;
+		private readonly IContactService _contactService;
+		private readonly IContactRequestService _contactRequestService;
 
-		public BlockedUserService(Context context)
+		public BlockedUserService(
+			Context context,
+			IContactService contactService,
+			IContactRequestService contactRequestService)
 		{
 			_context = context;
+			_contactService = contactService;
+			_contactRequestService = contactRequestService;
 		}
 
 		public void BlockUser(User blocker, User blocked)
@@ -25,18 +33,26 @@ namespace ZokuChat.Services
 			{
 				DateTime now = DateTime.UtcNow;
 
-				// Remove any contacts
-				_context.Contacts.RemoveRange(_context.Contacts.Where(c => c.UserUID.Equals(blocker.Id) || c.UserUID.Equals(blocked.Id)));
-
-				// Cancel any active contact requests
-				_context.ContactRequests.Where(r => r.RequestorUID.Equals(blocker.Id) || r.RequestorUID.Equals(blocked.Id))
-					.Where(r => r.IsActive())
-					.ToList()
-					.ForEach(r => {
-						r.IsCancelled = true;
-						r.ModifiedUID = blocker.Id;
-						r.ModifiedDateUtc = now;
-					});
+				if (_contactService.IsUserContact(blocker, blocked))
+				{
+					// The users are contacts so delete the connection
+					Contact contact = _contactService.GetUserContact(blocker, blocked);
+					_contactService.DeleteContact(contact);
+				}
+				else
+				{
+					// The users are not contacts but there may be an active request, so delete if necessary
+					if (_contactRequestService.HasActiveContactRequest(blocker, blocked))
+					{
+						ContactRequest contactRequest = _contactRequestService.GetContactRequestsFromUserToUser(blocker, blocked).Where(r => r.IsActive()).First();
+						_contactRequestService.CancelContactRequest(blocker, contactRequest);		
+					}
+					else if (_contactRequestService.HasActiveContactRequest(blocked, blocker))
+					{
+						ContactRequest contactRequest = _contactRequestService.GetContactRequestsFromUserToUser(blocked, blocker).Where(r => r.IsActive()).First();
+						_contactRequestService.CancelContactRequest(blocker, contactRequest);
+					}
+				}
 
 				// Block and save
 				_context.BlockedUsers.Add(new BlockedUser
