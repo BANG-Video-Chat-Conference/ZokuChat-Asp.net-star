@@ -103,6 +103,7 @@ namespace ZokuChat
 			services.AddTransient<IBlockedUserService, BlockedUserService>();
 			services.AddTransient<IContactService, ContactService>();
 			services.AddTransient<IContactRequestService, ContactRequestService>();
+			services.AddTransient<IRoomService, RoomService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

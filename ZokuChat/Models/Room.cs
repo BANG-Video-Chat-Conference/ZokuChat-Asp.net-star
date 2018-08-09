@@ -7,13 +7,20 @@ namespace ZokuChat.Models
     {
 		public int Id { get; set; }
 
-		[StringLength(200, MinimumLength = 1)]
+		[StringLength(80, MinimumLength = 1)]
 		[Required]
 		public string Name { get; set; }
+
+		[StringLength(300)]
+		public string Description { get; set; }
 
 		[StringLength(450)]
 		[Required]
 		public string CreatorUID { get; set; }
+
+		[StringLength(450)]
+		[Required]
+		public string CreatedUID { get; set; }
 
 		[Required]
 		public DateTime CreatedDateUtc { get; set; }
@@ -25,6 +32,7 @@ namespace ZokuChat.Models
 		[Required]
 		public DateTime ModifiedDateUtc { get; set; }
 
+		[Required]
 		public bool IsDeleted { get; set; }
     }
 }

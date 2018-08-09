@@ -21,7 +21,7 @@ namespace ZokuChat.Services
 			requestId.Should().BeGreaterThan(0);
 
 			// Retrieve
-			return _context.ContactRequests.Where(r => r.Id == requestId).FirstOrDefault();
+			return _context.ContactRequests.Find(requestId);
 		}
 
 		public void CancelContactRequest(User actionUser, ContactRequest request)

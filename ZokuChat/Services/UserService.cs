@@ -1,8 +1,5 @@
 ﻿using FluentAssertions;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ZokuChat.Data;
 using ZokuChat.Models;
 
@@ -22,7 +19,7 @@ namespace ZokuChat.Services
 			// Validate
 			UID.Should().NotBeEmpty();
 
-			return _context.Users.Where(u => u.Id.Equals(UID)).FirstOrDefault();
+			return _context.Users.Find(UID);
 		}
 
 		public User GetUserByUserName(string userName)

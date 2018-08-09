@@ -20,7 +20,7 @@ namespace ZokuChat.Services
 			contactId.Should().BeGreaterThan(0);
 
 			// Retrieve the contact
-			return _context.Contacts.Where(c => c.Id == contactId).FirstOrDefault();
+			return _context.Contacts.Find(contactId);
 		}
 
 		public Contact GetUserContact(User user, User contact)
