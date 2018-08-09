@@ -9,7 +9,7 @@ namespace ZokuChat.Services
 	public class BlockedUserService : IBlockedUserService
 	{
 		private readonly Context _context;
-		
+
 		public BlockedUserService(Context context)
 		{
 			_context = context;
@@ -24,6 +24,19 @@ namespace ZokuChat.Services
 			if (!IsUserBlocked(blocked, blocker))
 			{
 				DateTime now = DateTime.UtcNow;
+
+				// Remove any contacts
+				_context.Contacts.RemoveRange(_context.Contacts.Where(c => c.UserUID.Equals(blocker.Id) || c.UserUID.Equals(blocked.Id)));
+
+				// Cancel any active contact requests
+				_context.ContactRequests.Where(r => r.RequestorUID.Equals(blocker.Id) || r.RequestorUID.Equals(blocked.Id))
+					.Where(r => r.IsActive())
+					.ToList()
+					.ForEach(r => {
+						r.IsCancelled = true;
+						r.ModifiedUID = blocker.Id;
+						r.ModifiedDateUtc = now;
+					});
 
 				// Block and save
 				_context.BlockedUsers.Add(new BlockedUser

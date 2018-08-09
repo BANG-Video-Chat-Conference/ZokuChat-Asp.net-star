@@ -4,8 +4,10 @@
 		// Change button to indicate request accepted
 		clickedButton.removeClass('btn-primary')
 			.addClass('btn-success')
-			.html('Request Accepted')
-			.attr('disabled', 'disabled');
+			.html('Request Accepted');
+
+		// Disable both accept and cancel buttons
+		$(`.request-${id}`).attr('disabled', 'disabled');
 
 		// Send ajax request to ContactRequestController
 		window.ZokuChat.SendAjaxRequest(`/ContactRequests/Accept?requestId=${id}`);
@@ -13,8 +15,10 @@
 
 	CancelRequestButtonClick: function (clickedButton, id) {
 		// Change button to indicate request cancelled
-		clickedButton.html('Request Declined')
-			.attr('disabled', 'disabled');
+		clickedButton.html('Request Declined');
+
+		// Disable both accept and cancel buttons
+		$(`.request-${id}`).attr('disabled', 'disabled');
 
 		// Send ajax request to ContactRequestController
 		window.ZokuChat.SendAjaxRequest(`/ContactRequests/Cancel?requestId=${id}`);
@@ -35,6 +39,9 @@
 		// Change button to indicate user blocked
 		clickedButton.html('User Blocked')
 			.attr('disabled', 'disabled');
+
+		// Disable other buttons
+		clickedButton.siblings('button').attr('disabled', 'disabled');
 
 		// Send ajax request to BlockedUserController
 		window.ZokuChat.SendAjaxRequest(`/BlockedUsers/Block?blockedUID=${id}`);

@@ -17,11 +17,11 @@ namespace ZokuChat.Helpers
 		{
 			if (contactRequestService.HasActiveContactRequest(user, context.CurrentUser))
 			{
-				int contactId = contactRequestService.GetContactRequestsFromUserToUser(user, context.CurrentUser).Where(r => r.IsActive()).Select(c => c.Id).First();
+				int requestId = contactRequestService.GetContactRequestsFromUserToUser(user, context.CurrentUser).Where(r => r.IsActive()).Select(c => c.Id).First();
 
 				return new HtmlString(
-					$"<button class='btn btn-success {cssClasses} margin-right' onclick=\"window.ZokuChat.AcceptRequestButtonClick($(this), '{contactId}');\">Accept Request</button>" +
-					$"<button class='btn btn-danger {cssClasses}' onclick=\"window.ZokuChat.CancelRequestButtonClick($(this), '{contactId}');\">Decline Request</button>"
+					$"<button class='btn btn-success request-{requestId} {cssClasses} margin-right' onclick=\"window.ZokuChat.AcceptRequestButtonClick($(this), '{requestId}');\">Accept Request</button>" +
+					$"<button class='btn btn-danger request-{requestId} {cssClasses}' onclick=\"window.ZokuChat.CancelRequestButtonClick($(this), '{requestId}');\">Decline Request</button>"
 				);
 			}
 			else if (contactRequestService.HasActiveContactRequest(context.CurrentUser, user))
