@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Html;
+using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
 using ZokuChat.Services;
@@ -9,15 +10,18 @@ namespace ZokuChat.Helpers
     {
 		public static HtmlString GetContactRequestButton(
 			Context context,
+			IContactService contactService,
 			IContactRequestService contactRequestService,
 			User user,
 			string cssClasses = "")
 		{
 			if (contactRequestService.HasActiveContactRequest(user, context.CurrentUser))
 			{
+				int contactId = contactRequestService.GetContactRequestsFromUserToUser(user, context.CurrentUser).Select(c => c.Id).First();
+
 				return new HtmlString(
-					$"<button class='btn btn-success {cssClasses} margin-right' onclick=\"window.ZokuChat.AcceptRequestButtonClick($(this), '{user.Id}');\">Accept Request</button>" +
-					$"<button class='btn btn-success {cssClasses}' onclick=\"window.ZokuChat.CancelRequestButtonClick($(this), '{user.Id}');\">Accept Request</button>"
+					$"<button class='btn btn-success {cssClasses} margin-right' onclick=\"window.ZokuChat.AcceptRequestButtonClick($(this), '{contactId}');\">Accept Request</button>" +
+					$"<button class='btn btn-danger {cssClasses}' onclick=\"window.ZokuChat.CancelRequestButtonClick($(this), '{contactId}');\">Decline Request</button>"
 				);
 			}
 			else if (contactRequestService.HasActiveContactRequest(context.CurrentUser, user))

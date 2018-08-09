@@ -17,18 +17,15 @@ namespace ZokuChat.Controllers
 		private readonly Context _context;
 		private readonly IUserService _userService;
 		private readonly IContactService _contactService;
-		private readonly ContactPermissionHelper _contactPermissionHelper;
 
 		public ContactController(
 			Context context,
 			IUserService userService,
-			IContactService contactService,
-			ContactPermissionHelper contactPermissionHelper)
+			IContactService contactService)
 		{
 			_context = context;
 			_userService = userService;
 			_contactService = contactService;
-			_contactPermissionHelper = contactPermissionHelper;
 		}
 
         [Route("Remove")]
@@ -44,7 +41,7 @@ namespace ZokuChat.Controllers
 				// Retrieve the requested user
 				Contact contact = _contactService.GetContact(contactId);
 
-				if (contact != null && _contactPermissionHelper.CanDeleteContact(_context.CurrentUser, contact))
+				if (contact != null && ContactPermissionHelper.CanDeleteContact(_context.CurrentUser, contact))
 				{
 					// Delete the contact request
 					_contactService.DeleteContact(contact);

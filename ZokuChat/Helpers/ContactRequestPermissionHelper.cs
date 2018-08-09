@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using System;
 using ZokuChat.Data;
 using ZokuChat.Models;
 using ZokuChat.Services;
@@ -8,26 +7,21 @@ namespace ZokuChat.Helpers
 {
 	public class ContactRequestPermissionHelper
 	{
-		private readonly Context _context;
-		private readonly IContactService _contactService;
-		private readonly IContactRequestService _contactRequestService;
-
-		public ContactRequestPermissionHelper(Context context, IContactService contactService, IContactRequestService contactRequestService)
-		{
-			_context = context;
-			_contactService = contactService;
-			_contactRequestService = contactRequestService;
-		}
-
-		public bool CanMakeContactRequest(User requestor, User requested)
+		public static bool CanMakeContactRequest(
+			IContactService contactService,
+			IContactRequestService contactRequestService,
+			User requestor,
+			User requested)
 		{
 			// Validate
+			contactService.Should().NotBeNull();
+			contactRequestService.Should().NotBeNull();
 			requestor.Should().NotBeNull();
 			requested.Should().NotBeNull();
 
 			bool result;
 
-			if (_contactRequestService.HasActiveContactRequest(requestor, requested) || _contactService.IsUserContact(requestor, requested))
+			if (contactRequestService.HasActiveContactRequest(requestor, requested) || contactService.IsUserContact(requestor, requested))
 			{
 				// The contact or active request already exists so return false
 				result = false;
@@ -40,7 +34,7 @@ namespace ZokuChat.Helpers
 			return result;
 		}
 
-		public bool CanModifyContactRequest(User user, ContactRequest request)
+		public static bool CanModifyContactRequest(User user, ContactRequest request)
 		{
 			// Validate
 			user.Should().NotBeNull();

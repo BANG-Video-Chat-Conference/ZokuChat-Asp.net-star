@@ -63,12 +63,12 @@ namespace ZokuChat.Services
 				ContactUID = request.RequestorUID
 			};
 
-			// Set the paired Ids
+			// Add contacts and then set paired ids
+			_context.Contacts.AddRange(new Contact[] { contact, pairedContact });
 			contact.PairedId = pairedContact.Id;
 			pairedContact.PairedId = contact.Id;
 
-			// Add contacts and save
-			_context.Contacts.AddRange(new Contact[] { contact, pairedContact });
+			// Now we are ready to save
 			_context.SaveChanges();
 		}
 
@@ -83,13 +83,13 @@ namespace ZokuChat.Services
 
 			ContactRequest request = new ContactRequest
 			{
-				RequestorUID = requestor.Id.ToString(),
-				RequestedUID = requested.Id.ToString(),
+				RequestorUID = requestor.Id,
+				RequestedUID = requested.Id,
 				IsCancelled = false,
 				IsConfirmed = false,
-				CreatedUID = requestor.ToString(),
+				CreatedUID = requestor.Id,
 				CreatedDateUtc = now,
-				ModifiedUID = requestor.Id.ToString(),
+				ModifiedUID = requestor.Id,
 				ModifiedDateUtc = now
 			};
 
@@ -121,13 +121,13 @@ namespace ZokuChat.Services
 			requested.Should().NotBeNull();
 
 			// Get fromUser's contact requests for toUser
-			IQueryable<ContactRequest> requests = GetUsersContactRequestsByUser(requestor, requested);
+			IQueryable<ContactRequest> requests = GetContactRequestsFromUserToUser(requestor, requested);
 
 			// See if there are any active ones
 			return requests.Any(r => r.IsContactRequestActive());
 		}
 
-		public IQueryable<ContactRequest> GetUsersContactRequestsByUser(User requestor, User requested)
+		public IQueryable<ContactRequest> GetContactRequestsFromUserToUser(User requestor, User requested)
 		{
 			// Validate
 			requestor.Should().NotBeNull();

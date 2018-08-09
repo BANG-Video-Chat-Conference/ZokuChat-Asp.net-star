@@ -18,7 +18,7 @@ namespace ZokuChat.Services
 
 		ContactRequest GetContactRequest(int requestId);
 
-		IQueryable<ContactRequest> GetUsersContactRequestsByUser(User fromUser, User toUser);
+		IQueryable<ContactRequest> GetContactRequestsFromUserToUser(User fromUser, User toUser);
 
 		bool HasActiveContactRequest(User fromUser, User toUser);
 	}

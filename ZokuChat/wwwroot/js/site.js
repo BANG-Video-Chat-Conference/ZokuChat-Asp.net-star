@@ -1,7 +1,7 @@
 ﻿window.ZokuChat = window.ZokuChat || {};
 
 window.ZokuChat.AcceptRequestButtonClick = function (clickedButton, id) {
-	// Change button to indicate request sent
+	// Change button to indicate request accepted
 	clickedButton.removeClass('btn-primary')
 		.addClass('btn-success')
 		.html('Request Accepted')
@@ -12,10 +12,8 @@ window.ZokuChat.AcceptRequestButtonClick = function (clickedButton, id) {
 };
 
 window.ZokuChat.CancelRequestButtonClick = function (clickedButton, id) {
-	// Change button to indicate request sent
-	clickedButton.removeClass('btn-danger')
-		.addClass('btn-success')
-		.html('Request Accepted')
+	// Change button to indicate request cancelled
+	clickedButton.html('Request Declined')
 		.attr('disabled', 'disabled');
 
 	// Send ajax request to ContactRequestController
@@ -34,7 +32,7 @@ window.ZokuChat.SendRequestButtonClick = function (clickedButton, id) {
 };
 
 window.ZokuChat.BlockUserButtonClick = function (clickedButton, id) {
-	// Change button to indicate request sent
+	// Change button to indicate user blocked
 	clickedButton.html('User Blocked')
 		.attr('disabled', 'disabled');
 
@@ -43,7 +41,7 @@ window.ZokuChat.BlockUserButtonClick = function (clickedButton, id) {
 };
 
 window.ZokuChat.UnblockUserButtonClick = function (clickedButton, id) {
-	// Change button to indicate request sent
+	// Change button to indicate user unblocked
 	clickedButton.removeClass('btn-primary')
 		.addClass('btn-success')
 		.html('User Unblocked')
@@ -54,7 +52,7 @@ window.ZokuChat.UnblockUserButtonClick = function (clickedButton, id) {
 };
 
 window.ZokuChat.RemoveContactButtonClick = function (clickedButton, id) {
-	// Change button to indicate request sent
+	// Change button to indicate contact removed
 	clickedButton.removeClass('btn-primary')
 		.addClass('btn-success')
 		.html('Contact Removed')

@@ -6,9 +6,13 @@ namespace ZokuChat.Helpers
 {
     public class BlockedUserPermissionHelper
     {
-		public static bool CanBlockUser(IBlockedUserService blockedUserService, User actionUser, User otherUser)
+		public static bool CanBlockUser(
+			IBlockedUserService blockedUserService,
+			User actionUser,
+			User otherUser)
 		{
 			// Validate
+			blockedUserService.Should().NotBeNull();
 			actionUser.Should().NotBeNull();
 			otherUser.Should().NotBeNull();
 
@@ -16,9 +20,13 @@ namespace ZokuChat.Helpers
 			return !blockedUserService.AreUsersBlocked(actionUser, otherUser);
 		}
 
-		public static bool CanUnblockUser(IBlockedUserService blockedUserService, User actionUser, User blocked)
+		public static bool CanUnblockUser(
+			IBlockedUserService blockedUserService,
+			User actionUser,
+			User blocked)
 		{
 			// Validate
+			blockedUserService.Should().NotBeNull();
 			actionUser.Should().NotBeNull();
 			blocked.Should().NotBeNull();
 

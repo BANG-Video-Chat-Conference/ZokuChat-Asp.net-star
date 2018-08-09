@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using System;
-using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
 
@@ -8,14 +6,7 @@ namespace ZokuChat.Helpers
 {
     public class ContactPermissionHelper
     {
-		private readonly Context _context;
-
-		public ContactPermissionHelper(Context context)
-		{
-			_context = context;
-		}
-
-		public bool CanDeleteContact(User actionUser, Contact contact)
+		public static bool CanDeleteContact(User actionUser, Contact contact)
 		{
 			// Validate
 			actionUser.Should().NotBeNull();

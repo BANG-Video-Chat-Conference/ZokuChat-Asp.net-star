@@ -16,19 +16,19 @@ namespace ZokuChat.Controllers
     {
 		private readonly Context _context;
 		private readonly IUserService _userService;
+		private readonly IContactService _contactService;
 		private readonly IContactRequestService _contactRequestService;
-		private readonly ContactRequestPermissionHelper _contactRequestPermissionHelper;
 
 		public ContactRequestController(
 			Context context,
 			IUserService userService,
-			IContactRequestService contactRequestService,
-			ContactRequestPermissionHelper contactRequestPermissionHelper)
+			IContactService contactService,
+			IContactRequestService contactRequestService)
 		{
 			_context = context;
 			_userService = userService;
+			_contactService = contactService;
 			_contactRequestService = contactRequestService;
-			_contactRequestPermissionHelper = contactRequestPermissionHelper;
 		}
 
         [Route("Create")]
@@ -44,7 +44,7 @@ namespace ZokuChat.Controllers
 				// Retrieve the requested user
 				User requested = _userService.GetUserByUID(requestedUID);
 
-				if (requested != null && _contactRequestPermissionHelper.CanMakeContactRequest(_context.CurrentUser, requested))
+				if (requested != null && ContactRequestPermissionHelper.CanMakeContactRequest(_contactService, _contactRequestService, _context.CurrentUser, requested))
 				{
 					// Create the contact request
 					_contactRequestService.CreateContactRequest(_context.CurrentUser, requested);
@@ -79,7 +79,7 @@ namespace ZokuChat.Controllers
 				// Retrieve the requested user
 				ContactRequest request = _contactRequestService.GetContactRequest(requestId);
 
-				if (request != null && _contactRequestPermissionHelper.CanModifyContactRequest(_context.CurrentUser, request))
+				if (request != null && ContactRequestPermissionHelper.CanModifyContactRequest(_context.CurrentUser, request))
 				{
 					// Confirm the request
 					_contactRequestService.ConfirmContactRequest(_context.CurrentUser, request);
@@ -114,7 +114,7 @@ namespace ZokuChat.Controllers
 				// Retrieve the requested user
 				ContactRequest request = _contactRequestService.GetContactRequest(requestId);
 
-				if (request != null && _contactRequestPermissionHelper.CanModifyContactRequest(_context.CurrentUser, request))
+				if (request != null && ContactRequestPermissionHelper.CanModifyContactRequest(_context.CurrentUser, request))
 				{
 					// Cancel the request
 					_contactRequestService.CancelContactRequest(_context.CurrentUser, request);
