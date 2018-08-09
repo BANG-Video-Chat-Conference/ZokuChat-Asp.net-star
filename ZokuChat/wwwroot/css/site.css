@@ -43,6 +43,10 @@ html, body {
 	margin-left: 16px;
 }
 
+.btn {
+ border-radius: 0;
+}
+
 .nav-link:hover {
 	color: #db94b9 !important;
 }
@@ -58,6 +62,10 @@ html, body {
 .btn-nav {
 	border-color: #fff;
 	color: #fff;
+}
+
+.alert {
+	border-radius: 0;
 }
 
 .content-container {
