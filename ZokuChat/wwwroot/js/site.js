@@ -78,3 +78,15 @@ window.ZokuChat.SendAjaxRequest = function (url, successCallback, errorCallback)
 		}
 	});
 };
+
+window.ZokuChat.GetLocalDateStr = function (date) {
+	return `${1 + date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
+};
+
+window.ZokuChat.GetLocalTimeStr = function (date) {
+	return `${date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`;
+};
+
+window.ZokuChat.GetLocalDateTimeStr = function (date) {
+	return `${window.ZokuChat.GetLocalDateStr(date)} at ${window.ZokuChat.GetLocalTimeStr(date)}`;
+};

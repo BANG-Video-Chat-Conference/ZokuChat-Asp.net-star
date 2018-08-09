@@ -11,7 +11,14 @@
 		<div>
 			@UserService.GetUserByUID(Model.BlockedUID).UserName
 		</div>
-		<i class="text-muted">Blocked on @Model.CreatedDateUtc.ToZokuChatDateTimeString()</i>
+		<script>
+			$(document).ready(
+				function () {
+					$('#date-@Model.Id').html(`Blocked on ${window.ZokuChat.GetLocalDateTimeStr(@Model.CreatedDateUtc.ToJavaScriptDateString())}`);
+				}
+			);
+		</script>
+		<i class="text-muted" id="date-@Model.Id"></i>
 	</div>
 	<div class="card-footer">
 		@ZokuChat.Helpers.HtmlHelper.GetUnblockUserButton(UserService.GetUserByUID(Model.BlockedUID))
