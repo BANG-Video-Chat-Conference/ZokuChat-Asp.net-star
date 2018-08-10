@@ -1,0 +1,28 @@
+﻿@page
+@model ViewModel
+@{
+	ViewData["Title"] = "View Room";
+}
+
+@using ZokuChat.Helpers
+
+<partial name="_SiteHeader" />
+<div class="content-container">
+	<partial name="_ChatSidebar" />
+	<div class="content">
+		<h3>Rooms</h3>
+		<div class="form-group">
+			<label for="name">Name</label>
+			<div id="name">
+				@Model.Room.Name
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="description">Description</label>
+			<div id="description">
+				@Model.Room.Description
+			</div>
+		</div>
+		<a href="@UrlHelper.GetRoomsUrl()" class="btn btn-primary">Rooms List</a>
+	</div>
+</div>
