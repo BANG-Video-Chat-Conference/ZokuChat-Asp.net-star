@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
 
@@ -13,5 +14,9 @@ namespace ZokuChat.Services
 		IQueryable<Room> GetRoomsForUser(User user);
 
 		void CreateRoom(User actionUser, Room room);
+
+		void AddRoomContacts(User actionUser, Room room, List<string> contactUIDs);
+
+		IQueryable<RoomContact> GetRoomContacts(Room room);
     }
 }

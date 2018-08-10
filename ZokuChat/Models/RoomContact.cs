@@ -7,7 +7,6 @@ namespace ZokuChat.Models
     {
 		public int Id { get; set; }
 
-		[Required]
 		public int RoomId { get; set; }
 
 		[StringLength(450)]
@@ -27,8 +26,5 @@ namespace ZokuChat.Models
 
 		[Required]
 		public DateTime ModifiedDateUtc { get; set; }
-
-		[Required]
-		public bool IsCreator { get; set; }
     }
 }

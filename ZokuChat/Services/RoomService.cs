@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
@@ -68,6 +69,44 @@ namespace ZokuChat.Services
 			user.Should().NotBeNull();
 
 			return _context.Rooms.Where(r => r.CreatorUID.Equals(user.Id));
+		}
+
+		public IQueryable<RoomContact> GetRoomContacts(Room room)
+		{
+			// Validate
+			room.Should().NotBeNull();
+
+			return _context.RoomContacts.Where(rc => rc.RoomId == room.Id);
+		}
+
+		public void AddRoomContacts(User actionUser, Room room, List<string> contactUIDs)
+		{
+			// Validate
+			actionUser.Should().NotBeNull();
+			room.Should().NotBeNull();
+			contactUIDs.Should().NotBeNull();
+			contactUIDs.Count.Should().BeGreaterThan(0);
+
+			// Create a list of room contacts
+			DateTime now = DateTime.UtcNow;
+			List<RoomContact> roomContacts = new List<RoomContact>();
+
+			foreach (string contactUID in contactUIDs)
+			{
+				roomContacts.Add(new RoomContact
+				{
+					ContactUID = contactUID,
+					RoomId = room.Id,
+					CreatedUID = actionUser.Id,
+					CreatedDateUtc = now,
+					ModifiedUID = actionUser.Id,
+					ModifiedDateUtc = now
+				});
+			}
+
+			// Save the list of room contacts
+			_context.RoomContacts.AddRange(roomContacts);
+			_context.SaveChanges();
 		}
 	}
 }

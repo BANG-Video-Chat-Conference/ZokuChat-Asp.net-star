@@ -14,6 +14,7 @@ namespace ZokuChat.Models
 		public DbSet<ContactRequest> ContactRequests { get; set; }
 		public DbSet<BlockedUser> BlockedUsers { get; set; }
 		public DbSet<Room> Rooms { get; set; }
+		public DbSet<RoomContact> RoomContacts { get; set; }
 
 		private User _currentUser;
 		public User CurrentUser

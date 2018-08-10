@@ -1,0 +1,17 @@
+﻿@model Room
+@using ZokuChat.Models
+@using ZokuChat.Services
+
+@inject IRoomService RoomService
+@inject Context DbContext
+
+<div class="card card-room">
+	<div class="card-header">
+		@Model.Name
+	</div>
+	<div class="card-body">
+		@Model.Description
+	</div>
+	<div class="card-footer">
+	</div>
+</div>

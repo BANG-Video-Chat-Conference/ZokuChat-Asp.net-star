@@ -6,6 +6,7 @@
 		private const string _CONTACT_REQUESTS_URL = "/Chat/Request/Index";
 		private const string _USER_SEARCH_URL = "/Chat/Contact/UserSearch";
 		private const string _ROOMS_URL = "/Chat/Room/Index";
+		private const string _NEW_ROOM_URL = "/Chat/Room/Create";
 		private const string _LOGIN_URL = "/Account/Login";
 		private const string _LOGOUT_URL = "/Account/Logout";
 		private const string _CONFIRM_EMAIL_URL = "/Account/ConfirmEmail";
@@ -36,6 +37,11 @@
 		public static string GetRoomsUrl()
 		{
 			return _ROOMS_URL;
+		}
+
+		public static string GetNewRoomUrl()
+		{
+			return _NEW_ROOM_URL;
 		}
 
 		public static string GetAboutUrl()
