@@ -102,7 +102,14 @@ html, body {
 	text-decoration: none;
 }
 
-.card-user, .card-room {
-	width: 500px;
-	border-radius: 0;
+.card {
+	border-radius: 0
+}
+
+.card-user {
+	max-width: 500px;
+}
+
+.card-room {
+	max-width: 720px;
 }

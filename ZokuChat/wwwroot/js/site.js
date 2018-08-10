@@ -69,6 +69,13 @@
 		window.ZokuChat.SendAjaxRequest(`/Contacts/Remove?contactId=${id}`);
 	},
 
+	DeleteRoom: function (id) {
+		if (confirm('Are you sure you want to delete this room? This action cannot be undone.')) {
+			// Redirect to RoomController
+			window.location = `/Rooms/Delete?roomId=${id}`;
+		}
+	},
+
 	SendAjaxRequest: function (url, successCallback, errorCallback) {
 		$.ajax({
 			url: url,

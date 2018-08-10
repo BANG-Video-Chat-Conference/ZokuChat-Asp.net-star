@@ -25,9 +25,14 @@ namespace ZokuChat.Helpers
 			user.Should().NotBeNull();
 			room.Should().NotBeNull();
 
+			if (room.IsDeleted)
+			{
+				// Deleted rooms cannot be viewed
+				return false;
+			}
 			if (IsRoomCreator(user, room))
 			{
-				// Creators can always view their own rooms
+				// Creators can view their own rooms
 				return true;
 			}
 			else
@@ -37,13 +42,18 @@ namespace ZokuChat.Helpers
 			}
 		}
 
-		public static bool IsRoomCreator(User user, Room room)
+		private static bool IsRoomCreator(User user, Room room)
+		{
+			return room.CreatedUID.Equals(user.Id);
+		}
+
+		public static bool CanDeleteRoom(User user, Room room)
 		{
 			// Validate
 			user.Should().NotBeNull();
 			room.Should().NotBeNull();
 
-			return room.CreatorUID.Equals(user.Id);
+			return IsRoomCreator(user, room) && !room.IsDeleted;
 		}
     }
 }

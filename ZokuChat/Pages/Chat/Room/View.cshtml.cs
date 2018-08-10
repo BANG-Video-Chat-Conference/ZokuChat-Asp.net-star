@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 using ZokuChat.Helpers;
 using ZokuChat.Models;
 using ZokuChat.Services;
@@ -18,7 +20,7 @@ namespace ZokuChat.Pages.Chat.Room
 
 		public Models.Room Room;
 
-        public void OnGet(int id)
+        public IActionResult OnGet(int id)
         {
 			if (id > 0)
 			{
@@ -27,7 +29,11 @@ namespace ZokuChat.Pages.Chat.Room
 
 			if (Room == null || !RoomPermissionHelper.CanViewRoom(_roomService, _context.CurrentUser, Room))
 			{
-				LocalRedirect(UrlHelper.GetAccessDeniedUrl());
+				return LocalRedirect(UrlHelper.GetAccessDeniedUrl());
+			}
+			else
+			{
+				return Page();
 			}
         }
     }

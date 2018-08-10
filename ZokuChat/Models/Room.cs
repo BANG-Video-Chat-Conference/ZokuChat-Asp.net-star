@@ -15,9 +15,6 @@ namespace ZokuChat.Models
 		public string Description { get; set; }
 
 		[StringLength(450)]
-		public string CreatorUID { get; set; }
-
-		[StringLength(450)]
 		public string CreatedUID { get; set; }
 
 		[Required]

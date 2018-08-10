@@ -25,7 +25,6 @@ namespace ZokuChat.Services
 			// Set default properties
 			DateTime now = DateTime.UtcNow;
 
-			room.CreatorUID = actionUser.Id;
 			room.CreatedUID = actionUser.Id;
 			room.CreatedDateUtc = now;
 			room.ModifiedUID = actionUser.Id;
@@ -68,7 +67,7 @@ namespace ZokuChat.Services
 			// Validate
 			user.Should().NotBeNull();
 
-			return _context.Rooms.Where(r => r.CreatorUID.Equals(user.Id));
+			return _context.Rooms.Where(r => r.CreatedUID.Equals(user.Id)).Where(r => !r.IsDeleted);
 		}
 
 		public IQueryable<RoomContact> GetRoomContacts(Room room)
@@ -106,6 +105,16 @@ namespace ZokuChat.Services
 
 			// Save the list of room contacts
 			_context.RoomContacts.AddRange(roomContacts);
+			_context.SaveChanges();
+		}
+
+		public void DeleteRoom(Room room)
+		{
+			// Validate
+			room.Should().NotBeNull();
+
+			// Delete
+			room.IsDeleted = true;
 			_context.SaveChanges();
 		}
 	}
