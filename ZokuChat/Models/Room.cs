@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ZokuChat.Models
@@ -28,5 +29,7 @@ namespace ZokuChat.Models
 
 		[Required]
 		public bool IsDeleted { get; set; }
+
+		public ICollection<RoomContact> Contacts { get; set; }
     }
 }

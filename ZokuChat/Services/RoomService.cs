@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,12 @@ namespace ZokuChat.Services
 	public class RoomService : IRoomService
 	{
 		private readonly Context _context;
+		private readonly IContactService _contactService;
 
-		public RoomService(Context context)
+		public RoomService(Context context, IContactService contactService)
 		{
 			_context = context;
+			_contactService = contactService;
 		}
 
 		public void CreateRoom(User actionUser, Room room)
@@ -42,7 +45,7 @@ namespace ZokuChat.Services
 			roomId.Should().BeGreaterThan(0);
 
 			// Retrieve
-			return _context.Rooms.Find(roomId);
+			return _context.Rooms.Include(r => r.Contacts).Where(r => r.Id == roomId).FirstOrDefault();
 		}
 
 		public IQueryable<Room> GetRooms(RoomSearch search)
@@ -67,24 +70,28 @@ namespace ZokuChat.Services
 			// Validate
 			user.Should().NotBeNull();
 
-			return _context.Rooms.Where(r => r.CreatedUID.Equals(user.Id)).Where(r => !r.IsDeleted);
+			// Build a query for room ids where user is a contact
+			IQueryable<int> roomsWhereUserIsContact = _context.RoomContacts.Where(rc => rc.ContactUID.Equals(user.Id)).Select(rc => rc.RoomId);
+
+			// Return rooms where user is the creator or a contact and are not deleted
+			return _context.Rooms.Where(r => r.CreatedUID.Equals(user.Id) || roomsWhereUserIsContact.Contains(r.Id)).Where(r => !r.IsDeleted);
 		}
 
-		public IQueryable<RoomContact> GetRoomContacts(Room room)
-		{
-			// Validate
-			room.Should().NotBeNull();
-
-			return _context.RoomContacts.Where(rc => rc.RoomId == room.Id);
-		}
-
-		public void AddRoomContacts(User actionUser, Room room, List<string> contactUIDs)
+		/// <summary>
+		///	Adds UIDs to the room that are found in the user's contacts.
+		/// </summary>
+		public void AddRoomContacts(User actionUser, Room room, string[] UIDs)
 		{
 			// Validate
 			actionUser.Should().NotBeNull();
 			room.Should().NotBeNull();
-			contactUIDs.Should().NotBeNull();
-			contactUIDs.Count.Should().BeGreaterThan(0);
+			UIDs.Should().NotBeNullOrEmpty();
+
+			// Filter out invalid UIDs
+			IQueryable<string> contactUIDs =
+				_contactService.GetUserContacts(actionUser)
+					.Where(c => UIDs.Contains(c.ContactUID))
+					.Select(c => c.ContactUID);
 
 			// Create a list of room contacts
 			DateTime now = DateTime.UtcNow;

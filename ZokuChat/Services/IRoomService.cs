@@ -15,9 +15,7 @@ namespace ZokuChat.Services
 
 		void CreateRoom(User actionUser, Room room);
 
-		void AddRoomContacts(User actionUser, Room room, List<string> contactUIDs);
-
-		IQueryable<RoomContact> GetRoomContacts(Room room);
+		void AddRoomContacts(User actionUser, Room room, string[] UIDs);
 
 		void DeleteRoom(Room room);
     }

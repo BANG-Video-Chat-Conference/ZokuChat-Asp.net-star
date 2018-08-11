@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using ZokuChat.Controllers.Responses;
 using ZokuChat.Extensions;
 using ZokuChat.Helpers;
@@ -53,15 +51,8 @@ namespace ZokuChat.Controllers
 					return new JsonResult(result);
 				}
 
-				// Filter out invalid UIDs
-				List<string> contactUIDs = 
-					_contactService.GetUserContacts(_context.CurrentUser)
-						.Where(c => UIDs.Contains(c.ContactUID))
-						.Select(c => c.ContactUID)
-						.ToList();
-
-				// Now add the contacts to the room
-				_roomService.AddRoomContacts(_context.CurrentUser, room, contactUIDs);
+				// Now add the contacts to the room (UIDs not found in the actionUser's contacts will be filtered out)
+				_roomService.AddRoomContacts(_context.CurrentUser, room, UIDs);
 
 				// If we got this far we are successful
 				result.IsSuccessful = true;

@@ -5,6 +5,8 @@
 }
 
 @using ZokuChat.Helpers
+@using ZokuChat.Models
+@inject Context Context
 
 <partial name="_SiteHeader" />
 <div class="content-container">
@@ -23,7 +25,19 @@
 				@Model.Room.Description
 			</div>
 		</div>
+		<div class="form-group">
+			<label for="contacts">Contacts</label>
+			<div id="contacts">
+				@foreach (RoomContact contact in Model.Room.Contacts)
+				{
+					
+				}
+			</div>
+		</div>
 		<a href="@UrlHelper.GetRoomsUrl()" class="btn btn-primary margin-right">Rooms List</a>
-		<button class="btn btn-danger" onclick="window.ZokuChat.DeleteRoom(@Model.Room.Id);">Delete</button>
+		@if (RoomPermissionHelper.CanDeleteRoom(Context.CurrentUser, Model.Room))
+		{
+			<button class="btn btn-danger" onclick="window.ZokuChat.DeleteRoom(@Model.Room.Id);">Delete</button>
+		}
 	</div>
 </div>

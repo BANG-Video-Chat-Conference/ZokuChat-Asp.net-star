@@ -8,6 +8,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20180803195414_AddContactsTable.cs" />
     <Compile Remove="Migrations\20180803195414_AddContactsTable.Designer.cs" />
+    <Compile Remove="Migrations\20180811204231_AutoMapRoomContacts.cs" />
+    <Compile Remove="Migrations\20180811204231_AutoMapRoomContacts.Designer.cs" />
     <Compile Remove="Pages\Privacy.cshtml.cs" />
   </ItemGroup>
 

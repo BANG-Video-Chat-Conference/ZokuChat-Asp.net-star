@@ -9,7 +9,6 @@ namespace ZokuChat.Services
 	public class ExceptionService : IExceptionService
 	{
 		private readonly RavenClient _client;
-		private readonly ExceptionReporterOptions _options;
 		private readonly bool _isClientConfigured;
 
 		public ExceptionService(IOptions<ExceptionReporterOptions> optionsAccessor)

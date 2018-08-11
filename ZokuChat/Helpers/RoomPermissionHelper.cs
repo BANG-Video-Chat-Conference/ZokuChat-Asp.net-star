@@ -30,7 +30,7 @@ namespace ZokuChat.Helpers
 				// Deleted rooms cannot be viewed
 				return false;
 			}
-			if (IsRoomCreator(user, room))
+			else if (IsRoomCreator(user, room))
 			{
 				// Creators can view their own rooms
 				return true;
@@ -38,7 +38,7 @@ namespace ZokuChat.Helpers
 			else
 			{
 				// The user isn't the creator so return true if they are a room contact
-				return roomService.GetRoomContacts(room).Any(rc => rc.ContactUID.Equals(user.Id));
+				return room.Contacts.Any(rc => rc.ContactUID.Equals(user.Id));
 			}
 		}
 
