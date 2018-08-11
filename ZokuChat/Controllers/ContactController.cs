@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZokuChat.Controllers.Responses;

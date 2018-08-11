@@ -11,11 +11,16 @@ namespace ZokuChat.Pages.Chat.Room
 	{
 		private readonly Context _context;
 		private readonly IRoomService _roomService;
+		private readonly IExceptionService _exceptionService;
 
-		public CreateModel(Context context, IRoomService roomService)
+		public CreateModel(
+			Context context,
+			IRoomService roomService,
+			IExceptionService exceptionService)
 		{
 			_context = context;
 			_roomService = roomService;
+			_exceptionService = exceptionService;
 		}
 
 		[BindProperty]
@@ -37,8 +42,9 @@ namespace ZokuChat.Pages.Chat.Room
 					// We are successful if we got here, redirect to list of rooms
 					return LocalRedirect(UrlHelper.GetRoomsUrl());
 				}
-				catch (Exception)
+				catch (Exception e)
 				{
+					_exceptionService.ReportException(e);
 					ModelState.AddModelError(string.Empty, "Could not add room.");
 				}
 			}
