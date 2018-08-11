@@ -6,7 +6,9 @@
 
 @using ZokuChat.Helpers
 @using ZokuChat.Models
+@using ZokuChat.Services
 @inject Context Context
+@inject IUserService UserService
 
 <partial name="_SiteHeader" />
 <div class="content-container">
@@ -27,10 +29,15 @@
 		</div>
 		<div class="form-group">
 			<label for="contacts">Contacts</label>
-			<div id="contacts">
+			<div id="contacts" style="width: 500px; display: flex; flex-direction: row;">
+				<div class="room-creator margin-right margin-bottom">
+					@UserService.GetUserNameByUID(Model.Room.CreatedUID)
+				</div>
 				@foreach (RoomContact contact in Model.Room.Contacts)
 				{
-					
+					<div class="room-contact margin-right margin-bottom">
+						@UserService.GetUserNameByUID(contact.ContactUID)
+					</div>
 				}
 			</div>
 		</div>

@@ -14,6 +14,8 @@ namespace ZokuChat.Services
 
 		User GetUserByUserName(string userName);
 
+		string GetUserNameByUID(string UID);
+
 		IQueryable<User> GetUsers(UserSearch search);
     }
 }

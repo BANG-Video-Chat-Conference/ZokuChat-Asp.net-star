@@ -30,6 +30,14 @@ namespace ZokuChat.Services
 			return _context.Users.Where(u => UIDs.Contains(u.Id));
 		}
 
+		public string GetUserNameByUID(string UID)
+		{
+			// Validate
+			UID.Should().NotBeEmpty();
+
+			return _context.Users.Find(UID)?.UserName;
+		}
+
 		public User GetUserByUserName(string userName)
 		{
 			// Validate
