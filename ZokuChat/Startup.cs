@@ -96,6 +96,10 @@ namespace ZokuChat
 			services.AddSingleton<IEmailSender, EmailSender>();
 			services.Configure<AuthMessageSenderOptions>(Configuration);
 
+			// Configure service that reports exceptions
+			services.AddSingleton<IExceptionService, ExceptionService>();
+			services.Configure<ExceptionReporterOptions>(Configuration);
+
 			// Add injectable services
 			services.AddTransient<IEmailService, EmailService>();
 			services.AddTransient<IResolveUserService, ResolveUserService>();
