@@ -19,6 +19,7 @@ namespace ZokuChat.Services
 			if (options.SentryProjectId > 0 && !options.SentryKey.IsNullOrWhitespace())
 			{
 				_client = new RavenClient($"https://{options.SentryKey}@sentry.io/{options.SentryProjectId}");
+				_isClientConfigured = true;
 			}
 		}
 
