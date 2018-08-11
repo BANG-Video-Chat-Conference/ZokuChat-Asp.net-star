@@ -17,9 +17,17 @@ namespace ZokuChat.Services
 		public User GetUserByUID(string UID)
 		{
 			// Validate
-			UID.Should().NotBeEmpty();
+			UID.Should().NotBeNullOrWhiteSpace();
 
 			return _context.Users.Find(UID);
+		}
+
+		public IQueryable<User> GetUserByUID(string[] UIDs)
+		{
+			// Validate
+			UIDs.Should().NotBeEmpty();
+
+			return _context.Users.Where(u => UIDs.Contains(u.Id));
 		}
 
 		public User GetUserByUserName(string userName)

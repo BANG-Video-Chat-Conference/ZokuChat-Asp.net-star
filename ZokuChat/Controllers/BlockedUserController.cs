@@ -1,9 +1,9 @@
 ﻿using System;
-using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZokuChat.Controllers.Responses;
 using ZokuChat.Data;
+using ZokuChat.Extensions;
 using ZokuChat.Helpers;
 using ZokuChat.Models;
 using ZokuChat.Services;
@@ -17,15 +17,18 @@ namespace ZokuChat.Controllers
 		private readonly Context _context;
 		private readonly IUserService _userService;
 		private readonly IBlockedUserService _blockedUserService;
+		private readonly IExceptionService _exceptionService;
 
 		public BlockedUserController(
 			Context context,
 			IUserService userService,
-			IBlockedUserService blockedUserService)
+			IBlockedUserService blockedUserService,
+			IExceptionService exceptionService)
 		{
 			_context = context;
 			_userService = userService;
 			_blockedUserService = blockedUserService;
+			_exceptionService = exceptionService;
 		}
 
         [Route("Block")]
@@ -35,8 +38,11 @@ namespace ZokuChat.Controllers
 
 			try
 			{
-				// Validate
-				blockedUID.Should().NotBeNullOrWhiteSpace();
+				if (blockedUID.IsNullOrWhitespace())
+				{
+					result.ErrorMessage = "Bad request.";
+					return new JsonResult(result);
+				}
 
 				// Retrieve the requested user
 				User blocked = _userService.GetUserByUID(blockedUID);
@@ -56,8 +62,8 @@ namespace ZokuChat.Controllers
 			}
 			catch (Exception e)
 			{
-				// Something went wrong, log the exception's message
-				result.ErrorMessage = e.Message;
+				result.ErrorMessage = "An exception occurred.";
+				_exceptionService.ReportException(e);
 			}
 
 			return new JsonResult(result);
@@ -70,8 +76,11 @@ namespace ZokuChat.Controllers
 
 			try
 			{
-				// Validate
-				blockedUID.Should().NotBeNullOrWhiteSpace();
+				if (blockedUID.IsNullOrWhitespace())
+				{
+					result.ErrorMessage = "Bad request.";
+					return new JsonResult(result);
+				}
 
 				// Retrieve the requested user
 				User blocked = _userService.GetUserByUID(blockedUID);
@@ -91,8 +100,8 @@ namespace ZokuChat.Controllers
 			}
 			catch (Exception e)
 			{
-				// Something went wrong, log the exception's message
-				result.ErrorMessage = e.Message;
+				result.ErrorMessage = "An exception occurred.";
+				_exceptionService.ReportException(e);
 			}
 
 			return new JsonResult(result);

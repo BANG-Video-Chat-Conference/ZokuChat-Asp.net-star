@@ -1,9 +1,9 @@
 ﻿using System;
-using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZokuChat.Controllers.Responses;
 using ZokuChat.Data;
+using ZokuChat.Extensions;
 using ZokuChat.Helpers;
 using ZokuChat.Models;
 using ZokuChat.Services;
@@ -18,17 +18,20 @@ namespace ZokuChat.Controllers
 		private readonly IUserService _userService;
 		private readonly IContactService _contactService;
 		private readonly IContactRequestService _contactRequestService;
+		private readonly IExceptionService _exceptionService;
 
 		public ContactRequestController(
 			Context context,
 			IUserService userService,
 			IContactService contactService,
-			IContactRequestService contactRequestService)
+			IContactRequestService contactRequestService,
+			IExceptionService exceptionService)
 		{
 			_context = context;
 			_userService = userService;
 			_contactService = contactService;
 			_contactRequestService = contactRequestService;
+			_exceptionService = exceptionService;
 		}
 
         [Route("Create")]
@@ -38,8 +41,11 @@ namespace ZokuChat.Controllers
 
 			try
 			{
-				// Validate
-				requestedUID.Should().NotBeNullOrWhiteSpace();
+				if (requestedUID.IsNullOrWhitespace())
+				{
+					result.ErrorMessage = "Bad request.";
+					return new JsonResult(result);
+				}
 
 				// Retrieve the requested user
 				User requested = _userService.GetUserByUID(requestedUID);
@@ -59,8 +65,8 @@ namespace ZokuChat.Controllers
 			}
 			catch (Exception e)
 			{
-				// Something went wrong, log the exception's message
-				result.ErrorMessage = e.Message;
+				result.ErrorMessage = "An exception occured.";
+				_exceptionService.ReportException(e);
 			}
 
 			return new JsonResult(result);
@@ -73,8 +79,11 @@ namespace ZokuChat.Controllers
 
 			try
 			{
-				// Validate
-				requestId.Should().BeGreaterThan(0);
+				if (requestId <= 0)
+				{
+					result.ErrorMessage = "Bad request.";
+					return new JsonResult(result);
+				}
 
 				// Retrieve the requested user
 				ContactRequest request = _contactRequestService.GetContactRequest(requestId);
@@ -94,8 +103,8 @@ namespace ZokuChat.Controllers
 			}
 			catch (Exception e)
 			{
-				// Something went wrong, log the exception's message
-				result.ErrorMessage = e.Message;
+				result.ErrorMessage = "An exception occured.";
+				_exceptionService.ReportException(e);
 			}
 
 			return new JsonResult(result);
@@ -108,8 +117,11 @@ namespace ZokuChat.Controllers
 
 			try
 			{
-				// Validate
-				requestId.Should().BeGreaterThan(0);
+				if (requestId <= 0)
+				{
+					result.ErrorMessage = "Bad request.";
+					return new JsonResult(result);
+				}
 
 				// Retrieve the requested user
 				ContactRequest request = _contactRequestService.GetContactRequest(requestId);
@@ -129,8 +141,8 @@ namespace ZokuChat.Controllers
 			}
 			catch (Exception e)
 			{
-				// Something went wrong, log the exception's message
-				result.ErrorMessage = e.Message;
+				result.ErrorMessage = "An exception occured.";
+				_exceptionService.ReportException(e);
 			}
 
 			return new JsonResult(result);

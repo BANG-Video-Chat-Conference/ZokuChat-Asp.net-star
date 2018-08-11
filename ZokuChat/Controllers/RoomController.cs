@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using ZokuChat.Controllers.Responses;
+using ZokuChat.Extensions;
 using ZokuChat.Helpers;
 using ZokuChat.Models;
 using ZokuChat.Services;
@@ -13,11 +17,62 @@ namespace ZokuChat.Controllers
     {
 		private readonly Context _context;
 		private readonly IRoomService _roomService;
+		private readonly IContactService _contactService;
+		private readonly IExceptionService _exceptionService;
 
-		public RoomController(Context context, IRoomService roomService)
+		public RoomController(
+			Context context,
+			IRoomService roomService,
+			IContactService contactService,
+			IExceptionService exceptionService)
 		{
 			_context = context;
 			_roomService = roomService;
+			_contactService = contactService;
+			_exceptionService = exceptionService;
+		}
+
+		[Route("AddContacts")]
+		public JsonResult AddRoomContacts(int roomId, string[] UIDs)
+		{
+			GenericResponse result = new GenericResponse() { IsSuccessful = false };
+
+			try
+			{
+				if (roomId < 1 || UIDs.IsNullOrEmpty())
+				{
+					result.ErrorMessage = "Bad request.";
+					return new JsonResult(result);
+				}
+
+				Room room = _roomService.GetRoom(roomId);
+
+				if (room == null || !RoomPermissionHelper.CanAddRoomContact(_context.CurrentUser, room))
+				{
+					result.ErrorMessage = "You do not have permission to add a contact to this room.";
+					return new JsonResult(result);
+				}
+
+				// Filter out invalid UIDs
+				List<string> contactUIDs = 
+					_contactService.GetUserContacts(_context.CurrentUser)
+						.Where(c => UIDs.Contains(c.ContactUID))
+						.Select(c => c.ContactUID)
+						.ToList();
+
+				// Now add the contacts to the room
+				_roomService.AddRoomContacts(_context.CurrentUser, room, contactUIDs);
+
+				// If we got this far we are successful
+				result.IsSuccessful = true;
+			}
+			catch (Exception e)
+			{
+				result.ErrorMessage = "An exception occurred.";
+				_exceptionService.ReportException(e);
+			}
+
+			return new JsonResult(result);
 		}
 
 		[Route("Delete")]
@@ -41,9 +96,9 @@ namespace ZokuChat.Controllers
 					// Delete the room
 					_roomService.DeleteRoom(room);
 				}
-				catch (Exception)
+				catch (Exception e)
 				{
-					// If we got here something went wrong so return accordingly
+					_exceptionService.ReportException(e);
 					return LocalRedirect(UrlHelper.GetErrorUrl());
 				}
 			}

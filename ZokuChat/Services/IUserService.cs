@@ -10,6 +10,8 @@ namespace ZokuChat.Services
     {
 		User GetUserByUID(string UID);
 
+		IQueryable<User> GetUserByUID(string[] UIDs);
+
 		User GetUserByUserName(string userName);
 
 		IQueryable<User> GetUsers(UserSearch search);
