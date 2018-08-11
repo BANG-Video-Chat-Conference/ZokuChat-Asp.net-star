@@ -4,6 +4,7 @@
 	ViewData["Title"] = "View Room";
 }
 
+@using ZokuChat.Extensions
 @using ZokuChat.Helpers
 @using ZokuChat.Models
 @using ZokuChat.Services
@@ -14,11 +15,15 @@
 <div class="content-container">
 	<partial name="_ChatSidebar" />
 	<div class="content">
-		<h3>Rooms</h3>
-		<div class="form-group">
-			<label for="name">Name</label>
-			<div id="name">
-				@Model.Room.Name
+		<h3>@Model.Room.Name</h3>
+		<div class="form-group margin-lg-top">
+			<label for="created">Created Date</label>
+			<script>
+				$(document).ready(function () {
+					$('#created').html(window.ZokuChat.GetLocalDateTimeStr(@Model.Room.CreatedDateUtc.ToJavaScriptDateString()));
+				});
+			</script>
+			<div id="created">	
 			</div>
 		</div>
 		<div class="form-group">
@@ -29,13 +34,13 @@
 		</div>
 		<div class="form-group">
 			<label for="contacts">Contacts</label>
-			<div id="contacts" style="width: 500px; display: flex; flex-direction: row;">
-				<div class="room-creator margin-right margin-bottom">
+			<div id="contacts" style="max-width: 500px; display: flex; flex-direction: row;">
+				<div class="room-creator margin-sm-right margin-sm-bottom">
 					@UserService.GetUserNameByUID(Model.Room.CreatedUID)
 				</div>
 				@foreach (RoomContact contact in Model.Room.Contacts)
 				{
-					<div class="room-contact margin-right margin-bottom">
+					<div class="room-contact margin-sm-right margin-sm-bottom">
 						@UserService.GetUserNameByUID(contact.ContactUID)
 					</div>
 				}
