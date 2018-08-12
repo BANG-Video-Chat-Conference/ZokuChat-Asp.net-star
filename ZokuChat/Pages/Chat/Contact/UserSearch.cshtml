@@ -10,7 +10,7 @@
 	<div class="content">
 		<h3>User Search</h3>
 		<form method="post">
-			<div class="container-fluid margin-lg-top">
+			<div class="container-fluid margin-lg-bottom">
 				<div class="row">
 					<div class="col-200">
 						<div class="input-group">
@@ -25,13 +25,11 @@
 		</form>
 		@foreach (User user in Model.Users)
 		{
-			<div class="margin-lg-top">
-				<partial name="_UserCard" model="user" />
-			</div>
+			<partial name="_UserCard" model="user" />
 		}
 		@if (!String.IsNullOrWhiteSpace(Model.SearchMessage))
 		{
-			<div class="alert alert-primary margin-lg-top float-left">
+			<div class="alert alert-primary float-left">
 				@Model.SearchMessage
 			</div>
 		}

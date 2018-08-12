@@ -1,0 +1,16 @@
+﻿@model ContactRequest
+@using ZokuChat.Models
+@using ZokuChat.Services
+
+@inject IContactService ContactService
+@inject IContactRequestService ContactRequestService
+@inject IUserService UserService
+@inject Context DbContext
+
+<div class="user-card">
+	<div class="contact float-left margin-right margin-bottom">
+		@UserService.GetUserByUID(Model.RequestorUID).UserName
+	</div>
+	@ZokuChat.Helpers.HtmlHelper.GetContactRequestButton(DbContext, ContactService, ContactRequestService, UserService.GetUserByUID(Model.RequestorUID), "float-left margin-right margin-bottom")
+	@ZokuChat.Helpers.HtmlHelper.GetBlockUserButton(UserService.GetUserByUID(Model.RequestorUID), "float-left margin-right margin-bottom")
+</div>

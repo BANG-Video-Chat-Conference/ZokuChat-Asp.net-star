@@ -7,6 +7,10 @@ label {
 	font-weight: 500;
 }
 
+h3 {
+	margin-bottom: 16px;
+}
+
 .margin {
 	margin: 8px;
 }
@@ -79,10 +83,6 @@ label {
 	color: #db94b9 !important;
 }
 
-.btn-outline-success:hover {
-	background-color: #db94b9;
-}
-
 .btn-nav {
 	border-color: #fff;
 	color: #fff;
@@ -130,7 +130,15 @@ label {
 	border-radius: 0
 }
 
-.card-user {
+.user-card {
+	display: flex;
+}
+
+.card-contact {
+	max-width: 500px;
+}
+
+.card-request {
 	max-width: 500px;
 }
 
@@ -138,14 +146,21 @@ label {
 	max-width: 720px;
 }
 
+.contact {
+	background-color: #db94b9;
+	color: #fff;
+	height: 38px;
+	padding: .375rem .75rem;
+}
+
 .room-creator {
-	border: 2px solid #007bff;
-	color: #007bff;
+	background-color: #007bff;
+	color: #fff;
 	padding: 4px;
 }
 
 .room-contact {
-	border: 2px solid #db94b9;
-	color: #db94b9;
+	background-color: #db94b9;
+	color: #fff;
 	padding: 4px;
 }

@@ -13,9 +13,7 @@
 		<h3>Contact Requests</h3>
 		@foreach (ContactRequest request in Model.ContactRequests)
 		{
-			<div class="margin-lg-top">
-				<partial name="_ContactRequestCard" model="request" />
-			</div>
+			<partial name="_ContactRequestCard" model="request" />
 		}
 	</div>
 </div>

@@ -6,19 +6,17 @@
 @inject IContactRequestService ContactRequestService
 @inject Context DbContext
 
-<div class="card card-user">
-	<div class="card-body">
+<div class="user-card">
+	<div class="contact float-left margin-right margin-bottom">
 		@Model.UserName
 	</div>
-	<div class="card-footer">
-		@if (ContactService.IsUserContact(DbContext.CurrentUser, Model))
-		{
-			@ZokuChat.Helpers.HtmlHelper.GetContactRemoveButton(ContactService.GetUserContact(DbContext.CurrentUser, Model))
-		}
-		else
-		{
-			@ZokuChat.Helpers.HtmlHelper.GetContactRequestButton(DbContext, ContactService, ContactRequestService, Model)
-		}
-		@ZokuChat.Helpers.HtmlHelper.GetBlockUserButton(Model, "float-right")
-	</div>
+	@if (ContactService.IsUserContact(DbContext.CurrentUser, Model))
+	{
+		@ZokuChat.Helpers.HtmlHelper.GetContactRemoveButton(ContactService.GetUserContact(DbContext.CurrentUser, Model), "float-left margin-right margin-bottom")
+	}
+	else
+	{
+		@ZokuChat.Helpers.HtmlHelper.GetContactRequestButton(DbContext, ContactService, ContactRequestService, Model, "float-left margin-right margin-bottom")
+	}
+	@ZokuChat.Helpers.HtmlHelper.GetBlockUserButton(Model, "float-left margin-right margin-bottom")
 </div>

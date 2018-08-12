@@ -11,7 +11,7 @@
 			@UserService.GetUserByUID(Model.BlockedUID).UserName
 		</div>
 		<i class="text-muted">
-			<partial name="_LocalDateTime" model="@Model.CreatedDateUtc" />
+			Blocked on <partial name="_LocalDateTime" model="@Model.CreatedDateUtc" />
 		</i>
 	</div>
 	<div class="card-footer">

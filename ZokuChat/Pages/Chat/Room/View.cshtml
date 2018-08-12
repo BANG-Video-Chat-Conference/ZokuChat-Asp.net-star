@@ -4,7 +4,6 @@
 	ViewData["Title"] = "View Room";
 }
 
-@using ZokuChat.Extensions
 @using ZokuChat.Helpers
 @using ZokuChat.Models
 @using ZokuChat.Services
@@ -16,7 +15,7 @@
 	<partial name="_ChatSidebar" />
 	<div class="content">
 		<h3>@Model.Room.Name</h3>
-		<div class="form-group margin-lg-top">
+		<div class="form-group">
 			<label for="created">Created Date</label>
 			<div id="created">
 				<partial name="_LocalDateTime" model="@Model.Room.CreatedDateUtc" />
@@ -42,10 +41,10 @@
 				}
 			</div>
 		</div>
-		<a href="@UrlHelper.GetRoomsUrl()" class="btn btn-primary margin-right">Rooms List</a>
+		<a href="@UrlHelper.GetRoomsUrl()" class="btn btn-outline-primary margin-right">Rooms List</a>
 		@if (RoomPermissionHelper.CanDeleteRoom(Context.CurrentUser, Model.Room))
 		{
-			<button class="btn btn-danger" onclick="window.ZokuChat.DeleteRoom(@Model.Room.Id);">Delete</button>
+			<button class="btn btn-outline-danger" onclick="window.ZokuChat.DeleteRoom(@Model.Room.Id);">Delete</button>
 		}
 	</div>
 </div>
