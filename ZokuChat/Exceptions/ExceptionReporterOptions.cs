@@ -1,4 +1,4 @@
-﻿namespace ZokuChat.Services
+﻿namespace ZokuChat.Exceptions
 {
     public class ExceptionReporterOptions
     {

@@ -12,6 +12,7 @@ using ZokuChat.Email;
 using WebPWrecover.Services;
 using ZokuChat.Data;
 using ZokuChat.Services;
+using ZokuChat.Exceptions;
 
 namespace ZokuChat
 {
@@ -97,11 +98,12 @@ namespace ZokuChat
 			services.Configure<AuthMessageSenderOptions>(Configuration);
 
 			// Configure service that reports exceptions
-			services.AddSingleton<IExceptionService, ExceptionService>();
+			services.AddSingleton<ISentryClient, SentryClient>();
 			services.Configure<ExceptionReporterOptions>(Configuration);
 
 			// Add injectable services
 			services.AddTransient<IEmailService, EmailService>();
+			services.AddTransient<IExceptionService, ExceptionService>();
 			services.AddTransient<IResolveUserService, ResolveUserService>();
 			services.AddTransient<IUserService, UserService>();
 			services.AddTransient<IBlockedUserService, BlockedUserService>();
