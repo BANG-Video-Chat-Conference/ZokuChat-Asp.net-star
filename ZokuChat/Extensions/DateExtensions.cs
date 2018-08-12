@@ -24,9 +24,14 @@ namespace ZokuChat.Extensions
 			return $"{dateTime.ToString(DATE_FORMAT, CultureInfo.InvariantCulture)} at {dateTime.ToString(TIME_FORMAT, CultureInfo.InvariantCulture)}";
 		}
 
-		public static HtmlString ToJavaScriptDateString(this DateTime dateTime)
+		public static string ToLocalDateTimeString(this DateTime dateTime)
 		{
-			return new HtmlString($"new Date('{DateTime.SpecifyKind(dateTime, DateTimeKind.Utc).ToString("o")}')");
+			return dateTime.SpecifyUtc().ToString("o");
+		}
+
+		public static DateTime SpecifyUtc(this DateTime dateTime)
+		{
+			return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
 		}
 	}
 }
