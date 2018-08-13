@@ -2,7 +2,6 @@
 using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
-using ZokuChat.Services;
 
 namespace ZokuChat.Helpers
 {
@@ -18,10 +17,9 @@ namespace ZokuChat.Helpers
 			return IsRoomCreator(user, room);
 		}
 
-		public static bool CanViewRoom(IRoomService roomService, User user, Room room)
+		public static bool CanViewRoom(User user, Room room)
 		{
 			// Validate
-			roomService.Should().NotBeNull();
 			user.Should().NotBeNull();
 			room.Should().NotBeNull();
 
@@ -39,6 +37,23 @@ namespace ZokuChat.Helpers
 			{
 				// The user isn't the creator so return true if they are a room contact
 				return room.Contacts.Any(rc => rc.ContactUID.Equals(user.Id));
+			}
+		}
+
+		public static bool CanEditRoom(User user, Room room)
+		{
+			// Validate
+			user.Should().NotBeNull();
+			room.Should().NotBeNull();
+
+			if (!room.IsDeleted && IsRoomCreator(user, room))
+			{
+				// Creators can edit their own rooms if they are not deleted
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 

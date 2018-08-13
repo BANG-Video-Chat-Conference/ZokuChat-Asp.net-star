@@ -14,7 +14,11 @@
 		@Model.Description
 	</div>
 	<div class="card-footer">
+		<a href="" class="btn btn-outline-primary margin-right">Enter</a>
 		<a href="@UrlHelper.GetViewRoomUrl(Model.Id)" class="btn btn-outline-primary margin-right">View</a>
-		<a href="" class="btn btn-outline-primary">Enter</a>
+		@if (RoomPermissionHelper.CanEditRoom(DbContext.CurrentUser, Model))
+		{
+			<a href="@UrlHelper.GetEditRoomUrl(Model.Id)" class="btn btn-outline-primary margin-right">Edit</a>
+		}
 	</div>
 </div>

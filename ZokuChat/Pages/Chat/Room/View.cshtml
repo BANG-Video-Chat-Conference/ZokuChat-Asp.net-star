@@ -42,9 +42,13 @@
 			</div>
 		</div>
 		<a href="@UrlHelper.GetRoomsUrl()" class="btn btn-outline-primary margin-right">Rooms List</a>
+		@if (RoomPermissionHelper.CanEditRoom(Context.CurrentUser, Model.Room))
+		{
+			<a href="@UrlHelper.GetEditRoomUrl(Model.Room.Id)" class="btn btn-outline-primary margin-right">Edit</a>
+		}
 		@if (RoomPermissionHelper.CanDeleteRoom(Context.CurrentUser, Model.Room))
 		{
-			<button class="btn btn-outline-danger" onclick="window.ZokuChat.DeleteRoom(@Model.Room.Id);">Delete</button>
+			<button class="btn btn-outline-danger margin-right" onclick="window.ZokuChat.DeleteRoom(@Model.Room.Id);">Delete</button>
 		}
 	</div>
 </div>

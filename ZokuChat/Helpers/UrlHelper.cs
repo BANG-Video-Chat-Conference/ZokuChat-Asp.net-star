@@ -8,6 +8,7 @@
 		private const string _ROOMS_URL = "/Chat/Room/Index";
 		private const string _NEW_ROOM_URL = "/Chat/Room/Create";
 		private const string _VIEW_ROOM_URL = "/Chat/Room/View";
+		private const string _EDIT_ROOM_URL = "/Chat/Room/Edit";
 		private const string _LOGIN_URL = "/Account/Login";
 		private const string _LOGOUT_URL = "/Account/Logout";
 		private const string _CONFIRM_EMAIL_URL = "/Account/ConfirmEmail";
@@ -48,6 +49,11 @@
 		public static string GetViewRoomUrl(int id)
 		{
 			return $"{_VIEW_ROOM_URL}?id={id}";
+		}
+
+		public static string GetEditRoomUrl(int id)
+		{
+			return $"{_EDIT_ROOM_URL}?id={id}";
 		}
 
 		public static string GetAboutUrl()
