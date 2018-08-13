@@ -75,7 +75,7 @@
 			setContactUIDsInput();
 
 			contactsListSelect =
-				window.ZokuChat.initContactsListSelect2($('#contacts-select'))
+				window.ZokuChat.initContactsListSelect2($('#contacts-select'), 'Select desired contacts for this room')
 					.on("select2:select", function (e) { addUID(e); })
 					.on("select2:unselect", function (e) { removeUID(e); })
 					.val(contactUIDs)

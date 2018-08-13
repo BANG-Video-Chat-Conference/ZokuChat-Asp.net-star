@@ -107,7 +107,7 @@
 		return `${window.ZokuChat.getLocalDateStr(date)} at ${window.ZokuChat.getLocalTimeStr(date)}`;
 	},
 
-	initContactsListSelect2: function (selector) {
+	initContactsListSelect2: function (selector, placeholderText) {
 		return selector.select2({
 			ajax: {
 				url: '/Contacts/List',
@@ -131,7 +131,7 @@
 				}
 			},
 			multiple: true,
-			placeholder: 'Select desired contacts for this room'
+			placeholder: placeholderText
 		});
 	}
 
