@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZokuChat.Data;
@@ -28,16 +29,20 @@ namespace ZokuChat.Pages.Chat.Contact
 		public List<User> Users;
 		public string SearchMessage;
 
-		public void OnGet(string searchText)
+		public async Task<IActionResult> OnGet(string searchText)
         {
 			// Bind the search text to what was passed in before searching for users
 			SearchText = searchText;
-			Search();
+			await Task.Run(() => Search());
+
+			return Page();
         }
 
-		public void OnPost()
+		public async Task<IActionResult> OnPost()
 		{
-			Search();
+			await Task.Run(() => Search());
+
+			return Page();
 		}
 
 		private void Search()

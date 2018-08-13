@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ZokuChat.Models;
 using ZokuChat.Services;
 
@@ -19,9 +21,11 @@ namespace ZokuChat.Pages.Chat.Room
 
 		public List<Models.Room> Rooms;
 
-        public void OnGet()
+        public async Task<IActionResult> OnGet()
         {
-			Rooms = _roomService.GetRoomsForUser(_context.CurrentUser).ToList();
+			await Task.Run(() => Rooms = _roomService.GetRoomsForUser(_context.CurrentUser).ToList());
+
+			return Page();
         }
     }
 }

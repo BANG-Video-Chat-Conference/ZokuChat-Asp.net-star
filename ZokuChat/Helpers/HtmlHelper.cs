@@ -26,7 +26,7 @@ namespace ZokuChat.Helpers
 			}
 			else if (contactRequestService.HasActiveContactRequest(context.CurrentUser, user))
 			{
-				return new HtmlString($"<button class='btn btn-outline-success {cssClasses}' disabled>Request Sent</button>");
+				return new HtmlString($"<button class='btn btn-outline-primary {cssClasses}' disabled>Request Sent</button>");
 			}
 			else
 			{

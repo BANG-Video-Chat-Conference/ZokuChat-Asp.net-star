@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ZokuChat.Models;
 using ZokuChat.Services;
 
@@ -19,9 +21,10 @@ namespace ZokuChat.Pages.Chat.Contact
 			_contactService = contactService;
 		}
 
-		public void OnGet()
+		public async Task<IActionResult> OnGet()
 		{
-			Contacts = _contactService.GetUserContacts(_context.CurrentUser).ToList();
+			await Task.Run(() => Contacts = _contactService.GetUserContacts(_context.CurrentUser).ToList());
+			return Page();
 		}
     }
 }
