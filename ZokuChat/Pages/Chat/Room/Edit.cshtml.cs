@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 using ZokuChat.Helpers;
 using ZokuChat.Models;
 using ZokuChat.Services;
@@ -13,7 +13,6 @@ namespace ZokuChat.Pages.Chat.Room
     public class EditModel : PageModel
     {
 		private readonly Context _context;
-		private readonly IUserService _userService;
 		private readonly IRoomService _roomService;
 		private readonly IExceptionService _exceptionService;
 
@@ -33,11 +32,11 @@ namespace ZokuChat.Pages.Chat.Room
 			_exceptionService = exceptionService;
 		}
 
-        public IActionResult OnGet(int id)
+        public async Task<IActionResult> OnGet(int id)
         {
 			if (id > 0)
 			{
-				Room = _roomService.GetRoom(id);
+				Room = await Task.Run(() => _roomService.GetRoom(id));
 			}
 
 			if (Room == null || !RoomPermissionHelper.CanEditRoom(_context.CurrentUser, Room))
@@ -49,7 +48,7 @@ namespace ZokuChat.Pages.Chat.Room
 			return Page();
         }
 
-		public IActionResult OnPost(int id)
+		public async Task<IActionResult> OnPost(int id)
 		{
 			if (ModelState.IsValid)
 			{
@@ -59,7 +58,7 @@ namespace ZokuChat.Pages.Chat.Room
 
 					if (id > 0)
 					{
-						retrievedRoom = _roomService.GetRoom(id);
+						retrievedRoom = await Task.Run(() => _roomService.GetRoom(id));
 					}
 
 					if (retrievedRoom == null || !RoomPermissionHelper.CanEditRoom(_context.CurrentUser, retrievedRoom))
@@ -71,10 +70,10 @@ namespace ZokuChat.Pages.Chat.Room
 					retrievedRoom.Name = Room.Name;
 					retrievedRoom.Description = Room.Description;
 
-					_context.SaveChanges();
+					await _context.SaveChangesAsync();
 
 					// Now add the room contacts (this will only add valid room contacts)
-					_roomService.SetRoomContacts(_context.CurrentUser, retrievedRoom, ContactUIDs.Split(","));
+					_roomService.SetRoomContacts(_context.CurrentUser, retrievedRoom, ContactUIDs != null ? ContactUIDs.Split(",") : new string[] { });
 
 					// If we got here we were successful, so redirect to view page
 					return LocalRedirect(UrlHelper.GetViewRoomUrl(retrievedRoom.Id));

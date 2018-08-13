@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
+using System.Threading.Tasks;
 using ZokuChat.Helpers;
 using ZokuChat.Models;
 using ZokuChat.Services;
@@ -30,14 +31,14 @@ namespace ZokuChat.Pages.Chat.Room
         {
         }
 
-		public IActionResult OnPost()
+		public async Task<IActionResult> OnPost()
 		{
 			if (ModelState.IsValid)
 			{
 				try
 				{
 					// Try and create the room
-					_roomService.CreateRoom(_context.CurrentUser, Room);
+					await Task.Run(() => _roomService.CreateRoom(_context.CurrentUser, Room));
 
 					// We are successful if we got here, redirect to list of rooms
 					return LocalRedirect(UrlHelper.GetRoomsUrl());

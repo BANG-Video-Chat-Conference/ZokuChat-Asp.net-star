@@ -48,7 +48,7 @@
 		}
 		@if (RoomPermissionHelper.CanDeleteRoom(Context.CurrentUser, Model.Room))
 		{
-			<button class="btn btn-outline-danger margin-right" onclick="window.ZokuChat.DeleteRoom(@Model.Room.Id);">Delete</button>
+			<button class="btn btn-outline-danger margin-right" onclick="window.ZokuChat.deleteRoom(@Model.Room.Id);">Delete</button>
 		}
 	</div>
 </div>
