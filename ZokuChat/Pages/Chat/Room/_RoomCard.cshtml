@@ -1,4 +1,5 @@
 ﻿@model Room
+@using ZokuChat.Extensions
 @using ZokuChat.Helpers
 @using ZokuChat.Models
 @using ZokuChat.Services
@@ -11,7 +12,14 @@
 		@Model.Name
 	</div>
 	<div class="card-body">
-		@Model.Description
+		@if (Model.Description.IsNullOrWhitespace())
+		{
+			<i class="text-muted">No description provided.</i>
+		}
+		else
+		{
+			@Model.Description
+		}
 	</div>
 	<div class="card-footer">
 		<a href="" class="btn btn-outline-primary margin-right">Enter</a>
