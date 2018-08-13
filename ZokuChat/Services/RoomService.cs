@@ -97,7 +97,7 @@ namespace ZokuChat.Services
 			DateTime now = DateTime.UtcNow;
 			List<RoomContact> roomContacts = new List<RoomContact>();
 
-			foreach (string contactUID in contactUIDs)
+			foreach (string contactUID in contactUIDs.Where(id => !room.Contacts.Any(c => c.ContactUID.Equals(id))))
 			{
 				roomContacts.Add(new RoomContact
 				{
@@ -111,6 +111,45 @@ namespace ZokuChat.Services
 			}
 
 			// Save the list of room contacts
+			_context.RoomContacts.AddRange(roomContacts);
+			_context.SaveChanges();
+		}
+
+		/// <summary>
+		///	Sets UIDs to the room that are found in the user's contacts.
+		/// </summary>
+		public void SetRoomContacts(User actionUser, Room room, string[] UIDs)
+		{
+			// Validate
+			actionUser.Should().NotBeNull();
+			room.Should().NotBeNull();
+			UIDs.Should().NotBeNull();
+
+			// Filter out invalid UIDs
+			IQueryable<string> contactUIDs =
+				_contactService.GetUserContacts(actionUser)
+					.Where(c => UIDs.Contains(c.ContactUID))
+					.Select(c => c.ContactUID);
+
+			// Create a list of room contacts to add
+			DateTime now = DateTime.UtcNow;
+			List<RoomContact> roomContacts = new List<RoomContact>();
+
+			foreach (string contactUID in contactUIDs.Where(id => !room.Contacts.Any(c => c.ContactUID.Equals(id))))
+			{
+				roomContacts.Add(new RoomContact
+				{
+					ContactUID = contactUID,
+					RoomId = room.Id,
+					CreatedUID = actionUser.Id,
+					CreatedDateUtc = now,
+					ModifiedUID = actionUser.Id,
+					ModifiedDateUtc = now
+				});
+			}
+
+			// Save the list of room contacts
+			_context.RoomContacts.RemoveRange(_context.RoomContacts.Where(rc => rc.RoomId == room.Id && !UIDs.Contains(rc.ContactUID)));
 			_context.RoomContacts.AddRange(roomContacts);
 			_context.SaveChanges();
 		}

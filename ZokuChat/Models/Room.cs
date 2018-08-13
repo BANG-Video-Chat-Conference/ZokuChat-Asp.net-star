@@ -30,6 +30,6 @@ namespace ZokuChat.Models
 		[Required]
 		public bool IsDeleted { get; set; }
 
-		public ICollection<RoomContact> Contacts { get; set; }
+		public List<RoomContact> Contacts { get; set; }
     }
 }

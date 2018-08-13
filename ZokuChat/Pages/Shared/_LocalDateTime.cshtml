@@ -3,7 +3,7 @@
 
 <script>
 	$(document).ready(function () {
-		$('#date-time-@Model.Ticks').html(window.ZokuChat.GetLocalDateTimeStr(new Date('@Model.ToLocalDateTimeString()')));
+		$('#date-time-@Model.Ticks').html(window.ZokuChat.getLocalDateTimeStr(new Date('@Model.ToLocalDateTimeString()')));
 	});
 </script>
 <span id="date-time-@Model.Ticks">

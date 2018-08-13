@@ -28,6 +28,8 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\lib\jquery-validate\dist\" />
+    <Folder Include="wwwroot\lib\select2\js\" />
+    <Folder Include="wwwroot\lib\select2\css\" />
   </ItemGroup>
 
 </Project>

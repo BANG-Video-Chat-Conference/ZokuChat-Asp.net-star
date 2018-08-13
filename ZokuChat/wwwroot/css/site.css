@@ -160,11 +160,30 @@ h3 {
 .room-creator {
 	background-color: #007bff;
 	color: #fff;
-	padding: 4px;
+	height: 38px;
+	padding: .375rem .75rem;
 }
 
 .room-contact {
 	background-color: #db94b9;
 	color: #fff;
-	padding: 4px;
+	height: 38px;
+	padding: .375rem .75rem;
+}
+
+.select2-selection__rendered {
+	padding-left: .75rem !important;
+	padding-right: .75rem !important;
+}
+
+.select2-selection {
+	border-radius: 0 !important;
+}
+
+.select2-selection__choice {
+	background-color: #db94b9 !important;
+	color: #fff !important;
+	border-radius: 0 !important;
+	margin-right: 8px !important;
+	margin-top: 6px !important;
 }

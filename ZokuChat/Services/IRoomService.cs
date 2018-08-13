@@ -17,6 +17,8 @@ namespace ZokuChat.Services
 
 		void AddRoomContacts(User actionUser, Room room, string[] UIDs);
 
+		void SetRoomContacts(User actionUser, Room room, string[] UIDs);
+
 		void DeleteRoom(Room room);
     }
 }

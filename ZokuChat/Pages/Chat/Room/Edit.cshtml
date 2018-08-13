@@ -4,6 +4,10 @@
 	ViewData["Title"] = "Edit Room";
 }
 
+@using ZokuChat.Models
+@using ZokuChat.Services
+@inject IUserService UserService
+
 <partial name="_SiteHeader" />
 <div class="content-container">
 	<partial name="_ChatSidebar" />
@@ -22,6 +26,17 @@
 				<input id="description" asp-for="Room.Description" class="form-control" />
 				<span asp-validation-for="Room.Description" class="text-danger"></span>
 			</div>
+			<div class="form-group">
+				<label for="contacts">Contacts</label>
+				<select id="contacts-select" class="form-control">
+					@foreach (RoomContact contact in Model.Room.Contacts)
+					{
+						<option value="@contact.ContactUID">@UserService.GetUserNameByUID(contact.ContactUID)</option>
+					}
+				</select>
+				<input id="contacts" asp-for="ContactUIDs" type="hidden" />
+				<span asp-validation-for="ContactUIDs" class="text-danger"></span>
+			</div>
 			<input type="submit" value="Save" class="btn btn-primary">
 		</form>
 	</div>
@@ -29,4 +44,42 @@
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
+	<partial name="_Select2ScriptsPartial" />
+	<script>
+		var contactUIDs = [];
+
+		function removeUID(e) {
+			let index = contactUIDs.indexOf(e.params.data.id);
+			if (index > -1) {
+				contactUIDs.splice(index, 1);
+				setContactUIDsInput();
+			}
+		}
+
+		function addUID(e) {
+			let index = contactUIDs.indexOf(e.params.data.id);
+			if (index === -1) {
+				contactUIDs.push(e.params.data.id);
+				setContactUIDsInput();
+			}	
+		}
+
+		function setContactUIDsInput() {
+			$('#contacts').val(contactUIDs.join());
+		}
+
+		$(document).ready(function () {
+			let contactUIDsStr = '@Model.ContactUIDs';
+			contactUIDs = contactUIDsStr.split(',');
+
+			setContactUIDsInput();
+
+			contactsListSelect =
+				window.ZokuChat.initContactsListSelect2($('#contacts-select'))
+					.on("select2:select", function (e) { addUID(e); })
+					.on("select2:unselect", function (e) { removeUID(e); })
+					.val(contactUIDs)
+					.trigger('change');
+		});
+	</script>
 }

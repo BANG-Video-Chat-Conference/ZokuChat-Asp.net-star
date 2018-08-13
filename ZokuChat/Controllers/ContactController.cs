@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZokuChat.Controllers.Responses;
+using ZokuChat.Extensions;
 using ZokuChat.Helpers;
 using ZokuChat.Models;
 using ZokuChat.Services;
@@ -31,7 +32,7 @@ namespace ZokuChat.Controllers
 		}
 
 		[Route("List")]
-		public JsonResult GetContacts()
+		public JsonResult GetContacts(string searchTerm)
 		{
 			ContactsResponse result = new ContactsResponse() { IsSuccessful = false };
 
@@ -42,6 +43,11 @@ namespace ZokuChat.Controllers
 				if (contactUIDs.Length > 0)
 				{
 					result.Contacts = _userService.GetUserByUID(contactUIDs).Select(u => new ContactResult { Id = u.Id, UserName = u.UserName }).ToArray();
+
+					if (!searchTerm.IsNullOrWhitespace())
+					{
+						result.Contacts = result.Contacts.Where(cr => cr.UserName.Contains(searchTerm)).ToArray();
+					}
 				}
 				else
 				{
