@@ -31,5 +31,7 @@ namespace ZokuChat.Models
 		public bool IsDeleted { get; set; }
 
 		public List<RoomContact> Contacts { get; set; }
-    }
+
+		public List<Message> Messages { get; set; }
+	}
 }

@@ -28,5 +28,8 @@ namespace ZokuChat.Models
 		public DateTime ModifiedDateUtc { get; set; }
 
 		public bool IsDeleted { get; set; }
-    }
+
+		[Required]
+		public Room Room { get; set; }
+	}
 }

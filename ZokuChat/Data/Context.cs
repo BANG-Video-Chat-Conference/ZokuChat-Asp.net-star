@@ -15,6 +15,7 @@ namespace ZokuChat.Models
 		public DbSet<BlockedUser> BlockedUsers { get; set; }
 		public DbSet<Room> Rooms { get; set; }
 		public DbSet<RoomContact> RoomContacts { get; set; }
+		public DbSet<Message> Messages { get; set; }
 
 		private User _currentUser;
 		public User CurrentUser
@@ -43,6 +44,12 @@ namespace ZokuChat.Models
 			builder.Entity<RoomContact>()
 				.HasOne(rc => rc.Room)
 				.WithMany(r => r.Contacts)
+				.HasForeignKey(r => r.RoomId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			builder.Entity<Message>()
+				.HasOne(rc => rc.Room)
+				.WithMany(r => r.Messages)
 				.HasForeignKey(r => r.RoomId)
 				.OnDelete(DeleteBehavior.Cascade);
 		}
