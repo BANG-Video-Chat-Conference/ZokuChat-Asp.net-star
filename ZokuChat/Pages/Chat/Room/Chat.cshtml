@@ -4,13 +4,29 @@
 	ViewData["Title"] = "Chat";
 }
 
-<div class="content-container">
-	<div class="content">
+@using ZokuChat.Helpers;
 
+<div class="chat-container">
+	<div class="chat-header">
+		<a class="float-left" href="@UrlHelper.GetEnterRoomUrl(Model.Room.Id)">@Model.Room.Name</a>
+		<a class="float-right" href="@UrlHelper.GetRoomsUrl()">Exit Room</a>
 	</div>
-	<partial name="_ChatRoomSidebar" />
+	<div class="chat-messages">
+		
+	</div>
+	<div class="chat-footer">
+		<div class="input-group">
+			<input id="message-input" placeholder="Enter a message" class="form-control" />
+			<div class="input-group-append">
+				<input class="btn btn-primary" type="submit" value="Send" />
+			</div>
+		</div>
+	</div>
 </div>
 
 @section Scripts {
 	<partial name="_ChatHubScriptsPartial" />
+	<script>
+		window.ZokuChat.RoomId = @Model.Room.Id;
+	</script>
 }
