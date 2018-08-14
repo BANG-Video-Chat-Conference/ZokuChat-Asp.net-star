@@ -41,6 +41,7 @@
 				}
 			</div>
 		</div>
+		<a href="@UrlHelper.GetEnterRoomUrl(Model.Room.Id)" class="btn btn-outline-primary margin-right">Enter</a>
 		<a href="@UrlHelper.GetRoomsUrl()" class="btn btn-outline-primary margin-right">Rooms List</a>
 		@if (RoomPermissionHelper.CanEditRoom(Context.CurrentUser, Model.Room))
 		{

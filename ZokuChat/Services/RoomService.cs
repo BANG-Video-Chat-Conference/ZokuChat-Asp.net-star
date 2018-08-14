@@ -70,11 +70,8 @@ namespace ZokuChat.Services
 			// Validate
 			user.Should().NotBeNull();
 
-			// Build a query for room ids where user is a contact
-			IQueryable<int> roomsWhereUserIsContact = _context.RoomContacts.Where(rc => rc.ContactUID.Equals(user.Id)).Select(rc => rc.RoomId);
-
 			// Return rooms where user is the creator or a contact and are not deleted
-			return _context.Rooms.Where(r => r.CreatedUID.Equals(user.Id) || roomsWhereUserIsContact.Contains(r.Id)).Where(r => !r.IsDeleted);
+			return _context.Rooms.Include(r => r.Contacts).Where(r => r.CreatedUID.Equals(user.Id) || r.Contacts.Any(c => c.ContactUID.Equals(user.Id))).Where(r => !r.IsDeleted);
 		}
 
 		/// <summary>

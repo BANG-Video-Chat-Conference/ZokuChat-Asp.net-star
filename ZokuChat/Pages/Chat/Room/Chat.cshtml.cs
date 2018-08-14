@@ -22,7 +22,10 @@ namespace ZokuChat.Pages.Chat.Room
 
         public async Task<IActionResult> OnGet(int roomId)
         {
-			await Task.Run(() => Room = _roomService.GetRoom(roomId));
+			if (roomId > 0)
+			{
+				await Task.Run(() => Room = _roomService.GetRoom(roomId));
+			}
 
 			if (Room == null || !RoomPermissionHelper.CanViewRoom(_context.CurrentUser, Room))
 			{
