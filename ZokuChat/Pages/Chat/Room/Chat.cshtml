@@ -11,8 +11,13 @@
 		<a class="float-left" href="@UrlHelper.GetEnterRoomUrl(Model.Room.Id)">@Model.Room.Name</a>
 		<a class="float-right" href="@UrlHelper.GetRoomsUrl()">Exit Room</a>
 	</div>
-	<div class="chat-messages">
-		
+	<div class="chat-content">
+		<div class="chat-messages">
+			
+		</div>
+		<div class="chat-sidebar">
+			
+		</div>
 	</div>
 	<div class="chat-footer">
 		<div class="input-group">
@@ -27,6 +32,6 @@
 @section Scripts {
 	<partial name="_ChatHubScriptsPartial" />
 	<script>
-		window.ZokuChat.RoomId = @Model.Room.Id;
+		roomId = @Model.Room.Id;
 	</script>
 }
