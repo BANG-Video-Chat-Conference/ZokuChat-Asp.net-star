@@ -154,13 +154,56 @@ namespace ZokuChat.Services
 			_context.SaveChanges();
 		}
 
-		public void DeleteRoom(Room room)
+		public void DeleteRoom(User actionUser, Room room)
 		{
 			// Validate
+			actionUser.Should().NotBeNull();
 			room.Should().NotBeNull();
 
 			// Delete
 			room.IsDeleted = true;
+			room.ModifiedUID = actionUser.Id;
+			room.ModifiedDateUtc = DateTime.UtcNow;
+
+			// Save
+			_context.SaveChanges();
+		}
+
+		public void AddMessage(User actionUser, Room room, string text)
+		{
+			// Validate
+			actionUser.Should().NotBeNull();
+			room.Should().NotBeNull();
+			text.Should().NotBeNullOrWhiteSpace();
+
+			// Add and save
+			DateTime now = DateTime.UtcNow;
+
+			_context.Messages.Add(new Message
+			{
+				RoomId = room.Id,
+				Text = text,
+				CreatedUID = actionUser.Id,
+				CreatedDateUtc = now,
+				ModifiedUID = actionUser.Id,
+				ModifiedDateUtc = now,
+				IsDeleted = false
+			});
+
+			_context.SaveChanges();
+		}
+
+		public void DeleteMessage(User actionUser, Message message)
+		{
+			// Validate
+			actionUser.Should().NotBeNull();
+			message.Should().NotBeNull();
+
+			// Delete and save
+			message.IsDeleted = true;
+			message.ModifiedUID = actionUser.Id;
+			message.ModifiedDateUtc = DateTime.UtcNow;
+
 			_context.SaveChanges();
 		}
 	}

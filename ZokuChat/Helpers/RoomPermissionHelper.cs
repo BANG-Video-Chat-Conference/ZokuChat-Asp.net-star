@@ -13,8 +13,38 @@ namespace ZokuChat.Helpers
 			user.Should().NotBeNull();
 			room.Should().NotBeNull();
 
-			// The user can add the contact if they are the room creator
-			return IsRoomCreator(user, room);
+			// The user can add the contact if they are the room creator and the room is not deleted
+			return IsRoomCreator(user, room) & !room.IsDeleted;
+		}
+
+		public static bool CanRemoveRoomContact(User user, RoomContact roomContact)
+		{
+			// Validate
+			user.Should().NotBeNull();
+			roomContact.Should().NotBeNull();
+
+			// The user can remove the contact if they are the room creator and the room is not deleted
+			return IsRoomCreator(user, roomContact.Room) & !roomContact.Room.IsDeleted;
+		}
+
+		public static bool CanAddMessage(User user, Room room)
+		{
+			// Validate
+			user.Should().NotBeNull();
+			room.Should().NotBeNull();
+
+			// Return whether or not the user is a room contact or the creator and the room is not deleted
+			return !room.IsDeleted && IsRoomCreator(user, room) || room.Contacts.Any(c => c.ContactUID.Equals(user.Id));
+		}
+
+		public static bool CanDeleteMessage(User user, Message message)
+		{
+			// Validate
+			user.Should().NotBeNull();
+			message.Should().NotBeNull();
+
+			// Return whether or not the user is the message author or room creator and the room is not deleted
+			return !message.Room.IsDeleted && IsRoomCreator(user, message.Room) || message.CreatedUID.Equals(user.Id);
 		}
 
 		public static bool CanViewRoom(User user, Room room)

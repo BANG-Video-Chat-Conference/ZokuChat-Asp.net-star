@@ -85,7 +85,7 @@ namespace ZokuChat.Controllers
 				try
 				{
 					// Delete the room
-					_roomService.DeleteRoom(room);
+					_roomService.DeleteRoom(_context.CurrentUser, room);
 				}
 				catch (Exception e)
 				{

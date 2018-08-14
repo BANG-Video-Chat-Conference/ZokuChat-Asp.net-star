@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using ZokuChat.Data;
 using ZokuChat.Models;
 
@@ -19,6 +18,10 @@ namespace ZokuChat.Services
 
 		void SetRoomContacts(User actionUser, Room room, string[] UIDs);
 
-		void DeleteRoom(Room room);
+		void DeleteRoom(User actionUser, Room room);
+
+		void AddMessage(User actionUser, Room room, string text);
+
+		void DeleteMessage(User actionUser, Message message);
     }
 }

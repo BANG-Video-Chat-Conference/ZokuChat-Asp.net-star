@@ -1,18 +1,19 @@
-using System;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ZokuChat.Models;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using ZokuChat.Email;
+using System;
 using WebPWrecover.Services;
 using ZokuChat.Data;
-using ZokuChat.Services;
+using ZokuChat.Email;
 using ZokuChat.Exceptions;
+using ZokuChat.Hubs;
+using ZokuChat.Models;
+using ZokuChat.Services;
 
 namespace ZokuChat
 {
@@ -93,6 +94,8 @@ namespace ZokuChat
 				})
 				.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+			services.AddSignalR();
+
 			// Configure service that sends email
 			services.AddSingleton<IEmailSender, EmailSender>();
 			services.Configure<AuthMessageSenderOptions>(Configuration);
@@ -129,7 +132,11 @@ namespace ZokuChat
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication();
-            app.UseMvc();
+			app.UseSignalR(routes =>
+			{
+				routes.MapHub<ChatHub>("/chatHub");
+			});
+			app.UseMvc();
         }
     }
 }

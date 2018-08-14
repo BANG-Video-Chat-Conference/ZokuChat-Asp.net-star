@@ -1,0 +1,16 @@
+﻿@page
+@model ChatModel
+@{
+	ViewData["Title"] = "Chat";
+}
+
+<div class="content-container">
+	<div class="content">
+
+	</div>
+	<partial name="_ChatRoomSidebar" />
+</div>
+
+@section Scripts {
+	<partial name="_ChatHubScriptsPartial" />
+}
