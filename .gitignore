@@ -79,3 +79,7 @@ _[Ss]cripts
 ###############
 *.vs
 *.vscode
+######################
+#Node Package Manager#
+######################
+node_modules/
