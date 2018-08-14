@@ -203,5 +203,14 @@ namespace ZokuChat.Services
 
 			_context.SaveChanges();
 		}
+
+		public Message GetMessage(int messageId)
+		{
+			// Validate
+			messageId.Should().BeGreaterThan(0);
+
+			// Retrieve
+			return _context.Messages.Find(messageId);
+		}
 	}
 }

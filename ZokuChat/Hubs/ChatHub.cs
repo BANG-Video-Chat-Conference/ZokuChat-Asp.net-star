@@ -20,6 +20,33 @@ namespace ZokuChat.Hubs
 			_roomService = roomService;
 		}
 
+		public async Task DeleteMessage(int roomId, int messageId)
+		{
+			// Validation
+			if (roomId <= 0 || messageId <= 0)
+			{
+				await ReturnError("Could not delete message", "You must specify a room and message.");
+				return;
+			}
+
+			// Retrieve message
+			Message message = null;
+			await Task.Run(() => message = _roomService.GetMessage(messageId));
+
+			// Permission
+			if (message == null || !RoomPermissionHelper.CanDeleteMessage(_context.CurrentUser, message))
+			{
+				await ReturnError("Could not delete message", "You do not have permission, the room may have been deleted.");
+				return;
+			}
+
+			// Delete	
+			await Task.Run(() => _roomService.DeleteMessage(_context.CurrentUser, message));
+
+			// Notify all in group
+			await Clients.All.SendAsync("DeleteMessage", _context.CurrentUser.UserName, messageId);
+		}
+
 		public async Task SendMessage(int roomId, string text)
 		{
 			// Validation

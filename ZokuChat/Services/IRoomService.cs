@@ -22,6 +22,8 @@ namespace ZokuChat.Services
 
 		void AddMessage(User actionUser, Room room, string text);
 
+		Message GetMessage(int messageId);
+
 		void DeleteMessage(User actionUser, Message message);
     }
 }
