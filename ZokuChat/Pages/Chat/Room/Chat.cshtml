@@ -4,7 +4,11 @@
 	ViewData["Title"] = "Chat";
 }
 
-@using ZokuChat.Helpers;
+@using ZokuChat.Helpers
+@using ZokuChat.Models
+@using ZokuChat.Services
+@inject Context Context
+@inject IUserService UserService
 
 <div class="chat-container">
 	<div class="chat-header">
@@ -12,11 +16,18 @@
 		<a class="float-right" href="@UrlHelper.GetRoomsUrl()">Exit Room</a>
 	</div>
 	<div class="chat-content">
-		<div class="chat-messages">
-			
+		<div class="chat-messages">		
 		</div>
 		<div class="chat-sidebar">
-			
+			<div class="text-creator">
+				@UserService.GetUserNameByUID(Model.Room.CreatedUID)
+			</div>
+			@foreach (RoomContact contact in Model.Room.Contacts)
+			{
+			<div class="text-contact">
+				@UserService.GetUserNameByUID(contact.ContactUID)
+			</div>
+			}
 		</div>
 	</div>
 	<div class="chat-footer">
@@ -33,5 +44,7 @@
 	<partial name="_ChatHubScriptsPartial" />
 	<script>
 		roomId = @Model.Room.Id;
+		creatorId = '@Model.Room.CreatedUID';
+		currentUserId = '@Context.CurrentUser.Id';
 	</script>
 }

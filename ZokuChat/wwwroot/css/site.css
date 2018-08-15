@@ -164,6 +164,14 @@ h3 {
 	padding: .375rem .75rem;
 }
 
+.text-creator {
+	color: #007bff;
+}
+
+.text-contact {
+	color: #db94b9;
+}
+
 .room-contact {
 	background-color: #db94b9;
 	color: #fff;
@@ -209,6 +217,7 @@ h3 {
 }
 
 .chat-sidebar {
+	padding: .5rem 1rem;
 	border-left: 2px dashed #db94b9;
 	width: 200px;
 	height: 100%;
