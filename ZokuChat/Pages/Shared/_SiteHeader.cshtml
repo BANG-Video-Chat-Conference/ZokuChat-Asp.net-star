@@ -4,7 +4,7 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-dark bg-purple">
 	@Html.RouteLink("ZokuChat", "", new { }, new { @href = UrlHelper.GetHomeUrl(), @class = "navbar-brand" })
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
@@ -28,7 +28,7 @@
 						@Html.RouteLink(UserManager.GetUserAsync(User).Result.UserName, "", new { }, new { @href = UrlHelper.GetManageAccountUrl(), @class = "nav-link margin-right" })
 					</li>
 					<li class="nav-item active">
-						<button type="submit" class="btn btn-outline-success btn-nav my-2 my-sm-0">Logout</button>
+						<button type="submit" class="btn btn-outline-primary btn-nav my-2 my-sm-0">Logout</button>
 					</li>
 				</ul>
 			</form>

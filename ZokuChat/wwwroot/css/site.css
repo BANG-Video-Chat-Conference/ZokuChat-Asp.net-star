@@ -75,12 +75,16 @@ h3 {
  border-radius: 0;
 }
 
+.bg-purple {
+	background-color: #db94b9;
+}
+
 .nav-link:hover {
-	color: #db94b9 !important;
+	color: #007bff !important;
 }
 
 .navbar-brand:hover {
-	color: #db94b9 !important;
+	color: #007bff !important;
 }
 
 .btn-nav {
@@ -103,22 +107,21 @@ h3 {
 }
 
 .sidebar {
-	background-color: #db94b9;
-	color: #fff;
+	border-right: 2px dashed #db94b9;
 	width: 200px;
-	padding: 8px 16px;
+	padding: .5rem 1rem;
 	height: 100%;
 }
 
 .content {
-	padding: 8px 16px;
+	padding: .5rem 1rem;
 	height: 100%;
 	width: 100%;
 }
 
 .sidebar-link {
 	display: block;
-	color: #fff;
+	color: #db94b9;
 }
 
 .sidebar-link:hover {
