@@ -237,9 +237,9 @@ h3 {
 }
 
 .chat-footer {
+	border-top: 2px dashed #db94b9;
 	padding: .5rem 1rem;
 	height: 56px;
-	background-color: #db94b9;
 	color: white;
 }
 
