@@ -172,6 +172,10 @@ h3 {
 	color: #db94b9;
 }
 
+.text-error {
+	color: #cc0000;
+}
+
 .room-contact {
 	background-color: #db94b9;
 	color: #fff;

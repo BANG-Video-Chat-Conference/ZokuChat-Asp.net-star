@@ -6,7 +6,7 @@ namespace ZokuChat.Services
 {
     public interface IRoomService
     {
-		Room GetRoom(int roomId);
+		Room GetRoom(int roomId, bool includeMessages = false);
 
 		IQueryable<Room> GetRooms(RoomSearch search);
 

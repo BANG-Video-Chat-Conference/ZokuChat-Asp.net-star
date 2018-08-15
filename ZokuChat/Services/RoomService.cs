@@ -39,13 +39,20 @@ namespace ZokuChat.Services
 			_context.SaveChanges();
 		}
 
-		public Room GetRoom(int roomId)
+		public Room GetRoom(int roomId, bool includeMessages = false)
 		{
 			// Validate
 			roomId.Should().BeGreaterThan(0);
 
 			// Retrieve
-			return _context.Rooms.Include(r => r.Contacts).Where(r => r.Id == roomId).FirstOrDefault();
+			if (includeMessages)
+			{
+				return _context.Rooms.Include(r => r.Contacts).Include(r => r.Messages).Where(r => r.Id == roomId).FirstOrDefault();
+			}
+			else
+			{
+				return _context.Rooms.Include(r => r.Contacts).Where(r => r.Id == roomId).FirstOrDefault();
+			}
 		}
 
 		public IQueryable<Room> GetRooms(RoomSearch search)

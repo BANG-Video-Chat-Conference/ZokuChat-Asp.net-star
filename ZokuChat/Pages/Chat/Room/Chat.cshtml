@@ -16,7 +16,13 @@
 		<a class="float-right" href="@UrlHelper.GetRoomsUrl()">Exit Room</a>
 	</div>
 	<div class="chat-content">
-		<div class="chat-messages">		
+		<div id="messages-container" class="chat-messages">
+			@foreach (Message message in Model.Room.Messages.OrderBy(m => m.Id))
+			{
+				<div>
+					<span class="@Model.GetUserNameColorClass(message)">@UserService.GetUserNameByUID(message.CreatedUID)</span>: @message.Text
+				</div>
+			}
 		</div>
 		<div class="chat-sidebar">
 			<div class="text-creator">
@@ -24,17 +30,17 @@
 			</div>
 			@foreach (RoomContact contact in Model.Room.Contacts)
 			{
-			<div class="text-contact">
-				@UserService.GetUserNameByUID(contact.ContactUID)
-			</div>
+				<div class="text-contact">
+					@UserService.GetUserNameByUID(contact.ContactUID)
+				</div>
 			}
 		</div>
 	</div>
 	<div class="chat-footer">
 		<div class="input-group">
-			<input id="message-input" placeholder="Enter a message" class="form-control" />
+			<input id="message-input" required pattern=".{1,2000}" placeholder="Enter a message" class="form-control" />
 			<div class="input-group-append">
-				<input class="btn btn-primary" type="submit" value="Send" />
+				<input id="send-message" class="btn btn-primary" onclick="sendButtonClick();" required type="submit" value="Send" />
 			</div>
 		</div>
 	</div>
@@ -46,5 +52,13 @@
 		roomId = @Model.Room.Id;
 		creatorId = '@Model.Room.CreatedUID';
 		currentUserId = '@Context.CurrentUser.Id';
+		messagesContainer = $('#messages-container');
+
+		function sendButtonClick() {
+			if ($('#message-input').val().length > 0) {
+				sendMessage($('#message-input').val());
+				$('#message-input').val('');
+			}
+		}
 	</script>
 }

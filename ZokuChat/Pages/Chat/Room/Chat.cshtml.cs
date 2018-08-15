@@ -24,7 +24,7 @@ namespace ZokuChat.Pages.Chat.Room
         {
 			if (roomId > 0)
 			{
-				await Task.Run(() => Room = _roomService.GetRoom(roomId));
+				await Task.Run(() => Room = _roomService.GetRoom(roomId, includeMessages: true));
 			}
 
 			if (Room == null || !RoomPermissionHelper.CanViewRoom(_context.CurrentUser, Room))
@@ -34,5 +34,17 @@ namespace ZokuChat.Pages.Chat.Room
 
 			return Page();
         }
+
+		public string GetUserNameColorClass(Message message)
+		{
+			if (Room.CreatedUID.Equals(message.CreatedUID)) 
+			{
+				return "text-creator";
+			}
+			else
+			{
+				return "text-contact";
+			}
+		}
     }
 }

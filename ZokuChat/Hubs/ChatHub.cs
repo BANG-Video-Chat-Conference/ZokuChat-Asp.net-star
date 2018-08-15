@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using ZokuChat.Extensions;
 using ZokuChat.Helpers;
@@ -101,8 +102,11 @@ namespace ZokuChat.Hubs
 			// Add message to room		
 			await Task.Run(() => _roomService.AddMessage(_context.CurrentUser, room, text));
 
+			// Html encode the text of the message
+			text = HtmlEncoder.Default.Encode(text);
+
 			// Notify all in group
-			await Clients.OthersInGroup(roomId.ToString()).SendAsync("ReceiveMessage", _context.CurrentUser.UserName, text);
+			await Clients.Group(roomId.ToString()).SendAsync("ReceiveMessage", _context.CurrentUser.UserName, _context.CurrentUser.Id, text);
 		}
 
 		public async Task ReturnError(string errorCaption, string errorMessage)
