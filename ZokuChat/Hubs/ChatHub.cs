@@ -40,11 +40,6 @@ namespace ZokuChat.Hubs
 			await Groups.AddToGroupAsync(Context.ConnectionId, roomId.ToString());
 		}
 
-		public async Task LeaveRoom(int roomId)
-		{
-			await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomId.ToString());
-		}
-
 		public async Task DeleteMessage(int roomId, int messageId)
 		{
 			// Validation
