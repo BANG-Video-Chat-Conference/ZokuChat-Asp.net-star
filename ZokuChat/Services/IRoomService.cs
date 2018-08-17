@@ -24,6 +24,8 @@ namespace ZokuChat.Services
 
 		Message GetMessage(int messageId);
 
+		IQueryable<Message> GetMessages(MessageSearch search);
+
 		void DeleteMessage(User actionUser, Message message);
     }
 }

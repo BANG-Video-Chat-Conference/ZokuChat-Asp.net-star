@@ -219,5 +219,22 @@ namespace ZokuChat.Services
 			// Retrieve
 			return _context.Messages.Find(messageId);
 		}
+
+		public IQueryable<Message> GetMessages(MessageSearch search)
+		{
+			// Validate
+			search.Should().NotBeNull();
+			search.SearchText.Should().NotBeNull();
+
+			// Retrieve
+			var query = _context.Messages.Where(m => m.Text.Contains(search.SearchText));
+
+			if (search.MaxResults.HasValue)
+			{
+				query = query.Take(search.MaxResults.Value);
+			}
+
+			return query;
+		}
 	}
 }

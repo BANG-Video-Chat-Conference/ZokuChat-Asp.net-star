@@ -10,19 +10,21 @@
 @inject Context Context
 @inject IUserService UserService
 
-<div class="chat-container">
+<div id="chat-app" class="chat-container">
 	<div class="chat-header">
 		<a class="float-left" href="@UrlHelper.GetEnterRoomUrl(Model.Room.Id)">@Model.Room.Name</a>
 		<a class="float-right" href="@UrlHelper.GetRoomsUrl()">Exit Room</a>
 	</div>
 	<div class="chat-content">
 		<div id="messages-container" class="chat-messages">
-			@foreach (Message message in Model.Room.Messages.OrderBy(m => m.Id))
-			{
-				<div>
-					<span class="@Model.GetUserNameColorClass(message)">@UserService.GetUserNameByUID(message.CreatedUID)</span>: @message.Text
-				</div>
-			}
+			<div v-for="message in messages">
+				<span :class="{ 'text-creator' : window.ZokuChat.chat.room.creatorId == message.userId, 'text-contact' : window.ZokuChat.chat.room.creatorId != message.userId }">
+					{{ message.userName }}
+				</span>
+				<span>
+					: {{ message.text }}
+				</span>
+			</div>
 		</div>
 		<div class="chat-sidebar">
 			<div class="text-creator">
@@ -47,16 +49,16 @@
 </div>
 
 @section Scripts {
-	<partial name="_ChatHubScriptsPartial" />
+	<partial name="_ChatScriptsPartial" />
 	<script>
-		roomId = @Model.Room.Id;
-		creatorId = '@Model.Room.CreatedUID';
-		currentUserId = '@Context.CurrentUser.Id';
-		messagesContainer = $('#messages-container');
+		$(document).ready(function () {
+			window.ZokuChat.chat.room = new Room(@Model.Room.Id, '@Model.Room.CreatedUID', '@Context.CurrentUser.Id');
+			window.ZokuChat.chat.app.startHub();
+		});
 
 		function sendButtonClick() {
 			if ($('#message-input').val().length > 0) {
-				sendMessage($('#message-input').val());
+				window.ZokuChat.chat.app.sendMessage($('#message-input').val());
 				$('#message-input').val('');
 			}
 		}

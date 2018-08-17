@@ -17,9 +17,9 @@
 		"sourceMap": false
 	},
 	{
-		"outputFileName": "wwwroot/js/chatHub.min.js",
+		"outputFileName": "wwwroot/js/chat.min.js",
 		"inputFiles": [
-			"wwwroot/js/chatHub.js"
+			"wwwroot/js/chat.js"
 		],
 		"minify": {
 			"enabled": true,

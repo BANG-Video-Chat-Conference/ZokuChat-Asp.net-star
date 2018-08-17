@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using ZokuChat.Data;
 using ZokuChat.Extensions;
 using ZokuChat.Helpers;
 using ZokuChat.Models;
@@ -13,11 +16,13 @@ namespace ZokuChat.Hubs
     public class ChatHub : Hub
     {
 		private readonly Context _context;
+		private readonly IUserService _userService;
 		private readonly IRoomService _roomService;
 
-		public ChatHub(Context context, IRoomService roomService)
+		public ChatHub(Context context, IUserService userService, IRoomService roomService)
 		{
 			_context = context;
+			_userService = userService;
 			_roomService = roomService;
 		}
 
@@ -39,6 +44,44 @@ namespace ZokuChat.Hubs
 			}
 
 			await Groups.AddToGroupAsync(Context.ConnectionId, roomId.ToString());
+		}
+
+		public async Task GetMessages(int roomId)
+		{
+			if (roomId <= 0)
+			{
+				await ReturnError("Could not join room", "You must specify a room.");
+				return;
+			}
+
+			Room room = null;
+			await Task.Run(() => room = _roomService.GetRoom(roomId));
+
+			if (room == null || !RoomPermissionHelper.CanViewRoom(_context.CurrentUser, room))
+			{
+				await ReturnError("Could not join room", "You do not have permission, the room may have been deleted.");
+				return;
+			}
+
+			// Retrieve last 300 messages
+			List<Models.Message> hubMessages = null;
+
+			await Task.Run(() => {
+				List<Message> messages = _roomService.GetMessages(new MessageSearch()).ToList();
+				List<User> messageUsers = _userService.GetUserByUID(messages.Select(m => m.CreatedUID).ToArray()).ToList();
+
+				hubMessages = 
+					messages.Select(m => new Models.Message { UserName = messageUsers.First(u => m.CreatedUID.Equals(u.Id)).UserName, UserId = m.CreatedUID, Text = m.Text })
+							.ToList();
+			});
+
+			if (hubMessages == null)
+			{
+				await ReturnError("Could not retrieve messages", "Something went wrong, pleash refresh the page.");
+				return;
+			}
+
+			await Clients.Caller.SendAsync("ReceiveMessages", hubMessages);
 		}
 
 		public async Task DeleteMessage(int roomId, int messageId)
