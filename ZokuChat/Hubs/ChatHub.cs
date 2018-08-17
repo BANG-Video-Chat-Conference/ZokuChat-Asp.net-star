@@ -50,7 +50,7 @@ namespace ZokuChat.Hubs
 		{
 			if (roomId <= 0)
 			{
-				await ReturnError("Could not join room", "You must specify a room.");
+				await ReturnError("Could not retrieve messages", "You must specify a room.");
 				return;
 			}
 
@@ -59,7 +59,7 @@ namespace ZokuChat.Hubs
 
 			if (room == null || !RoomPermissionHelper.CanViewRoom(_context.CurrentUser, room))
 			{
-				await ReturnError("Could not join room", "You do not have permission, the room may have been deleted.");
+				await ReturnError("Could not retrieve messages", "You do not have permission, the room may have been deleted.");
 				return;
 			}
 
@@ -149,7 +149,7 @@ namespace ZokuChat.Hubs
 			text = HtmlEncoder.Default.Encode(text);
 
 			// Notify all in group
-			await Clients.Group(roomId.ToString()).SendAsync("ReceiveMessage", _context.CurrentUser.UserName, _context.CurrentUser.Id, text);
+			await Clients.Group(roomId.ToString()).SendAsync("ReceiveMessage", new Models.Message { UserName = _context.CurrentUser.UserName, UserId = _context.CurrentUser.Id, Text = text });
 		}
 
 		public async Task ReturnError(string errorCaption, string errorMessage)
