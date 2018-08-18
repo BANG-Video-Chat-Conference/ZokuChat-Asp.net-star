@@ -16,51 +16,50 @@ class Error {
 window.ZokuChat.chat = {};
 window.ZokuChat.chat.room = null;
 
-window.ZokuChat.chat.connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-
-window.ZokuChat.chat.connection.on("ReceiveMessages", function (messages) {
-	messages.forEach(function (message) {
-		window.ZokuChat.chat.app.messages.push(message);
-	});
-});
-
-window.ZokuChat.chat.connection.on("ReceiveMessage", function (message) {
-	window.ZokuChat.chat.app.messages.push(message);
-});
-
-window.ZokuChat.chat.connection.on("ReceiveError", function (caption, message) {
-	window.ZokuChat.chat.app.errors.push(caption, message);
-});
-
-window.ZokuChat.chat.app = new Vue({
+var app = new Vue({
 	el: '#chat-app',
 	data: {
 		window: window,
+		connection: new signalR.HubConnectionBuilder().withUrl("/chatHub").build(),
 		messages: [],
 		errors: []
 	},
 	methods: {
-		startHub: function () {
-			window.ZokuChat.chat.connection.start().catch(function (err) {
+		init: () => {
+			app.connection.start().catch(function (err) {
 				return console.error(err.toString());
 			}).then(function (value) {
-				window.ZokuChat.chat.app.joinRoom().then(function (value) {
-					window.ZokuChat.chat.app.retrieveMessages();
+				app.joinRoom().then(function (value) {
+					app.retrieveMessages();
 				});
 			});
+
+			app.connection.on("ReceiveMessages", function (messages) {
+				messages.forEach(function (message) {
+					app.messages.push(message);
+				});
+			});
+
+			app.connection.on("ReceiveMessage", function (message) {
+				app.messages.push(message);
+			});
+
+			app.connection.on("ReceiveError", function (caption, message) {
+				app.errors.push(caption, message);
+			});
 		},
-		joinRoom: function () {
-			return window.ZokuChat.chat.connection.invoke("JoinRoom", window.ZokuChat.chat.room.id).catch(function (err) {
+		joinRoom: () => {
+			return app.connection.invoke("JoinRoom", window.ZokuChat.chat.room.id).catch(function (err) {
 				return console.error(err.toString());
 			});
 		},
-		retrieveMessages: function () {
-			return window.ZokuChat.chat.connection.invoke("GetMessages", window.ZokuChat.chat.room.id).catch(function (err) {
+		retrieveMessages: () => {
+			return app.connection.invoke("GetMessages", window.ZokuChat.chat.room.id).catch(function (err) {
 				return console.error(err.toString());
 			});
 		},
-		sendMessage: function (text) {
-			return window.ZokuChat.chat.connection.invoke("SendMessage", window.ZokuChat.chat.room.id, text).catch(function (err) {
+		sendMessage: (text) => {
+			return app.connection.invoke("SendMessage", window.ZokuChat.chat.room.id, text).catch(function (err) {
 				return console.error(err.toString());
 			});
 		}

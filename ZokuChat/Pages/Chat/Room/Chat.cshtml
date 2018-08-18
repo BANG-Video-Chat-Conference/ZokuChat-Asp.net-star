@@ -52,11 +52,11 @@
 	<partial name="_ChatScriptsPartial" />
 	<script>
 		window.ZokuChat.chat.room = new Room(@Model.Room.Id, '@Model.Room.CreatedUID', '@Context.CurrentUser.Id');
-		window.ZokuChat.chat.app.startHub();
+		app.init();
 
 		function sendButtonClick() {
 			if ($('#message-input').val().length > 0) {
-				window.ZokuChat.chat.app.sendMessage($('#message-input').val());
+				app.sendMessage($('#message-input').val());
 				$('#message-input').val('');
 			}
 		}
