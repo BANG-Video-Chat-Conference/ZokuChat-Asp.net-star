@@ -51,10 +51,8 @@
 @section Scripts {
 	<partial name="_ChatScriptsPartial" />
 	<script>
-		$(document).ready(function () {
-			window.ZokuChat.chat.room = new Room(@Model.Room.Id, '@Model.Room.CreatedUID', '@Context.CurrentUser.Id');
-			window.ZokuChat.chat.app.startHub();
-		});
+		window.ZokuChat.chat.room = new Room(@Model.Room.Id, '@Model.Room.CreatedUID', '@Context.CurrentUser.Id');
+		window.ZokuChat.chat.app.startHub();
 
 		function sendButtonClick() {
 			if ($('#message-input').val().length > 0) {
