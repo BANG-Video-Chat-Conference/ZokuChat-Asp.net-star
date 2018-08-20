@@ -229,6 +229,7 @@ h3 {
 	border-left: 2px dashed #db94b9;
 	width: 200px;
 	height: 100%;
+	overflow-y: auto;
 }
 
 .chat-header {
