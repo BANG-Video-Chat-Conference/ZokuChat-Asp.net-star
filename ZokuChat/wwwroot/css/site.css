@@ -221,6 +221,7 @@ h3 {
 	padding: .5rem 1rem;
 	width: 100%;
 	height: 100%;
+	overflow-y: auto;
 }
 
 .chat-sidebar {
