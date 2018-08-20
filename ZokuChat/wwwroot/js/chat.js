@@ -36,6 +36,15 @@ var app = new Vue({
 				app.messages.push(message);
 			});
 
+			app.connection.on("ReceiveDeleteMessage", function (message) {
+				let index = app.messages.findIndex(function (m) {
+					return m.id == message.id;
+				});
+
+				if (index > -1) app.messages.splice(index, 1);
+				app.messages.push(message);
+			});
+
 			app.connection.on("ReceiveError", function (caption, message) {
 				app.errors.push(caption, message);
 			});
@@ -62,6 +71,21 @@ var app = new Vue({
 			return app.connection.invoke("SendMessage", window.ZokuChat.chat.room.id, text).catch(function (err) {
 				return console.error(err.toString());
 			});
+		},
+		sendButtonClick: () => {
+			if ($('#message-input').val().length > 0) {
+				app.sendMessage($('#message-input').val());
+				$('#message-input').val('');
+			}
+		},
+		deleteMessage: (message) => {
+			return app.connection.invoke("DeleteMessage", window.ZokuChat.chat.room.id, message.id).catch(function (err) {
+				return console.error(err.toString());
+			});
+		},
+		canDeleteMessage: (message) => {
+			let currentUserId = window.ZokuChat.chat.room.currentUserId;
+			return currentUserId === message.userId || currentUserId === window.ZokuChat.chat.room.creatorId;
 		}
 	}
 })

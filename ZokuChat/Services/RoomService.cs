@@ -173,7 +173,7 @@ namespace ZokuChat.Services
 			_context.SaveChanges();
 		}
 
-		public void AddMessage(User actionUser, Room room, string text)
+		public int AddMessage(User actionUser, Room room, string text)
 		{
 			// Validate
 			actionUser.Should().NotBeNull();
@@ -183,7 +183,7 @@ namespace ZokuChat.Services
 			// Add and save
 			DateTime now = DateTime.UtcNow;
 
-			_context.Messages.Add(new Message
+			Message message = new Message
 			{
 				RoomId = room.Id,
 				Text = text,
@@ -192,9 +192,12 @@ namespace ZokuChat.Services
 				ModifiedUID = actionUser.Id,
 				ModifiedDateUtc = now,
 				IsDeleted = false
-			});
+			};
 
+			_context.Messages.Add(message);
 			_context.SaveChanges();
+
+			return message.Id;
 		}
 
 		public void DeleteMessage(User actionUser, Message message)
@@ -217,7 +220,7 @@ namespace ZokuChat.Services
 			messageId.Should().BeGreaterThan(0);
 
 			// Retrieve
-			return _context.Messages.Find(messageId);
+			return _context.Messages.Include(m => m.Room).Where(m => m.Id == messageId).FirstOrDefault();
 		}
 
 		public IQueryable<Message> GetMessages(MessageSearch search)

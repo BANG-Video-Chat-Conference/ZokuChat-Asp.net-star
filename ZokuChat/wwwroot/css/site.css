@@ -264,3 +264,15 @@ h3 {
 	color: #007bff;
 	text-decoration: none;
 }
+
+.message-action-menu {
+	display: inline-block;
+	cursor: pointer;
+}
+
+.message-action-options {
+	position: absolute;
+	border: 2px dashed #db94b9;
+	padding: 4px;
+	background-color: #fff;
+}

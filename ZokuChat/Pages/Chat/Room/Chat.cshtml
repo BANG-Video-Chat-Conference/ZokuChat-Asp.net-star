@@ -24,9 +24,18 @@
 				<span v-if="!message.isDeleted"> 
 					{{ ` ${message.text}` }}
 				</span>
-				<span v-if="message.isDeleted" :title="`Deleted by ${message.modifiedUserName}`">
-					{{ ' [Deleted]' }}
+				<span v-if="message.isDeleted" class="text-error" :title="`Deleted by ${message.modifiedUserName}`">
+					{{ ' [ deleted ]' }}
 				</span>
+				<div v-if="!message.isDeleted && canDeleteMessage(message)"
+					 @@mouseover="message.showActionMenu = true"
+					 @@mouseout="message.showActionMenu = false"
+					 class="message-action-menu text-creator">
+					<b>+</b>
+					<div v-if="message.showActionMenu" class="message-action-options">
+						<span v-on:click="deleteMessage(message); message.showActionMenu = false;">Delete</span>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="chat-sidebar">
@@ -43,9 +52,14 @@
 	</div>
 	<div class="chat-footer">
 		<div class="input-group">
-			<input id="message-input" required pattern=".{1,2000}" placeholder="Enter a message" class="form-control" />
+			<input id="message-input" 
+				   pattern=".{1,2000}"
+				   placeholder="Enter a message"
+				   class="form-control"
+				   @@keydown.enter="sendButtonClick();"
+				   required />
 			<div class="input-group-append">
-				<input id="send-message" class="btn btn-primary" onclick="sendButtonClick();" required type="submit" value="Send" />
+				<input id="send-message" class="btn btn-primary" @@click="sendButtonClick();" required type="submit" value="Send" />
 			</div>
 		</div>
 	</div>
@@ -56,12 +70,5 @@
 	<script>
 		window.ZokuChat.chat.room = new Room(@Model.Room.Id, '@Model.Room.CreatedUID', '@Context.CurrentUser.Id');
 		app.init();
-
-		function sendButtonClick() {
-			if ($('#message-input').val().length > 0) {
-				app.sendMessage($('#message-input').val());
-				$('#message-input').val('');
-			}
-		}
 	</script>
 }

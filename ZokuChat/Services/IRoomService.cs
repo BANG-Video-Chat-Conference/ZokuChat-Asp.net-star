@@ -20,7 +20,7 @@ namespace ZokuChat.Services
 
 		void DeleteRoom(User actionUser, Room room);
 
-		void AddMessage(User actionUser, Room room, string text);
+		int AddMessage(User actionUser, Room room, string text);
 
 		Message GetMessage(int messageId);
 

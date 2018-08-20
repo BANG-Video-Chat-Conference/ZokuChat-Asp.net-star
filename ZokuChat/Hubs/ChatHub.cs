@@ -71,10 +71,11 @@ namespace ZokuChat.Hubs
 				List<User> messageUsers = _userService.GetUserByUID(messages.Select(m => m.CreatedUID).ToArray()).ToList();
 
 				hubMessages = 
-					messages.Select(m => new Models.Message { 
+					messages.Select(m => new Models.Message {
+								Id = m.Id,
 								UserName = messageUsers.First(u => m.CreatedUID.Equals(u.Id)).UserName,
 								UserId = m.CreatedUID,
-								Text = m.Text,
+								Text = m.IsDeleted ? string.Empty : m.Text,
 								IsDeleted = m.IsDeleted,
 								ModifiedId = m.ModifiedUID,
 								ModifiedUserName = messageUsers.First(u => u.Id.Equals(m.ModifiedUID)).UserName
@@ -116,14 +117,15 @@ namespace ZokuChat.Hubs
 
 			// Notify all in group
 			Models.Message hubMessage = new Models.Message {
+				Id = message.Id,
 				UserName = _userService.GetUserNameByUID(message.CreatedUID),
 				UserId = message.CreatedUID,
-				Text = message.Text,
-				IsDeleted = message.IsDeleted,
+				Text = string.Empty,
+				IsDeleted = true,
 				ModifiedId = _context.CurrentUser.Id,
 				ModifiedUserName = _context.CurrentUser.UserName
 			};
-			await Clients.OthersInGroup(roomId.ToString()).SendAsync("DeleteMessage", hubMessage);
+			await Clients.Group(roomId.ToString()).SendAsync("ReceiveDeleteMessage", hubMessage);
 		}
 
 		public async Task SendMessage(int roomId, string text)
@@ -157,8 +159,9 @@ namespace ZokuChat.Hubs
 				text = text.Substring(0, 2000);
 			}
 
-			// Add message to room		
-			await Task.Run(() => _roomService.AddMessage(_context.CurrentUser, room, text));
+			// Add message to room
+			int messageId = -1;	
+			await Task.Run(() => messageId = _roomService.AddMessage(_context.CurrentUser, room, text));
 
 			// Html encode the text of the message
 			text = HtmlEncoder.Default.Encode(text);
@@ -166,6 +169,7 @@ namespace ZokuChat.Hubs
 			// Notify all in group
 			Models.Message hubMessage = new Models.Message
 			{
+				Id = messageId,
 				UserName = _context.CurrentUser.UserName,
 				UserId = _context.CurrentUser.Id,
 				Text = text,
