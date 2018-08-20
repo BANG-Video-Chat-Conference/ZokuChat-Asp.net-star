@@ -71,7 +71,14 @@ namespace ZokuChat.Hubs
 				List<User> messageUsers = _userService.GetUserByUID(messages.Select(m => m.CreatedUID).ToArray()).ToList();
 
 				hubMessages = 
-					messages.Select(m => new Models.Message { UserName = messageUsers.First(u => m.CreatedUID.Equals(u.Id)).UserName, UserId = m.CreatedUID, Text = m.Text })
+					messages.Select(m => new Models.Message { 
+								UserName = messageUsers.First(u => m.CreatedUID.Equals(u.Id)).UserName,
+								UserId = m.CreatedUID,
+								Text = m.Text,
+								IsDeleted = m.IsDeleted,
+								ModifiedId = m.ModifiedUID,
+								ModifiedUserName = messageUsers.First(u => u.Id.Equals(m.ModifiedUID)).UserName
+							})
 							.ToList();
 			});
 
@@ -108,7 +115,15 @@ namespace ZokuChat.Hubs
 			await Task.Run(() => _roomService.DeleteMessage(_context.CurrentUser, message));
 
 			// Notify all in group
-			await Clients.OthersInGroup(roomId.ToString()).SendAsync("DeleteMessage", _context.CurrentUser.UserName, messageId);
+			Models.Message hubMessage = new Models.Message {
+				UserName = _userService.GetUserNameByUID(message.CreatedUID),
+				UserId = message.CreatedUID,
+				Text = message.Text,
+				IsDeleted = message.IsDeleted,
+				ModifiedId = _context.CurrentUser.Id,
+				ModifiedUserName = _context.CurrentUser.UserName
+			};
+			await Clients.OthersInGroup(roomId.ToString()).SendAsync("DeleteMessage", hubMessage);
 		}
 
 		public async Task SendMessage(int roomId, string text)
@@ -149,7 +164,16 @@ namespace ZokuChat.Hubs
 			text = HtmlEncoder.Default.Encode(text);
 
 			// Notify all in group
-			await Clients.Group(roomId.ToString()).SendAsync("ReceiveMessage", new Models.Message { UserName = _context.CurrentUser.UserName, UserId = _context.CurrentUser.Id, Text = text });
+			Models.Message hubMessage = new Models.Message
+			{
+				UserName = _context.CurrentUser.UserName,
+				UserId = _context.CurrentUser.Id,
+				Text = text,
+				IsDeleted = false,
+				ModifiedId = _context.CurrentUser.Id,
+				ModifiedUserName = _context.CurrentUser.UserName
+			};
+			await Clients.Group(roomId.ToString()).SendAsync("ReceiveMessage", hubMessage);
 		}
 
 		public async Task ReturnError(string errorCaption, string errorMessage)

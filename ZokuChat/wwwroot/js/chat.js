@@ -26,14 +26,6 @@ var app = new Vue({
 	},
 	methods: {
 		init: () => {
-			app.connection.start().catch(function (err) {
-				return console.error(err.toString());
-			}).then(function (value) {
-				app.joinRoom().then(function (value) {
-					app.retrieveMessages();
-				});
-			});
-
 			app.connection.on("ReceiveMessages", function (messages) {
 				messages.forEach(function (message) {
 					app.messages.push(message);
@@ -46,6 +38,14 @@ var app = new Vue({
 
 			app.connection.on("ReceiveError", function (caption, message) {
 				app.errors.push(caption, message);
+			});
+
+			app.connection.start().catch(function (err) {
+				return console.error(err.toString());
+			}).then(function (value) {
+				app.joinRoom().then(function (value) {
+					app.retrieveMessages();
+				});
 			});
 		},
 		joinRoom: () => {

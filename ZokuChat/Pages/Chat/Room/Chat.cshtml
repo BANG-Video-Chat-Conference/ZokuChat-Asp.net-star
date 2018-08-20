@@ -19,10 +19,13 @@
 		<div id="messages-container" class="chat-messages">
 			<div v-for="message in messages">
 				<span :class="{ 'text-creator' : window.ZokuChat.chat.room.creatorId == message.userId, 'text-contact' : window.ZokuChat.chat.room.creatorId != message.userId }">
-					{{ message.userName }}
+					{{ message.userName }}:
 				</span>
-				<span>
-					: {{ message.text }}
+				<span v-if="!message.isDeleted"> 
+					{{ ` ${message.text}` }}
+				</span>
+				<span v-if="message.isDeleted" :title="`Deleted by ${message.modifiedUserName}`">
+					{{ ' [Deleted]' }}
 				</span>
 			</div>
 		</div>
