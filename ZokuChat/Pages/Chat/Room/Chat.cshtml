@@ -18,19 +18,17 @@
 	<div class="chat-content">
 		<div id="messages-container" class="chat-messages">
 			<div v-for="message in messages">
-				<div style="display: inline-block">
-					<span :class="{ 'text-creator' : window.ZokuChat.chat.room.creatorId == message.userId, 'text-contact' : window.ZokuChat.chat.room.creatorId != message.userId }">
-						{{ message.userName }}:
-					</span>
-					<span v-if="!message.isDeleted">
-						{{ ` ${message.text}` }}
-					</span>
-					<span v-if="message.isDeleted"
-						  class="text-error"
-						  :title="`Deleted by ${message.modifiedUserName}`">
-						{{ ' [ deleted ]' }}
-					</span>
-				</div>
+				<span :class="{ 'text-creator' : window.ZokuChat.chat.room.creatorId == message.userId, 'text-contact' : window.ZokuChat.chat.room.creatorId != message.userId }">
+					{{ message.userName }}:
+				</span>
+				<span v-if="!message.isDeleted">
+					{{ ` ${message.text}` }}
+				</span>
+				<span v-if="message.isDeleted"
+						class="text-error"
+						:title="`Deleted by ${message.modifiedUserName}`">
+					{{ ' [ deleted ]' }}
+				</span>
 				<div class="action-menu text-creator"
 					 @@mouseover="message.showActionMenu = true"
 				     @@mouseout="message.showActionMenu = false"
