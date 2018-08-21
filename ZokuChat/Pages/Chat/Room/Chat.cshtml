@@ -31,14 +31,14 @@
 						{{ ' [ deleted ]' }}
 					</span>
 				</div>
-				<div class="message-action-menu text-creator"
+				<div class="action-menu text-creator"
 					 @@mouseover="message.showActionMenu = true"
 				     @@mouseout="message.showActionMenu = false"
 				     v-if="!message.isDeleted && canDeleteMessage(message)">
 					<span>
 						<b>+</b>
 					</span>
-					<div v-if="message.showActionMenu" class="message-action-options">
+					<div v-if="message.showActionMenu" class="action-menu-options">
 						<span v-on:click="deleteMessage(message); message.showActionMenu = false;">Delete</span>
 					</div>
 				</div>

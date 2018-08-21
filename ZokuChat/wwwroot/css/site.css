@@ -265,12 +265,12 @@ h3 {
 	text-decoration: none;
 }
 
-.message-action-menu {
+.action-menu {
 	display: inline;
 	cursor: pointer;
 }
 
-.message-action-options {
+.action-menu-options {
 	display: inline;
 	z-index: 1000;
 	position: static;
