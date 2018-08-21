@@ -266,12 +266,14 @@ h3 {
 }
 
 .message-action-menu {
-	display: inline-block;
+	display: inline;
 	cursor: pointer;
 }
 
 .message-action-options {
-	position: absolute;
+	display: inline;
+	z-index: 1000;
+	position: static;
 	border: 2px dashed #db94b9;
 	padding: 4px;
 	background-color: #fff;

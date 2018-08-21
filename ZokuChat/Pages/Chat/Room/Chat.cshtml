@@ -18,20 +18,26 @@
 	<div class="chat-content">
 		<div id="messages-container" class="chat-messages">
 			<div v-for="message in messages">
-				<span :class="{ 'text-creator' : window.ZokuChat.chat.room.creatorId == message.userId, 'text-contact' : window.ZokuChat.chat.room.creatorId != message.userId }">
-					{{ message.userName }}:
-				</span>
-				<span v-if="!message.isDeleted"> 
-					{{ ` ${message.text}` }}
-				</span>
-				<span v-if="message.isDeleted" class="text-error" :title="`Deleted by ${message.modifiedUserName}`">
-					{{ ' [ deleted ]' }}
-				</span>
-				<div v-if="!message.isDeleted && canDeleteMessage(message)"
+				<div style="display: inline-block">
+					<span :class="{ 'text-creator' : window.ZokuChat.chat.room.creatorId == message.userId, 'text-contact' : window.ZokuChat.chat.room.creatorId != message.userId }">
+						{{ message.userName }}:
+					</span>
+					<span v-if="!message.isDeleted">
+						{{ ` ${message.text}` }}
+					</span>
+					<span v-if="message.isDeleted"
+						  class="text-error"
+						  :title="`Deleted by ${message.modifiedUserName}`">
+						{{ ' [ deleted ]' }}
+					</span>
+				</div>
+				<div class="message-action-menu text-creator"
 					 @@mouseover="message.showActionMenu = true"
-					 @@mouseout="message.showActionMenu = false"
-					 class="message-action-menu text-creator">
-					<b>+</b>
+				     @@mouseout="message.showActionMenu = false"
+				     v-if="!message.isDeleted && canDeleteMessage(message)">
+					<span>
+						<b>+</b>
+					</span>
 					<div v-if="message.showActionMenu" class="message-action-options">
 						<span v-on:click="deleteMessage(message); message.showActionMenu = false;">Delete</span>
 					</div>
