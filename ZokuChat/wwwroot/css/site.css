@@ -272,7 +272,6 @@ h3 {
 
 .action-menu-options {
 	display: inline;
-	z-index: 1000;
 	position: static;
 	border: 2px dashed #db94b9;
 	padding: 4px;
