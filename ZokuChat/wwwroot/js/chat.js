@@ -21,6 +21,7 @@ var app = new Vue({
 	data: {
 		window: window,
 		connection: new signalR.HubConnectionBuilder().withUrl("/chatHub").build(),
+		contacts: [],
 		messages: [],
 		errors: []
 	},
@@ -29,6 +30,12 @@ var app = new Vue({
 			app.connection.on("ReceiveMessages", function (messages) {
 				messages.forEach(function (message) {
 					app.messages.push(message);
+				});
+			});
+
+			app.connection.on("ReceiveContacts", function (contacts) {
+				contacts.forEach(function (contact) {
+					app.contacts.push(contact);
 				});
 			});
 

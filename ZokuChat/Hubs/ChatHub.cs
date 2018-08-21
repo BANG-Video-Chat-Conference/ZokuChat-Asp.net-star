@@ -44,6 +44,21 @@ namespace ZokuChat.Hubs
 			}
 
 			await Groups.AddToGroupAsync(Context.ConnectionId, roomId.ToString());
+
+			List<Models.Contact> hubContacts = new List<Models.Contact>();
+			await Task.Run(() => { 
+				hubContacts = 
+					_userService.GetUserByUID(room.Contacts.Select(c => c.ContactUID).ToArray())
+					.Select(u => new Models.Contact
+					{
+						Id = room.Contacts.First(c => c.ContactUID.Equals(u.Id)).Id,
+						UserUID = u.Id,
+						UserName = u.UserName
+					})
+					.ToList();
+			});
+
+			await Clients.Caller.SendAsync("ReceiveContacts", hubContacts);
 		}
 
 		public async Task GetMessages(int roomId)

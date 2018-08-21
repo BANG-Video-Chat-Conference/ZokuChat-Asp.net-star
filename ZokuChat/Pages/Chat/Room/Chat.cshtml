@@ -42,12 +42,11 @@
 			<div class="text-creator">
 				@UserService.GetUserNameByUID(Model.Room.CreatedUID)
 			</div>
-			@foreach (RoomContact contact in Model.Room.Contacts)
-			{
+			<div v-for="contact in contacts">
 				<div class="text-contact">
-					@UserService.GetUserNameByUID(contact.ContactUID)
+					{{ contact.userName }}
 				</div>
-			}
+			</div>
 		</div>
 	</div>
 	<div class="chat-footer">
