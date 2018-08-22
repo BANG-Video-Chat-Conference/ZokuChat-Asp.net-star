@@ -271,6 +271,14 @@ h3 {
 	cursor: pointer;
 }
 
+.action-menu-button {
+	margin: 0;
+	padding: 0;
+	color: #007bff;
+	background-color: transparent;
+	border: 0;
+}
+
 .action-menu-button:hover {
 	color: #db94b9;
 }

@@ -34,13 +34,16 @@
 					 @@mouseout="message.showActionMenu = false"
 					 v-if="!message.isDeleted && canDeleteMessage(message)">
 					<span>
-						<b class="action-menu-button">+</b>
+						<button class="action-menu-button"
+						   @@click="message.showActionMenu = !message.showActionMenu">
+							+
+						</button>
 					</span>
 					<div v-if="message.showActionMenu" class="action-menu-options">
-						<span class="action-menu-button"
+						<button class="action-menu-button"
 							  @@click="deleteMessage(message); message.showActionMenu = false;">
 							Delete
-						</span>
+						</button>
 					</div>
 				</div>
 			</div>

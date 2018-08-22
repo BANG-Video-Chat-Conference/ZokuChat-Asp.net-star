@@ -48,8 +48,7 @@ var app = new Vue({
 					return m.id == message.id;
 				});
 
-				if (index > -1) app.messages.splice(index, 1);
-				app.messages.push(message);
+				if (index > -1) app.messages.splice(index, 1, message);
 			});
 
 			app.connection.on("ReceiveError", function (caption, message) {
