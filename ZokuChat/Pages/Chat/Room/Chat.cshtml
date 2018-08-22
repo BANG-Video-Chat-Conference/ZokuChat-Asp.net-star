@@ -31,13 +31,16 @@
 				</span>
 				<div class="action-menu text-creator"
 					 @@mouseover="message.showActionMenu = true"
-				     @@mouseout="message.showActionMenu = false"
-				     v-if="!message.isDeleted && canDeleteMessage(message)">
+					 @@mouseout="message.showActionMenu = false"
+					 v-if="!message.isDeleted && canDeleteMessage(message)">
 					<span>
-						<b>+</b>
+						<b class="action-menu-button">+</b>
 					</span>
 					<div v-if="message.showActionMenu" class="action-menu-options">
-						<span v-on:click="deleteMessage(message); message.showActionMenu = false;">Delete</span>
+						<span class="action-menu-button"
+							  @@click="deleteMessage(message); message.showActionMenu = false;">
+							Delete
+						</span>
 					</div>
 				</div>
 			</div>

@@ -266,13 +266,19 @@ h3 {
 }
 
 .action-menu {
-	display: inline;
+	display: inline-block;
+	position: relative;
 	cursor: pointer;
 }
 
+.action-menu-button:hover {
+	color: #db94b9;
+}
+
 .action-menu-options {
-	display: inline;
-	position: static;
+	display: inline-block;
+	position: absolute;
+	z-index: 1;
 	border: 2px dashed #db94b9;
 	padding: 4px;
 	background-color: #fff;
