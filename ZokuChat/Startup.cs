@@ -34,9 +34,9 @@ namespace ZokuChat
 			if (env.IsDevelopment())
 			{
 				_isDevEnvironment = true;
-				builder.AddUserSecrets<Startup>();
 			}
 
+			builder.AddUserSecrets<Startup>();
 			Configuration = builder.Build();
 		}
 

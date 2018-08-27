@@ -26,5 +26,16 @@
 			"renameLocals": true
 		},
 		"sourceMap": false
+	},
+	{
+		"outputFileName": "wwwroot/lib/adapter/adapter.min.js",
+		"inputFiles": [
+			"wwwroot/lib/adapter/adapter.js"
+		],
+		"minify": {
+			"enabled": true,
+			"renameLocals": true
+		},
+		"sourceMap": false
 	}
 ]
