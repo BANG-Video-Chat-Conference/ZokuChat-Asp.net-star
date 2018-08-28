@@ -45,7 +45,7 @@ var app = new Vue({
 
 			app.connection.on("ReceiveDeleteMessage", function (message) {
 				let index = app.messages.findIndex(function (m) {
-					return m.id == message.id;
+					return m.id === message.id;
 				});
 
 				if (index > -1) app.messages.splice(index, 1, message);
@@ -94,4 +94,4 @@ var app = new Vue({
 			return currentUserId === message.userId || currentUserId === window.ZokuChat.chat.room.creatorId;
 		}
 	}
-})
+});
