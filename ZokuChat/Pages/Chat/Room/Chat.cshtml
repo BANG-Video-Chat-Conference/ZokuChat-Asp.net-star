@@ -15,35 +15,42 @@
 		<a class="float-left" href="@UrlHelper.GetEnterRoomUrl(Model.Room.Id)">@Model.Room.Name</a>
 		<a class="float-right" href="@UrlHelper.GetRoomsUrl()">Exit Room</a>
 	</div>
-	<div class="chat-content">
-		<div id="messages-container" class="chat-messages">
-			<div v-for="message in messages">
-				<span :class="{ 'text-creator' : window.ZokuChat.chat.room.creatorId == message.userId, 'text-contact' : window.ZokuChat.chat.room.creatorId != message.userId }">
-					{{ message.userName }}:
-				</span>
-				<span v-if="!message.isDeleted">
-					{{ ` ${message.text}` }}
-				</span>
-				<span v-if="message.isDeleted"
-						class="text-error"
-						:title="`Deleted by ${message.modifiedUserName}`">
-					{{ ' [ deleted ]' }}
-				</span>
-				<div class="action-menu text-creator"
-					 @@mouseover="message.showActionMenu = true"
-					 @@mouseout="message.showActionMenu = false"
-					 v-if="!message.isDeleted && canDeleteMessage(message)">
-					<span>
-						<button class="action-menu-button"
-						   @@click="message.showActionMenu = !message.showActionMenu">
-							+
-						</button>
+	<div class="chat-body">
+		<div class="chat-container">
+			<div id="video-container">
+				<video v-for="broadcast in broadcasts"
+					   :src="broadcast.streamUrl"
+					   autoplay></video>
+			</div>
+			<div id="messages-container" class="chat-messages">
+				<div v-for="message in messages">
+					<span :class="{ 'text-creator' : window.ZokuChat.chat.room.creatorId == message.userId, 'text-contact' : window.ZokuChat.chat.room.creatorId != message.userId }">
+						{{ message.userName }}:
 					</span>
-					<div v-if="message.showActionMenu" class="action-menu-options">
-						<button class="action-menu-button"
-							  @@click="deleteMessage(message); message.showActionMenu = false;">
-							Delete
-						</button>
+					<span v-if="!message.isDeleted">
+						{{ ` ${message.text}` }}
+					</span>
+					<span v-if="message.isDeleted"
+						  class="text-error"
+						  :title="`Deleted by ${message.modifiedUserName}`">
+						{{ ' [ deleted ]' }}
+					</span>
+					<div class="action-menu text-creator"
+						 @@mouseover="message.showActionMenu = true"
+						 @@mouseout="message.showActionMenu = false"
+						 v-if="!message.isDeleted && canDeleteMessage(message)">
+						<span>
+							<button class="action-menu-button"
+									@@click="message.showActionMenu = !message.showActionMenu">
+								+
+							</button>
+						</span>
+						<div v-if="message.showActionMenu" class="action-menu-options">
+							<button class="action-menu-button"
+									@@click="deleteMessage(message); message.showActionMenu = false;">
+								Delete
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>

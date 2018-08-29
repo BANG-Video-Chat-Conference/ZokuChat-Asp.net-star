@@ -195,6 +195,52 @@ namespace ZokuChat.Hubs
 			await Clients.Group(roomId.ToString()).SendAsync("ReceiveMessage", hubMessage);
 		}
 
+		public async Task SendAnswer(int roomId, string answer)
+		{
+			// Validation
+			if (roomId <= 0)
+			{
+				await ReturnError("Could not send answer", "You must specify a room.");
+				return;
+			}
+
+			// Permission
+			Room room = null;
+			await Task.Run(() => room = _roomService.GetRoom(roomId));
+
+			if (room == null || !RoomPermissionHelper.CanAddMessage(_context.CurrentUser, room))
+			{
+				await ReturnError("Could not send answer", "You do not have permission, the room may have been deleted.");
+				return;
+			}
+
+			// Notify all in group
+			await Clients.Group(roomId.ToString()).SendAsync("ReceiveAnswer", answer);
+		}
+
+		public async Task SendCandidate(int roomId, string candidate)
+		{
+			// Validation
+			if (roomId <= 0)
+			{
+				await ReturnError("Could not send candidate", "You must specify a room.");
+				return;
+			}
+
+			// Permission
+			Room room = null;
+			await Task.Run(() => room = _roomService.GetRoom(roomId));
+
+			if (room == null || !RoomPermissionHelper.CanAddMessage(_context.CurrentUser, room))
+			{
+				await ReturnError("Could not send candidate", "You do not have permission, the room may have been deleted.");
+				return;
+			}
+
+			// Notify all in group
+			await Clients.Group(roomId.ToString()).SendAsync("ReceiveCandidate", candidate);
+		}
+
 		public async Task ReturnError(string errorCaption, string errorMessage)
 		{
 			await Clients.Caller.SendAsync("ReceiveError", errorCaption, errorMessage);
