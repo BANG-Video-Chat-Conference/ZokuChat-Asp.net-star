@@ -229,9 +229,13 @@ h3 {
 	overflow-y: auto;
 }
 
-.video-container {
+.chat-videos {
 	display: flex;
 	flex-direction: row;
+}
+
+.chat-messages {
+	word-break: break-all;
 }
 
 .chat-sidebar {
@@ -276,6 +280,7 @@ h3 {
 }
 
 .action-menu {
+	word-break: initial;
 	display: inline-block;
 	position: relative;
 	cursor: pointer;

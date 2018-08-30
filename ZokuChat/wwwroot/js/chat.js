@@ -62,6 +62,11 @@ var app = new Vue({
 				messages.forEach(function (message) {
 					app.messages.push(message);
 				});
+
+				// Scroll to latest
+				app.$nextTick(() => {
+					app.scrollToLatestMessage();
+				});
 			});
 
 			app.connection.on("ReceiveContacts", function (contacts) {
@@ -72,6 +77,11 @@ var app = new Vue({
 
 			app.connection.on("ReceiveMessage", function (message) {
 				app.messages.push(message);
+
+				// Scroll to latest
+				app.$nextTick(() => {
+					app.scrollToLatestMessage();
+				});
 			});
 
 			app.connection.on("ReceiveDeleteMessage", function (message) {
@@ -179,6 +189,10 @@ var app = new Vue({
 		canDeleteMessage: (message) => {
 			let currentUserId = window.ZokuChat.chat.room.currentUserId;
 			return currentUserId === message.userId || currentUserId === window.ZokuChat.chat.room.creatorId;
+		},
+		scrollToLatestMessage: () => {
+			let container = $('#messages-container');
+			container.scrollTop(container.height());
 		},
 		startBroadcast: () => {
 			let broadcast;

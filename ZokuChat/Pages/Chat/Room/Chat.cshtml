@@ -17,7 +17,7 @@
 	</div>
 	<div class="chat-body">
 		<div class="chat-container">
-			<div id="video-container">
+			<div id="video-container" class="chat-videos">
 				<video v-for="broadcast in broadcasts"
 					   :id="`#broadcast-${broadcast.userId}`"
 					   :src="broadcast.streamUrl"
