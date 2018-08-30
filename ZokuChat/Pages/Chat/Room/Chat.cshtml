@@ -19,7 +19,9 @@
 		<div class="chat-container">
 			<div id="video-container">
 				<video v-for="broadcast in broadcasts"
+					   :id="`#broadcast-${broadcast.userId}`"
 					   :src="broadcast.streamUrl"
+					   :title="broadcast.userName"
 					   autoplay></video>
 			</div>
 			<div id="messages-container" class="chat-messages">

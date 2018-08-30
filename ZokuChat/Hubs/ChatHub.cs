@@ -195,6 +195,70 @@ namespace ZokuChat.Hubs
 			await Clients.Group(roomId.ToString()).SendAsync("ReceiveMessage", hubMessage);
 		}
 
+		public async Task StartBroadcast(int roomId, Models.Broadcast broadcast)
+		{
+			// Validation
+			if (roomId <= 0)
+			{
+				await ReturnError("Could not start broadcast", "You must specify a room.");
+				return;
+			}
+
+			if (broadcast == null || broadcast.StreamUrl.IsNullOrWhitespace())
+			{
+				await ReturnError("Could not start broadcast", "StreamUrl must be specified.");
+				return;
+			}
+
+			// Permission
+			Room room = null;
+			await Task.Run(() => room = _roomService.GetRoom(roomId));
+
+			if (room == null || !RoomPermissionHelper.CanAddMessage(_context.CurrentUser, room))
+			{
+				await ReturnError("Could not start broadcast", "You do not have permission, the room may have been deleted.");
+				return;
+			}
+
+			// Notify all in group
+			Models.Broadcast hubBroadcast = new Models.Broadcast
+			{
+				UserName = _context.CurrentUser.UserName,
+				UserId = _context.CurrentUser.Id,
+				StreamUrl = broadcast.StreamUrl
+			};
+			await Clients.Group(roomId.ToString()).SendAsync("ReceiveBroadcast", hubBroadcast);
+		}
+
+		public async Task StopBroadcast(int roomId)
+		{
+			// Validation
+			if (roomId <= 0)
+			{
+				await ReturnError("Could not stop broadcast", "You must specify a room.");
+				return;
+			}
+
+			// Permission
+			Room room = null;
+			await Task.Run(() => room = _roomService.GetRoom(roomId));
+
+			if (room == null || !RoomPermissionHelper.CanAddMessage(_context.CurrentUser, room))
+			{
+				await ReturnError("Could not stop broadcast", "You do not have permission, the room may have been deleted.");
+				return;
+			}
+
+			// Notify all in group
+			Models.Broadcast hubBroadcast = new Models.Broadcast
+			{
+				UserName = _context.CurrentUser.UserName,
+				UserId = _context.CurrentUser.Id,
+				StreamUrl = string.Empty
+			};
+			await Clients.Group(roomId.ToString()).SendAsync("ReceiveDeleteBroadcast", hubBroadcast);
+		}
+
 		public async Task SendAnswer(int roomId, string answer)
 		{
 			// Validation
@@ -214,8 +278,31 @@ namespace ZokuChat.Hubs
 				return;
 			}
 
-			// Notify all in group
-			await Clients.Group(roomId.ToString()).SendAsync("ReceiveAnswer", answer);
+			// Notify others in group
+			await Clients.OthersInGroup(roomId.ToString()).SendAsync("ReceiveAnswer", answer);
+		}
+
+		public async Task SendOffer(int roomId, string offer)
+		{
+			// Validation
+			if (roomId <= 0)
+			{
+				await ReturnError("Could not send offer", "You must specify a room.");
+				return;
+			}
+
+			// Permission
+			Room room = null;
+			await Task.Run(() => room = _roomService.GetRoom(roomId));
+
+			if (room == null || !RoomPermissionHelper.CanAddMessage(_context.CurrentUser, room))
+			{
+				await ReturnError("Could not send offer", "You do not have permission, the room may have been deleted.");
+				return;
+			}
+
+			// Notify others in group
+			await Clients.OthersInGroup(roomId.ToString()).SendAsync("ReceiveOffer", offer);
 		}
 
 		public async Task SendCandidate(int roomId, string candidate)
@@ -237,8 +324,8 @@ namespace ZokuChat.Hubs
 				return;
 			}
 
-			// Notify all in group
-			await Clients.Group(roomId.ToString()).SendAsync("ReceiveCandidate", candidate);
+			// Notify others in group
+			await Clients.OthersInGroup(roomId.ToString()).SendAsync("ReceiveCandidate", candidate);
 		}
 
 		public async Task ReturnError(string errorCaption, string errorMessage)

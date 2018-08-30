@@ -14,8 +14,7 @@ class Error {
 }
 
 class Broadcast {
-	constructor(userId, streamUrl) {
-		this.userId = userId;
+	constructor(streamUrl) {
 		this.streamUrl = streamUrl;
 	}
 }
@@ -81,6 +80,25 @@ var app = new Vue({
 				});
 
 				if (index > -1) app.messages.splice(index, 1, message);
+			});
+
+			app.connection.on("ReceiveBroadcast", function (broadcast) {
+				app.broadcasts.push(broadcast);
+			});
+
+			app.connection.on("ReceiveDeleteBroadcast", function (broadcast) {
+				// Delete the stream
+				let tracks = $(`#broadcast-${broadcast.userId}`).getTracks();
+				tracks.forEach(function (track) {
+					track.stop();
+				});
+
+				// Delete broadcast object
+				let index = app.broadcasts.findIndex(function (b) {
+					return b.userId === broadcast.userId;
+				});
+
+				if (index > -1) app.broadcasts.splice(index, 1);
 			});
 
 			app.connection.on("ReceiveError", function (caption, message) {
@@ -166,8 +184,7 @@ var app = new Vue({
 			let broadcast;
 
 			navigator.getUserMedia({ video: true, audio: true }, function (stream) {
-				broadcast = new Broadcast(window.ZokuChat.chat.room.currentUserId, window.URL.createObjectURL(stream));
-				app.broadcasts.push(broadcast);
+				broadcast = new Broadcast(window.URL.createObjectURL(stream));
 				app.peerConnection.addStream(stream);
 			});
 
