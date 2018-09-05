@@ -14,8 +14,9 @@ class Error {
 }
 
 class Broadcast {
-	constructor(streamUrl) {
-		this.streamUrl = streamUrl;
+	constructor(stream, userId) {
+		this.stream = stream;
+		this.userId = userId;
 	}
 }
 
@@ -31,27 +32,12 @@ var app = new Vue({
 			"iceServers": [
 				{ "urls": "stun:stun.1.google.com:19302" },
 				{ "urls": "stun:stun1.l.google.com:19302" },
-				{ "urls": "stun:stun2.l.google.com:19302" },
-				{ "urls": "stun:stun3.1.google.com:19302" },
-				{ "urls": "stun:stun4.1.google.com:19302" },
-				{ "urls": "stun:stun01.sipphone.com" },
-				{ "urls": "stun:stun.ekiga.net" },
-				{ "urls": "stun:stun.fwdnet.net" },
-				{ "urls": "stun:stun.ideasip.com" },
-				{ "urls": "stun:stun.iptel.org" },
-				{ "urls": "stun:stun.rixtelecom.se" },
-				{ "urls": "stun:stun.schlund.de" },
-				{ "urls": "stun:stunserver.org" },
-				{ "urls": "stun:stun.softjoys.com" },
-				{ "urls": "stun:stun.voiparound.com" },
-				{ "urls": "stun:stun.voipbuster.com" },
-				{ "urls": "stun:stun.voipstunt.com" },
-				{ "urls": "stun:stun.voxgratia.org" },
-				{ "urls": "stun:stun.xten.com" }
+				{ "urls": "stun:stun2.l.google.com:19302" }
 			]
 		}),
 		contacts: [],
 		messages: [],
+		broadcasting: false,
 		broadcasts: [],
 		errors: []
 	},
@@ -97,27 +83,31 @@ var app = new Vue({
 			});
 
 			app.connection.on("ReceiveDeleteBroadcast", function (broadcast) {
-				// Delete the stream
-				let tracks = $(`#broadcast-${broadcast.userId}`).getTracks();
-				tracks.forEach(function (track) {
-					track.stop();
-				});
-
-				// Delete broadcast object
 				let index = app.broadcasts.findIndex(function (b) {
 					return b.userId === broadcast.userId;
 				});
 
-				if (index > -1) app.broadcasts.splice(index, 1);
+				if (index > -1) {
+					// Delete the stream
+					let tracks = app.broadcasts[index].stream.getTracks();
+					tracks.forEach(function (track) {
+						track.stop();
+					});
+
+					// Delete broadcast object
+					app.broadcasts.splice(index, 1);
+				}
 			});
 
 			app.connection.on("ReceiveError", function (caption, message) {
 				app.errors.push(caption, message);
 			});
 
-			app.connection.start().catch(function (err) {
-				return console.error(err.toString());
-			}).then(function (value) {
+			app.connection.start()
+				.catch(function (err) {
+					return console.error(err.toString());
+				})
+				.then(function (value) {
 				app.joinRoom().then(function (value) {
 					app.retrieveMessages();
 				});
@@ -195,23 +185,38 @@ var app = new Vue({
 			container.scrollTop(container.height());
 		},
 		startBroadcast: () => {
-			let broadcast;
+			navigator.mediaDevices.getUserMedia({
+					video: {
+						width: { min: 640, ideal: 1920, max: 1920 },
+						height: { min: 480, ideal: 1080, max: 1080 }
+					},
+					audio: true
+				})
+				.then(function (stream) {
+					let broadcast = new Broadcast(stream, window.ZokuChat.chat.room.currentUserId);
+					app.peerConnection.addStream(stream);
+					app.broadcasts.push(broadcast);
 
-			navigator.getUserMedia({ video: true, audio: true }, function (stream) {
-				broadcast = new Broadcast(window.URL.createObjectURL(stream));
-				app.peerConnection.addStream(stream);
-			});
+					app.$nextTick(() => {
+						let video = $(`video#broadcast-${window.ZokuChat.chat.room.currentUserId}`);
+						video.onloadedmetadata = function (e) {
+							video.play();
+						};
+						video.srcObject = stream;
 
-			if (broadcast) {
-				return app.connection.invoke("StartBroadcast", window.ZokuChat.chat.room.id, broadcast).catch(function (err) {
-					return console.error(err.toString());
-				});
-			}
+						app.broadcasting = true;
+					});
+				})
+				.catch(function (err) { console.error(err.toString()); });
 		},
 		stopBroadcast: () => {
-			return app.connection.invoke("StopBroadcast", window.ZokuChat.chat.room.id).catch(function (err) {
-				return console.error(err.toString());
-			});
+			return app.connection.invoke("StopBroadcast", window.ZokuChat.chat.room.id)
+				.then(function () {
+					app.broadcasting = false;
+				})
+				.catch(function (err) {
+					return console.error(err.toString());
+				})
 		}
 	}
 });

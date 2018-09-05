@@ -17,14 +17,17 @@
 	</div>
 	<div class="chat-body">
 		<div class="chat-container">
-			<div id="video-container" class="chat-videos">
+			<div v-if="broadcasts.length > 0" 
+				 id="video-container"
+				 class="chat-videos">
 				<video v-for="broadcast in broadcasts"
-					   :id="`#broadcast-${broadcast.userId}`"
-					   :src="broadcast.streamUrl"
-					   :title="broadcast.userName"
-					   autoplay></video>
+					   :id="`broadcast-${broadcast.userId}`"
+					   autoplay="autoplay">
+				</video>
 			</div>
-			<div id="messages-container" class="chat-messages">
+			<div id="messages-container"
+				 class="chat-messages"
+				 :style="{ height: broadcasts.length > 0 ? '50%' : '100%' }">
 				<div v-for="message in messages">
 					<span :class="{ 'text-creator' : window.ZokuChat.chat.room.creatorId == message.userId, 'text-contact' : window.ZokuChat.chat.room.creatorId != message.userId }">
 						{{ message.userName }}:
@@ -58,6 +61,16 @@
 			</div>
 		</div>
 		<div class="chat-sidebar">
+			<button class="btn btn-primary"
+					v-if="!broadcasting"
+					@@click="startBroadcast()">
+				Start Broadcast
+			</button>
+			<button class="btn btn-danger"
+					v-if="broadcasting"
+					@@click="stopBroadcast()">
+				Stop Broadcast
+			</button>
 			<div class="text-creator">
 				@UserService.GetUserNameByUID(Model.Room.CreatedUID)
 			</div>

@@ -232,6 +232,11 @@ h3 {
 .chat-videos {
 	display: flex;
 	flex-direction: row;
+	height: 50%;
+}
+
+.chat-videos video {
+	width: 100%;
 }
 
 .chat-messages {

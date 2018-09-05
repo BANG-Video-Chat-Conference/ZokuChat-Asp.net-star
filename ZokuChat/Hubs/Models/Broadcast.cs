@@ -6,6 +6,6 @@
 
 		public string UserName { get; set; }
 
-		public string StreamUrl { get; set; }
+		public string Stream { get; set; }
 	}
 }
