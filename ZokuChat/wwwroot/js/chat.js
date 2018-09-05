@@ -23,6 +23,8 @@ class Broadcast {
 window.ZokuChat.chat = {};
 window.ZokuChat.chat.room = null;
 
+window.ZokuChat.chat.myStream;
+
 var app = new Vue({
 	el: '#chat-app',
 	data: {
@@ -31,8 +33,7 @@ var app = new Vue({
 		peerConnection: new RTCPeerConnection({
 			"iceServers": [
 				{ "urls": "stun:stun.1.google.com:19302" },
-				{ "urls": "stun:stun1.l.google.com:19302" },
-				{ "urls": "stun:stun2.l.google.com:19302" }
+				{ "urls": "stun:stun1.l.google.com:19302" }
 			]
 		}),
 		contacts: [],
@@ -103,15 +104,16 @@ var app = new Vue({
 				app.errors.push(caption, message);
 			});
 
-			app.connection.start()
-				.catch(function (err) {
+			app.connection.start().then(function (value) {
+					app.joinRoom().then(function (value) {
+							app.retrieveMessages();
+						})
+						.catch(function (err) {
+							return console.error(err.toString());
+						});
+				}).catch(function (err) {
 					return console.error(err.toString());
-				})
-				.then(function (value) {
-				app.joinRoom().then(function (value) {
-					app.retrieveMessages();
 				});
-			});
 
 			// Setup rtc handlers
 			app.peerConnection.ontrack = function (e) {
@@ -186,28 +188,25 @@ var app = new Vue({
 		},
 		startBroadcast: () => {
 			navigator.mediaDevices.getUserMedia({
-					video: {
-						width: { min: 640, ideal: 1920, max: 1920 },
-						height: { min: 480, ideal: 1080, max: 1080 }
-					},
-					audio: true
-				})
-				.then(function (stream) {
-					let broadcast = new Broadcast(stream, window.ZokuChat.chat.room.currentUserId);
-					app.peerConnection.addStream(stream);
-					app.broadcasts.push(broadcast);
+				video: {
+					width: { min: 640, ideal: 1920, max: 1920 },
+					height: { min: 480, ideal: 1080, max: 1080 }
+				},
+				audio: true
+			}).then(function (stream) {
+				window.ZokuChat.chat.myStream = stream;
 
-					app.$nextTick(() => {
-						let video = $(`video#broadcast-${window.ZokuChat.chat.room.currentUserId}`);
-						video.onloadedmetadata = function (e) {
-							video.play();
-						};
-						video.srcObject = stream;
+				let broadcast = new Broadcast(stream, window.ZokuChat.chat.room.currentUserId);
+				app.peerConnection.addStream(stream);
+				app.broadcasts.push(broadcast);
 
-						app.broadcasting = true;
-					});
-				})
-				.catch(function (err) { console.error(err.toString()); });
+				app.$nextTick(() => {
+					let video = $(`video#broadcast-${window.ZokuChat.chat.room.currentUserId}`);
+					video.srcObject = window.ZokuChat.chat.myStream;
+
+					app.broadcasting = true;
+				});
+			});
 		},
 		stopBroadcast: () => {
 			return app.connection.invoke("StopBroadcast", window.ZokuChat.chat.room.id)
@@ -216,7 +215,7 @@ var app = new Vue({
 				})
 				.catch(function (err) {
 					return console.error(err.toString());
-				})
+				});
 		}
 	}
 });
