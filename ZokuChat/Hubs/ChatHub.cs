@@ -266,6 +266,12 @@ namespace ZokuChat.Hubs
 				return;
 			}
 
+			if (answer.IsNullOrWhitespace())
+			{
+				await ReturnError("Could not send answer", "You must specify an answer.");
+				return;
+			}
+
 			// Permission
 			Room room = null;
 			await Task.Run(() => room = _roomService.GetRoom(roomId));
@@ -289,6 +295,12 @@ namespace ZokuChat.Hubs
 				return;
 			}
 
+			if (offer.IsNullOrWhitespace())
+			{
+				await ReturnError("Could not send offer", "You must specify an offer.");
+				return;
+			}
+
 			// Permission
 			Room room = null;
 			await Task.Run(() => room = _roomService.GetRoom(roomId));
@@ -309,6 +321,12 @@ namespace ZokuChat.Hubs
 			if (roomId <= 0)
 			{
 				await ReturnError("Could not send candidate", "You must specify a room.");
+				return;
+			}
+
+			if (candidate.IsNullOrWhitespace())
+			{
+				await ReturnError("Could not send candidate", "You must specify a candidate.");
 				return;
 			}
 

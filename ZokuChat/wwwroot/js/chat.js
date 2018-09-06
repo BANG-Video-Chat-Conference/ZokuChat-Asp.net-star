@@ -212,14 +212,22 @@ var app = new Vue({
 				app.peerConnection.createOffer({
 					offerToReceiveAudio: 1,
 					offerToReceiveVideo: 1
-				}).then(desc => app.peerConnection.setLocalDescription(desc));
+				})
+				.then(desc => {
+					return app.peerConnection.setLocalDescription(desc);
+				})
+				.then(() => {
+					return app.connection.invoke("SendOffer", window.ZokuChat.chat.room.id, JSON.stringify(app.peerConnection.localDescription))
+						.then(() => {
+							let broadcast = new Broadcast();
+							broadcast.stream = stream;
+							app.broadcasts.push(broadcast);
 
-				let broadcast = new Broadcast();
-				broadcast.stream = stream;
-				app.broadcasts.push(broadcast);
-
-				app.connection.invoke("StartBroadcast", window.ZokuChat.chat.room.id, new Broadcast(stream.id, window.ZokuChat.chat.room.currentUserId))
-					.then(() => app.broadcasting = true);
+							app.connection.invoke("StartBroadcast", window.ZokuChat.chat.room.id, new Broadcast(stream.id, window.ZokuChat.chat.room.currentUserId))
+								.then(() => app.broadcasting = true);
+						})
+						.catch(err => console.error(err.toString()));
+				});
 			});
 		},
 		stopBroadcast: () => {
