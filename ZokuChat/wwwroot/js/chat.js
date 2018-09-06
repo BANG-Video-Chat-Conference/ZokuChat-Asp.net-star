@@ -166,7 +166,7 @@ var app = new Vue({
 			}
 		},
 		sendOffer: (offer) => {
-			return app.connection.invoke("SendOffer", window.ZokuChat.chat.room.id, JSON.stringify(app.peerConnection.localDescription));
+			return app.connection.invoke("SendOffer", window.ZokuChat.chat.room.id, JSON.stringify({ type: 'offer', sdp: app.peerConnection.localDescription }));
 		},
 		sendAnswer: (answer) => {
 			return app.connection.invoke("SendAnswer", window.ZokuChat.chat.room.id, JSON.stringify(answer));
