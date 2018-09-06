@@ -204,9 +204,9 @@ namespace ZokuChat.Hubs
 				return;
 			}
 
-			if (broadcast == null || broadcast.Stream.IsNullOrWhitespace())
+			if (broadcast.StreamId.IsNullOrWhitespace())
 			{
-				await ReturnError("Could not start broadcast", "StreamUrl must be specified.");
+				await ReturnError("Could not start broadcast", "StreamId must be specified.");
 				return;
 			}
 
@@ -223,9 +223,8 @@ namespace ZokuChat.Hubs
 			// Notify all in group
 			Models.Broadcast hubBroadcast = new Models.Broadcast
 			{
-				UserName = _context.CurrentUser.UserName,
 				UserId = _context.CurrentUser.Id,
-				Stream = broadcast.Stream
+				StreamId = broadcast.StreamId
 			};
 			await Clients.Group(roomId.ToString()).SendAsync("ReceiveBroadcast", hubBroadcast);
 		}
@@ -252,9 +251,8 @@ namespace ZokuChat.Hubs
 			// Notify all in group
 			Models.Broadcast hubBroadcast = new Models.Broadcast
 			{
-				UserName = _context.CurrentUser.UserName,
 				UserId = _context.CurrentUser.Id,
-				Stream = string.Empty
+				StreamId = string.Empty
 			};
 			await Clients.Group(roomId.ToString()).SendAsync("ReceiveDeleteBroadcast", hubBroadcast);
 		}

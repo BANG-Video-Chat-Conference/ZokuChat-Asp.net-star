@@ -14,8 +14,8 @@ class Error {
 }
 
 class Broadcast {
-	constructor(stream, userId) {
-		this.stream = stream;
+	constructor(streamId, userId) {
+		this.streamId = streamId;
 		this.userId = userId;
 	}
 }
@@ -78,7 +78,20 @@ var app = new Vue({
 			});
 
 			app.connection.on("ReceiveBroadcast", function (broadcast) {
-				app.broadcasts.push(broadcast);
+				let index = app.broadcasts.findIndex(function (b) {
+					return b.stream.id === broadcast.streamId;
+				});
+
+				if (index > -1) {
+					let foundBroadcast = app.broadcasts[index];
+
+					foundBroadcast.streamId = broadcast.streamId;
+					foundBroadcast.userId = broadcast.userId;
+
+					app.$nextTick(() => {
+						document.querySelector(`video#broadcast-${broadcast.userId}`).srcObject = foundBroadcast.stream;
+					});
+				}
 			});
 
 			app.connection.on("ReceiveDeleteBroadcast", function (broadcast) {
@@ -115,7 +128,10 @@ var app = new Vue({
 
 			// Setup rtc handlers
 			app.peerConnection.ontrack = function (e) {
-				//e.streams[0]
+				let broadcast = new Broadcast();
+				broadcast.stream = e.streams[0];
+
+				app.broadcasts.push(broadcast);
 			};
 
 			app.peerConnection.onicecandidate = function (e) {
@@ -192,24 +208,24 @@ var app = new Vue({
 				},
 				audio: true
 			}).then(function (stream) {
-				let broadcast = new Broadcast(stream, window.ZokuChat.chat.room.currentUserId);
-				app.peerConnection.addStream(stream);
+				stream.getTracks().forEach(track => app.peerConnection.addTrack(track, stream));
+				app.peerConnection.createOffer({
+					offerToReceiveAudio: 1,
+					offerToReceiveVideo: 1
+				}).then(desc => app.peerConnection.setLocalDescription(desc));
+
+				let broadcast = new Broadcast();
+				broadcast.stream = stream;
 				app.broadcasts.push(broadcast);
 
-				app.$nextTick(() => {
-					document.querySelector(`video#broadcast-${window.ZokuChat.chat.room.currentUserId}`).srcObject = stream;
-					app.broadcasting = true;
-				});
+				app.connection.invoke("StartBroadcast", window.ZokuChat.chat.room.id, new Broadcast(stream.id, window.ZokuChat.chat.room.currentUserId))
+					.then(() => app.broadcasting = true);
 			});
 		},
 		stopBroadcast: () => {
 			return app.connection.invoke("StopBroadcast", window.ZokuChat.chat.room.id)
-				.then(function () {
-					app.broadcasting = false;
-				})
-				.catch(function (err) {
-					return console.error(err.toString());
-				});
+				.then(() => app.broadcasting = false)
+				.catch(err => console.error(err.toString()));
 		}
 	}
 });
