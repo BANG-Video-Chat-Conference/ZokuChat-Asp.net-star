@@ -23,8 +23,6 @@ class Broadcast {
 window.ZokuChat.chat = {};
 window.ZokuChat.chat.room = null;
 
-window.ZokuChat.chat.myStream;
-
 var app = new Vue({
 	el: '#chat-app',
 	data: {
@@ -194,16 +192,12 @@ var app = new Vue({
 				},
 				audio: true
 			}).then(function (stream) {
-				window.ZokuChat.chat.myStream = stream;
-
 				let broadcast = new Broadcast(stream, window.ZokuChat.chat.room.currentUserId);
 				app.peerConnection.addStream(stream);
 				app.broadcasts.push(broadcast);
 
 				app.$nextTick(() => {
-					let video = $(`video#broadcast-${window.ZokuChat.chat.room.currentUserId}`);
-					video.srcObject = window.ZokuChat.chat.myStream;
-
+					document.querySelector(`video#broadcast-${window.ZokuChat.chat.room.currentUserId}`).srcObject = stream;
 					app.broadcasting = true;
 				});
 			});
