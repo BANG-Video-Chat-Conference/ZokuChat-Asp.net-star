@@ -115,16 +115,10 @@ var app = new Vue({
 				app.errors.push(caption, message);
 			});
 
-			app.connection.start().then(function (value) {
-					app.joinRoom().then(function (value) {
-							app.retrieveMessages();
-						})
-						.catch(function (err) {
-							return console.error(err.toString());
-						});
-				}).catch(function (err) {
-					return console.error(err.toString());
-				});
+			app.connection.start()
+				.then(function (value) {
+					app.joinRoom().then(() => app.retrieveMessages());
+				})
 
 			// Setup rtc handlers
 			app.peerConnection.ontrack = function (e) {
@@ -157,19 +151,13 @@ var app = new Vue({
 			});
 		},
 		joinRoom: () => {
-			return app.connection.invoke("JoinRoom", window.ZokuChat.chat.room.id).catch(function (err) {
-				return console.error(err.toString());
-			});
+			return app.connection.invoke("JoinRoom", window.ZokuChat.chat.room.id);
 		},
 		retrieveMessages: () => {
-			return app.connection.invoke("GetMessages", window.ZokuChat.chat.room.id).catch(function (err) {
-				return console.error(err.toString());
-			});
+			return app.connection.invoke("GetMessages", window.ZokuChat.chat.room.id);
 		},
 		sendMessage: (text) => {
-			return app.connection.invoke("SendMessage", window.ZokuChat.chat.room.id, text).catch(function (err) {
-				return console.error(err.toString());
-			});
+			return app.connection.invoke("SendMessage", window.ZokuChat.chat.room.id, text);
 		},
 		sendButtonClick: () => {
 			if ($('#message-input').val().length > 0) {
@@ -177,20 +165,17 @@ var app = new Vue({
 				$('#message-input').val('');
 			}
 		},
+		sendOffer: (offer) => {
+			return app.connection.invoke("SendOffer", window.ZokuChat.chat.room.id, JSON.stringify(app.peerConnection.localDescription));
+		},
 		sendAnswer: (answer) => {
-			return app.connection.invoke("SendAnswer", window.ZokuChat.chat.room.id, JSON.stringify(answer)).catch(function (err) {
-				return console.error(err.toString());
-			});
+			return app.connection.invoke("SendAnswer", window.ZokuChat.chat.room.id, JSON.stringify(answer));
 		},
 		sendCandidate: (candidate) => {
-			return app.connection.invoke("SendCandidate", window.ZokuChat.chat.room.id, JSON.stringify(candidate)).catch(function (err) {
-				return console.error(err.toString());
-			});
+			return app.connection.invoke("SendCandidate", window.ZokuChat.chat.room.id, JSON.stringify(candidate));
 		},
 		deleteMessage: (message) => {
-			return app.connection.invoke("DeleteMessage", window.ZokuChat.chat.room.id, message.id).catch(function (err) {
-				return console.error(err.toString());
-			});
+			return app.connection.invoke("DeleteMessage", window.ZokuChat.chat.room.id, message.id);
 		},
 		canDeleteMessage: (message) => {
 			let currentUserId = window.ZokuChat.chat.room.currentUserId;
@@ -217,7 +202,7 @@ var app = new Vue({
 					return app.peerConnection.setLocalDescription(desc);
 				})
 				.then(() => {
-					return app.connection.invoke("SendOffer", window.ZokuChat.chat.room.id, JSON.stringify(app.peerConnection.localDescription))
+					return app.sendOffer()
 						.then(() => {
 							let broadcast = new Broadcast();
 							broadcast.stream = stream;
@@ -225,15 +210,13 @@ var app = new Vue({
 
 							app.connection.invoke("StartBroadcast", window.ZokuChat.chat.room.id, new Broadcast(stream.id, window.ZokuChat.chat.room.currentUserId))
 								.then(() => app.broadcasting = true);
-						})
-						.catch(err => console.error(err.toString()));
+						});
 				});
 			});
 		},
 		stopBroadcast: () => {
 			return app.connection.invoke("StopBroadcast", window.ZokuChat.chat.room.id)
-				.then(() => app.broadcasting = false)
-				.catch(err => console.error(err.toString()));
+				.then(() => app.broadcasting = false);
 		}
 	}
 });
