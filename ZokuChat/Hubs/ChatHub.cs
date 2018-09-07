@@ -257,12 +257,18 @@ namespace ZokuChat.Hubs
 			await Clients.Group(roomId.ToString()).SendAsync("ReceiveDeleteBroadcast", hubBroadcast);
 		}
 
-		public async Task SendAnswer(int roomId, string answer)
+		public async Task SendAnswer(int roomId, string userId, string answer)
 		{
 			// Validation
 			if (roomId <= 0)
 			{
 				await ReturnError("Could not send answer", "You must specify a room.");
+				return;
+			}
+
+			if (userId.IsNullOrWhitespace())
+			{
+				await ReturnError("Could not send answer", "You must specify a userId.");
 				return;
 			}
 
@@ -283,7 +289,7 @@ namespace ZokuChat.Hubs
 			}
 
 			// Notify others in group
-			await Clients.OthersInGroup(roomId.ToString()).SendAsync("ReceiveAnswer", answer);
+			await Clients.OthersInGroup(roomId.ToString()).SendAsync("ReceiveAnswer", answer, userId);
 		}
 
 		public async Task SendOffer(int roomId, string offer)
@@ -312,7 +318,7 @@ namespace ZokuChat.Hubs
 			}
 
 			// Notify others in group
-			await Clients.OthersInGroup(roomId.ToString()).SendAsync("ReceiveOffer", offer);
+			await Clients.OthersInGroup(roomId.ToString()).SendAsync("ReceiveOffer", offer, _context.CurrentUser.Id);
 		}
 
 		public async Task SendCandidate(int roomId, string candidate)

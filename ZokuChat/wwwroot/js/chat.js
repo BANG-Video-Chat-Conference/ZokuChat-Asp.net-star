@@ -134,20 +134,22 @@ var app = new Vue({
 				} 
 			};
 
-			app.connection.on("ReceiveOffer", function (offer) {
-				app.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-				app.peerConnection.createAnswer(function (answer) {
+			app.connection.on("ReceiveOffer", function (offer, userId) {
+				app.peerConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(offer)));
+				app.peerConnection.createAnswer().then(answer => {
 					app.peerConnection.setLocalDescription(answer);
-					app.sendAnswer(answer);
+					app.sendAnswer(answer, userId);
 				}); 
 			});
 
-			app.connection.on("ReceiveAnswer", function (answer) {
-				app.peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+			app.connection.on("ReceiveAnswer", function (answer, userId) {
+				if (userId === window.ZokuChat.chat.room.currentUserId) {
+					app.peerConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(answer)));
+				}
 			});
 
 			app.connection.on("ReceiveCandidate", function (candidate) {
-				app.peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+				app.peerConnection.addIceCandidate(new RTCIceCandidate(JSON.parse(candidate)));
 			});
 		},
 		joinRoom: () => {
@@ -166,10 +168,10 @@ var app = new Vue({
 			}
 		},
 		sendOffer: (offer) => {
-			return app.connection.invoke("SendOffer", window.ZokuChat.chat.room.id, JSON.stringify({ type: 'offer', sdp: app.peerConnection.localDescription }));
+			return app.connection.invoke("SendOffer", window.ZokuChat.chat.room.id, JSON.stringify(app.peerConnection.localDescription));
 		},
-		sendAnswer: (answer) => {
-			return app.connection.invoke("SendAnswer", window.ZokuChat.chat.room.id, JSON.stringify(answer));
+		sendAnswer: (answer, userId) => {
+			return app.connection.invoke("SendAnswer", window.ZokuChat.chat.room.id, userId, JSON.stringify(answer));
 		},
 		sendCandidate: (candidate) => {
 			return app.connection.invoke("SendCandidate", window.ZokuChat.chat.room.id, JSON.stringify(candidate));
