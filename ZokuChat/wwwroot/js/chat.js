@@ -36,6 +36,7 @@ var app = new Vue({
 		}),
 		contacts: [],
 		messages: [],
+		streams: [],
 		broadcasting: false,
 		broadcasts: [],
 		errors: []
@@ -78,18 +79,19 @@ var app = new Vue({
 			});
 
 			app.connection.on("ReceiveBroadcast", function (broadcast) {
-				let index = app.broadcasts.findIndex(function (b) {
-					return b.stream.id === broadcast.streamId;
+				let index = app.streams.findIndex(function (s) {
+					return s.id === broadcast.streamId;
 				});
 
 				if (index > -1) {
-					let foundBroadcast = app.broadcasts[index];
+					let foundStream = app.streams[index];
+					let newBroadcast = new Broadcast(broadcast.streamId, broadcast.userId);
+					newBroadcast.stream = foundStream;
 
-					foundBroadcast.streamId = broadcast.streamId;
-					foundBroadcast.userId = broadcast.userId;
+					app.broadcasts.push(newBroadcast);
 
 					app.$nextTick(() => {
-						document.querySelector(`video#broadcast-${broadcast.userId}`).srcObject = foundBroadcast.stream;
+						document.querySelector(`video#broadcast-${broadcast.userId}`).srcObject = foundStream;
 					});
 				}
 			});
@@ -121,11 +123,10 @@ var app = new Vue({
 				})
 
 			// Setup rtc handlers
-			app.peerConnection.ontrack = function (e) {
-				let broadcast = new Broadcast();
-				broadcast.stream = e.streams[0];
-
-				app.broadcasts.push(broadcast);
+			app.peerConnection.ontrack = e => {
+				if (app.streams.findIndex(s => s.id === e.streams[0].id) == -1) {
+					app.streams.push(e.streams[0]);
+				}
 			};
 
 			app.peerConnection.onicecandidate = function (e) {
@@ -206,10 +207,7 @@ var app = new Vue({
 				.then(() => {
 					return app.sendOffer()
 						.then(() => {
-							let broadcast = new Broadcast();
-							broadcast.stream = stream;
-							app.broadcasts.push(broadcast);
-
+							app.streams.push(stream);
 							app.connection.invoke("StartBroadcast", window.ZokuChat.chat.room.id, new Broadcast(stream.id, window.ZokuChat.chat.room.currentUserId))
 								.then(() => app.broadcasting = true);
 						});

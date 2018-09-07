@@ -21,6 +21,7 @@
 				 id="video-container"
 				 class="chat-videos">
 				<video v-for="broadcast in broadcasts"
+					   :key="broadcast.userId"
 					   :id="`broadcast-${broadcast.userId}`"
 					   autoplay>
 				</video>
