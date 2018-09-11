@@ -37,6 +37,7 @@ var app = new Vue({
 		contacts: [],
 		messages: [],
 		streams: [],
+		localSenders: [],
 		broadcasting: false,
 		broadcasts: [],
 		errors: []
@@ -53,6 +54,12 @@ var app = new Vue({
 				app.$nextTick(() => {
 					app.scrollToLatestMessage();
 				});
+			});
+
+			app.connection.on("ReceiveContact", function (contact) {
+				if (app.broadcasting) {
+					app.sendOfferToUser(contact.userUID);
+				}
 			});
 
 			app.connection.on("ReceiveContacts", function (contacts) {
@@ -108,6 +115,12 @@ var app = new Vue({
 						track.stop();
 					});
 
+					let streamIndex = app.streams.findIndex(function (s) {
+						return s.id === app.broadcasts[index].stream.id;
+					});
+
+					if (streamIndex > -1) app.streams.splice(streamIndex, 1);
+
 					// Delete broadcast object
 					app.broadcasts.splice(index, 1);
 				}
@@ -123,10 +136,16 @@ var app = new Vue({
 				})
 
 			// Setup rtc handlers
-			app.peerConnection.ontrack = e => {
+			app.peerConnection.ontrack = function (e) {
 				if (app.streams.findIndex(s => s.id === e.streams[0].id) == -1) {
 					app.streams.push(e.streams[0]);
 				}
+			};
+
+			app.peerConnection.onnegotiationneeded = function (e) {
+				app.peerConnection.createOffer().then(desc => {
+					return app.peerConnection.setLocalDescription(desc);
+				}).then(() => app.sendOffer());
 			};
 
 			app.peerConnection.onicecandidate = function (e) {
@@ -136,11 +155,17 @@ var app = new Vue({
 			};
 
 			app.connection.on("ReceiveOffer", function (offer, userId) {
-				app.peerConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(offer)));
-				app.peerConnection.createAnswer().then(answer => {
-					app.peerConnection.setLocalDescription(answer);
-					app.sendAnswer(answer, userId);
-				}); 
+				let broadcastIndex = app.broadcasts.findIndex(b => {
+					return b.userId === userId;
+				});
+
+				if (broadcastIndex === -1) {
+					app.peerConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(offer)));
+					app.peerConnection.createAnswer().then(answer => {
+						app.peerConnection.setLocalDescription(answer);
+						app.sendAnswer(answer, userId);
+					}); 
+				}
 			});
 
 			app.connection.on("ReceiveAnswer", function (answer, userId) {
@@ -168,8 +193,11 @@ var app = new Vue({
 				$('#message-input').val('');
 			}
 		},
-		sendOffer: (offer) => {
+		sendOffer: () => {
 			return app.connection.invoke("SendOffer", window.ZokuChat.chat.room.id, JSON.stringify(app.peerConnection.localDescription));
+		},
+		sendOfferToUser: (userId) => {
+			return app.connection.invoke("SendOfferToUser", window.ZokuChat.chat.room.id, userId, JSON.stringify(app.peerConnection.localDescription));
 		},
 		sendAnswer: (answer, userId) => {
 			return app.connection.invoke("SendAnswer", window.ZokuChat.chat.room.id, userId, JSON.stringify(answer));
@@ -196,25 +224,21 @@ var app = new Vue({
 				},
 				audio: true
 			}).then(function (stream) {
-				stream.getTracks().forEach(track => app.peerConnection.addTrack(track, stream));
-				app.peerConnection.createOffer({
-					offerToReceiveAudio: 1,
-					offerToReceiveVideo: 1
-				})
-				.then(desc => {
+				app.streams.push(stream);
+				stream.getTracks().forEach(track => app.localSenders.push(app.peerConnection.addTrack(track, stream)));
+
+				app.peerConnection.createOffer().then(desc => {
 					return app.peerConnection.setLocalDescription(desc);
-				})
-				.then(() => {
-					return app.sendOffer()
-						.then(() => {
-							app.streams.push(stream);
-							app.connection.invoke("StartBroadcast", window.ZokuChat.chat.room.id, new Broadcast(stream.id, window.ZokuChat.chat.room.currentUserId))
-								.then(() => app.broadcasting = true);
-						});
-				});
+				}).then(() => app.sendOffer().then(() => {
+					app.connection.invoke("StartBroadcast", window.ZokuChat.chat.room.id, new Broadcast(stream.id, window.ZokuChat.chat.room.currentUserId))
+						.then(() => app.broadcasting = true);
+				}));
 			});
 		},
 		stopBroadcast: () => {
+			app.localSenders.forEach(sender => app.peerConnection.removeTrack(sender));
+			app.localSenders.splice(0, app.localSenders.length);
+
 			return app.connection.invoke("StopBroadcast", window.ZokuChat.chat.room.id)
 				.then(() => app.broadcasting = false);
 		}

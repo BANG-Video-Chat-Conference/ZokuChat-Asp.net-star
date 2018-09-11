@@ -59,6 +59,14 @@ namespace ZokuChat.Hubs
 			});
 
 			await Clients.Caller.SendAsync("ReceiveContacts", hubContacts);
+
+			Models.Contact caller = new Models.Contact
+			{
+				UserName = _context.CurrentUser.UserName,
+				UserUID = _context.CurrentUser.Id
+			};
+
+			await Clients.OthersInGroup(roomId.ToString()).SendAsync("ReceiveContact", caller);
 		}
 
 		public async Task GetMessages(int roomId)
@@ -289,7 +297,42 @@ namespace ZokuChat.Hubs
 			}
 
 			// Notify others in group
-			await Clients.OthersInGroup(roomId.ToString()).SendAsync("ReceiveAnswer", answer, userId);
+			await Clients.User(userId).SendAsync("ReceiveAnswer", answer, userId);
+		}
+
+		public async Task SendOfferToUser(int roomId, string userId, string offer)
+		{
+			// Validation
+			if (roomId <= 0)
+			{
+				await ReturnError("Could not send offer", "You must specify a room.");
+				return;
+			}
+
+			if (userId.IsNullOrWhitespace())
+			{
+				await ReturnError("Could not send offer", "You must specify a user.");
+				return;
+			}
+
+			if (offer.IsNullOrWhitespace())
+			{
+				await ReturnError("Could not send offer", "You must specify an offer.");
+				return;
+			}
+
+			// Permission
+			Room room = null;
+			await Task.Run(() => room = _roomService.GetRoom(roomId));
+
+			if (room == null || !RoomPermissionHelper.CanAddMessage(_context.CurrentUser, room))
+			{
+				await ReturnError("Could not send offer", "You do not have permission, the room may have been deleted.");
+				return;
+			}
+
+			// Notify specified user
+			await Clients.User(userId).SendAsync("ReceiveOffer", offer, _context.CurrentUser.Id);
 		}
 
 		public async Task SendOffer(int roomId, string offer)
