@@ -37,7 +37,6 @@ var app = new Vue({
 		contacts: [],
 		messages: [],
 		streams: [],
-		localSenders: [],
 		broadcasting: false,
 		broadcasts: [],
 		errors: []
@@ -225,20 +224,17 @@ var app = new Vue({
 				audio: true
 			}).then(function (stream) {
 				app.streams.push(stream);
-				stream.getTracks().forEach(track => app.localSenders.push(app.peerConnection.addTrack(track, stream)));
+				stream.getTracks().forEach(track => app.peerConnection.addTrack(track, stream));
 
 				app.peerConnection.createOffer().then(desc => {
 					return app.peerConnection.setLocalDescription(desc);
-				}).then(() => app.sendOffer().then(() => {
-					app.connection.invoke("StartBroadcast", window.ZokuChat.chat.room.id, new Broadcast(stream.id, window.ZokuChat.chat.room.currentUserId))
-						.then(() => app.broadcasting = true);
-				}));
+				}).then(() => app.sendOffer());
+
+				app.connection.invoke("StartBroadcast", window.ZokuChat.chat.room.id, new Broadcast(stream.id, window.ZokuChat.chat.room.currentUserId))
+					.then(() => app.broadcasting = true);
 			});
 		},
 		stopBroadcast: () => {
-			app.localSenders.forEach(sender => app.peerConnection.removeTrack(sender));
-			app.localSenders.splice(0, app.localSenders.length);
-
 			return app.connection.invoke("StopBroadcast", window.ZokuChat.chat.room.id)
 				.then(() => app.broadcasting = false);
 		}
