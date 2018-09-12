@@ -36,6 +36,8 @@ var app = new Vue({
 		}),
 		contacts: [],
 		messages: [],
+		myStreamId: -1,
+		mySenders: [],
 		streams: [],
 		broadcasting: false,
 		broadcasts: [],
@@ -57,7 +59,8 @@ var app = new Vue({
 
 			app.connection.on("ReceiveContact", function (contact) {
 				if (app.broadcasting) {
-					app.sendOfferToUser(contact.userUID);
+					app.connection.invoke("StartBroadcast", window.ZokuChat.chat.room.id, new Broadcast(app.myStreamId, window.ZokuChat.chat.room.currentUserId))
+						.then(() => app.sendOfferToUser(contact.userUID));
 				}
 			});
 
@@ -85,20 +88,8 @@ var app = new Vue({
 			});
 
 			app.connection.on("ReceiveBroadcast", function (broadcast) {
-				let index = app.streams.findIndex(function (s) {
-					return s.id === broadcast.streamId;
-				});
-
-				if (index > -1) {
-					let foundStream = app.streams[index];
-					let newBroadcast = new Broadcast(broadcast.streamId, broadcast.userId);
-					newBroadcast.stream = foundStream;
-
-					app.broadcasts.push(newBroadcast);
-
-					app.$nextTick(() => {
-						document.querySelector(`video#broadcast-${broadcast.userId}`).srcObject = foundStream;
-					});
+				if (app.broadcasts.findIndex((b) => b.userId === broadcast.userId) === -1) {
+					app.broadcasts.push(new Broadcast(broadcast.streamId, broadcast.userId));
 				}
 			});
 
@@ -109,16 +100,14 @@ var app = new Vue({
 
 				if (index > -1) {
 					// Delete the stream
-					let tracks = app.broadcasts[index].stream.getTracks();
-					tracks.forEach(function (track) {
-						track.stop();
-					});
-
 					let streamIndex = app.streams.findIndex(function (s) {
-						return s.id === app.broadcasts[index].stream.id;
+						return s.id === app.broadcasts[index].streamId;
 					});
 
-					if (streamIndex > -1) app.streams.splice(streamIndex, 1);
+					if (streamIndex > -1) {
+						app.streams[streamIndex].getTracks().forEach(track => track.stop);
+						app.streams.splice(streamIndex, 1);
+					}
 
 					// Delete broadcast object
 					app.broadcasts.splice(index, 1);
@@ -136,8 +125,20 @@ var app = new Vue({
 
 			// Setup rtc handlers
 			app.peerConnection.ontrack = function (e) {
-				if (app.streams.findIndex(s => s.id === e.streams[0].id) == -1) {
-					app.streams.push(e.streams[0]);
+				if (app.streams.findIndex(s => s.id === e.streams[0].id) === -1) {
+					let stream = e.streams[0];
+					app.streams.push(stream);
+
+					let broadcastIndex = app.broadcasts.findIndex(function (b) {
+						return b.streamId === stream.id;
+					});
+
+					if (broadcastIndex > -1) {
+						let broadcast = app.broadcasts[broadcastIndex];
+						app.$nextTick(() => {
+							document.querySelector(`video#broadcast-${broadcast.userId}`).srcObject = stream;
+						});
+					}
 				}
 			};
 
@@ -154,17 +155,11 @@ var app = new Vue({
 			};
 
 			app.connection.on("ReceiveOffer", function (offer, userId) {
-				let broadcastIndex = app.broadcasts.findIndex(b => {
-					return b.userId === userId;
-				});
-
-				if (broadcastIndex === -1) {
-					app.peerConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(offer)));
-					app.peerConnection.createAnswer().then(answer => {
-						app.peerConnection.setLocalDescription(answer);
-						app.sendAnswer(answer, userId);
-					}); 
-				}
+				app.peerConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(offer)));
+				app.peerConnection.createAnswer().then(answer => {
+					app.peerConnection.setLocalDescription(answer);
+					app.sendAnswer(answer, userId);
+				}); 
 			});
 
 			app.connection.on("ReceiveAnswer", function (answer, userId) {
@@ -223,18 +218,29 @@ var app = new Vue({
 				},
 				audio: true
 			}).then(function (stream) {
-				app.streams.push(stream);
-				stream.getTracks().forEach(track => app.peerConnection.addTrack(track, stream));
+				app.myStreamId = stream.id;
 
-				app.peerConnection.createOffer().then(desc => {
-					return app.peerConnection.setLocalDescription(desc);
-				}).then(() => app.sendOffer());
+				let broadcast = new Broadcast(stream.id, window.ZokuChat.chat.room.currentUserId);
+				app.broadcasts.push(broadcast);
 
-				app.connection.invoke("StartBroadcast", window.ZokuChat.chat.room.id, new Broadcast(stream.id, window.ZokuChat.chat.room.currentUserId))
-					.then(() => app.broadcasting = true);
+				app.$nextTick(() => {
+					document.querySelector(`video#broadcast-${broadcast.userId}`).srcObject = stream;
+				});
+
+				app.connection.invoke("StartBroadcast", window.ZokuChat.chat.room.id, new Broadcast(app.myStreamId, window.ZokuChat.chat.room.currentUserId))
+					.then(() => {
+						app.broadcasting = true;
+						app.streams.push(stream);
+						stream.getTracks().forEach(track => app.mySenders.push(app.peerConnection.addTrack(track, stream)));
+					});
 			});
 		},
 		stopBroadcast: () => {
+			if (app.mySenders.length > 0) {
+				app.mySenders.forEach(sender => app.peerConnection.removeTrack(sender));
+				app.mySenders.splice(0, app.mySenders.length);
+			}
+
 			return app.connection.invoke("StopBroadcast", window.ZokuChat.chat.room.id)
 				.then(() => app.broadcasting = false);
 		}

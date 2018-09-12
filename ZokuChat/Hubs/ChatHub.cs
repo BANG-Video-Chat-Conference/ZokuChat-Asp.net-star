@@ -234,7 +234,7 @@ namespace ZokuChat.Hubs
 				UserId = _context.CurrentUser.Id,
 				StreamId = broadcast.StreamId
 			};
-			await Clients.Group(roomId.ToString()).SendAsync("ReceiveBroadcast", hubBroadcast);
+			await Clients.OthersInGroup(roomId.ToString()).SendAsync("ReceiveBroadcast", hubBroadcast);
 		}
 
 		public async Task StopBroadcast(int roomId)
