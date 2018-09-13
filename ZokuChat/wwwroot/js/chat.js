@@ -233,6 +233,8 @@ var app = new Vue({
 						app.streams.push(stream);
 						stream.getTracks().forEach(track => app.mySenders.push(app.peerConnection.addTrack(track, stream)));
 					});
+			}).catch(function (err) {
+				logError(err);
 			});
 		},
 		stopBroadcast: () => {
@@ -243,6 +245,9 @@ var app = new Vue({
 
 			return app.connection.invoke("StopBroadcast", window.ZokuChat.chat.room.id)
 				.then(() => app.broadcasting = false);
+		},
+		logError: (err) => {
+			console.log(err.name + ": " + err.message);
 		}
 	}
 });

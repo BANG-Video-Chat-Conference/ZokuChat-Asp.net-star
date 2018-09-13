@@ -23,6 +23,7 @@
 				<video v-for="broadcast in broadcasts"
 					   :key="broadcast.userId"
 					   :id="`broadcast-${broadcast.userId}`"
+					   :style="{ width: `${100 / broadcasts.length}%` }"
 					   autoplay>
 				</video>
 			</div>
