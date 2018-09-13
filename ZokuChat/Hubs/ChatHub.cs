@@ -296,7 +296,7 @@ namespace ZokuChat.Hubs
 				return;
 			}
 
-			// Notify others in group
+			// Notify the specified user
 			await Clients.User(userId).SendAsync("ReceiveAnswer", answer, userId);
 		}
 
