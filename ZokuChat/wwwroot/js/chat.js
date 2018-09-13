@@ -155,17 +155,16 @@ var app = new Vue({
 			};
 
 			app.connection.on("ReceiveOffer", function (offer, userId) {
-				app.peerConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(offer)));
-				app.peerConnection.createAnswer().then(answer => {
-					app.peerConnection.setLocalDescription(answer);
-					app.sendAnswer(answer, userId);
-				}); 
+				app.peerConnection.setRemoteDescription(JSON.parse(offer)).then(() => {
+					app.peerConnection.createAnswer().then(answer => {
+						app.peerConnection.setLocalDescription(answer);
+						app.sendAnswer(answer, userId);
+					}); 
+				});
 			});
 
 			app.connection.on("ReceiveAnswer", function (answer, userId) {
-				if (userId === window.ZokuChat.chat.room.currentUserId) {
-					app.peerConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(answer)));
-				}
+				app.peerConnection.setRemoteDescription(JSON.parse(answer));
 			});
 
 			app.connection.on("ReceiveCandidate", function (candidate) {
@@ -233,6 +232,8 @@ var app = new Vue({
 						app.streams.push(stream);
 						stream.getTracks().forEach(track => app.mySenders.push(app.peerConnection.addTrack(track, stream)));
 					});
+			}).catch(function (err) {
+				logError(err);
 			});
 		},
 		stopBroadcast: () => {
@@ -243,6 +244,9 @@ var app = new Vue({
 
 			return app.connection.invoke("StopBroadcast", window.ZokuChat.chat.room.id)
 				.then(() => app.broadcasting = false);
+		},
+		logError: (err) => {
+			console.log(err.name + ": " + err.message);
 		}
 	}
 });
