@@ -4,26 +4,28 @@
 	ViewData["Title"] = "New Room";
 }
 
-<partial name="_SiteHeader" />
-<div class="content-container">
-	<partial name="_ChatSidebar" />
-	<div class="content">
-		<h3>New Room</h3>
-		<form method="post">
-			@Html.AntiForgeryToken()
-			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-			<div class="form-group">
-				<label for="name">Name</label>
-				<input id="name" asp-for="Room.Name" placeholder="Enter a name" class="form-control" />
-				<span asp-validation-for="Room.Name" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label for="description">Description</label>
-				<input id="description" asp-for="Room.Description" placeholder="Enter an optional description" class="form-control" />
-				<span asp-validation-for="Room.Description" class="text-danger"></span>
-			</div>
-			<input type="submit" value="Create" class="btn btn-primary">
-		</form>
+<div class="page-body">
+	<partial name="_SiteHeader" />
+	<div class="content-container">
+		<partial name="_ChatSidebar" />
+		<div class="content">
+			<h3>New Room</h3>
+			<form method="post">
+				@Html.AntiForgeryToken()
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<div class="form-group">
+					<label for="name">Name</label>
+					<input id="name" asp-for="Room.Name" placeholder="Enter a name" class="form-control" />
+					<span asp-validation-for="Room.Name" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label for="description">Description</label>
+					<input id="description" asp-for="Room.Description" placeholder="Enter an optional description" class="form-control" />
+					<span asp-validation-for="Room.Description" class="text-danger"></span>
+				</div>
+				<input type="submit" value="Create" class="btn btn-primary">
+			</form>
+		</div>
 	</div>
 </div>
 

@@ -4,34 +4,36 @@
 	ViewData["Title"] = "Register";
 }
 
-<partial name="_SiteHeader" />
-<div class="content">
-	<h3>Register</h3>
-	<form method="post">
-		@Html.AntiForgeryToken()
-		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-		<div class="form-group">
-			<label for="email">Email</label>
-			<input id="email" asp-for="Register.Email" placeholder="Enter an email" class="form-control" />
-			<span asp-validation-for="Register.Email" class="text-danger"></span>
-		</div>
-		<div class="form-group">
-			<label for="username">Username</label>
-			<input id="username" asp-for="Register.UserName" placeholder="Enter a username" class="form-control" />
-			<span asp-validation-for="Register.UserName" class="text-danger"></span>
-		</div>
-		<div class="form-group">
-			<label for="password">Password</label>
-			<input id="password" type="password" asp-for="Register.Password" placeholder="Enter a secure password" class="form-control" />
-			<span asp-validation-for="Register.Password" class="text-danger"></span>
-		</div>
-		<div class="form-group">
-			<label for="passwordConfirm">Confirm Password</label>
-			<input id="passwordConfirm" type="password" asp-for="Register.PasswordConfirm" placeholder="Confirm the password" class="form-control" />
-			<span asp-validation-for="Register.PasswordConfirm" class="text-danger"></span>
-		</div>
-		<input type="submit" value="Join" class="btn btn-primary">
-	</form>
+<div class="page-body">
+	<partial name="_SiteHeader" />
+	<div class="content">
+		<h3>Register</h3>
+		<form method="post">
+			@Html.AntiForgeryToken()
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label for="email">Email</label>
+				<input id="email" asp-for="Register.Email" placeholder="Enter an email" class="form-control" />
+				<span asp-validation-for="Register.Email" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label for="username">Username</label>
+				<input id="username" asp-for="Register.UserName" placeholder="Enter a username" class="form-control" />
+				<span asp-validation-for="Register.UserName" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label for="password">Password</label>
+				<input id="password" type="password" asp-for="Register.Password" placeholder="Enter a secure password" class="form-control" />
+				<span asp-validation-for="Register.Password" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label for="passwordConfirm">Confirm Password</label>
+				<input id="passwordConfirm" type="password" asp-for="Register.PasswordConfirm" placeholder="Confirm the password" class="form-control" />
+				<span asp-validation-for="Register.PasswordConfirm" class="text-danger"></span>
+			</div>
+			<input type="submit" value="Join" class="btn btn-primary">
+		</form>
+	</div>
 </div>
 
 @section Scripts {

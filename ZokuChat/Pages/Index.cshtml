@@ -7,15 +7,17 @@
 @using ZokuChat.Models
 @inject Context Context
 
-<partial name="_SiteHeader" />
-<div class="content-container">
-	<partial name="_HomeSidebar" />
-	<div class="content">
-		<h3>Home</h3>
-		<p>
-			@Context.Users.Count() Users <br />
-			@Context.Rooms.Count() Rooms <br />
-			@Context.Messages.Count() Messages
-		</p>
+<div class="page-body">
+	<partial name="_SiteHeader" />
+	<div class="content-container">
+		<partial name="_HomeSidebar" />
+		<div class="content">
+			<h3>Home</h3>
+			<p>
+				@Context.Users.Count() Users <br />
+				@Context.Rooms.Count() Rooms <br />
+				@Context.Messages.Count() Messages
+			</p>
+		</div>
 	</div>
 </div>

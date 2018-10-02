@@ -4,9 +4,11 @@
 	ViewData["Title"] = Model.ViewedUser.UserName;
 }
 
-<partial name="_SiteHeader" />
-<div class="content-container">
-	<div class="content">
-		<h3>@Model.ViewedUser.UserName</h3>
+<div class="page-body">
+	<partial name="_SiteHeader" />
+	<div class="content-container">
+		<div class="content">
+			<h3>@Model.ViewedUser.UserName</h3>
+		</div>
 	</div>
 </div>

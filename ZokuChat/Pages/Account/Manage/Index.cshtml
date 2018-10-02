@@ -4,21 +4,23 @@
 	ViewData["Title"] = "Account";
 }
 
-<partial name="_SiteHeader" />
-<div class="content-container">
-	<partial name="_ManageSidebar" />
-	<div class="content">
-		<h3>Account</h3>
-		<div class="form-group">
-			<label for="username">Username</label>
-			<div id="username">
-				@Model.CurrentUser.UserName
+<div class="page-body">
+	<partial name="_SiteHeader" />
+	<div class="content-container">
+		<partial name="_ManageSidebar" />
+		<div class="content">
+			<h3>Account</h3>
+			<div class="form-group">
+				<label for="username">Username</label>
+				<div id="username">
+					@Model.CurrentUser.UserName
+				</div>
 			</div>
-		</div>
-		<div class="form-group">
-			<label for="email">Email</label>
-			<div id="email">
-				@Model.CurrentUser.Email
+			<div class="form-group">
+				<label for="email">Email</label>
+				<div id="email">
+					@Model.CurrentUser.Email
+				</div>
 			</div>
 		</div>
 	</div>

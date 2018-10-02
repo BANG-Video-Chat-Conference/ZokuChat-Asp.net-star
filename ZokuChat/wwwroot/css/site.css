@@ -87,6 +87,10 @@ h3 {
 	color: #007bff !important;
 }
 
+.navbar-noflex {
+	flex: 0 0 auto;
+}
+
 .btn-nav {
 	border-color: #fff;
 	color: #fff;
@@ -100,23 +104,28 @@ h3 {
 	border-radius: 0;
 }
 
-.content-container {
-	width: 100%;
+.page-body {
 	height: 100%;
 	display: flex;
+	flex-direction: column;
+}
+
+.content-container {
+	display: flex;
+	flex-direction: row;
+	flex: auto;
 }
 
 .sidebar {
 	border-right: 2px dashed #db94b9;
 	width: 200px;
 	padding: .5rem 1rem;
-	height: 100%;
 }
 
 .content {
 	padding: .5rem 1rem;
-	height: 100%;
 	width: 100%;
+	overflow-y: auto;
 }
 
 .sidebar-link {
@@ -204,35 +213,33 @@ h3 {
 }
 
 .chat-container {
-	width: 100%;
 	height: 100%;
 	display: flex;
 	flex-direction: column;
 }
 
 .chat-body {
-	width: 100%;
-	height: 100%;
 	display: flex;
 	flex-direction: row;
+	overflow-y: auto;
 }
 
 .chat-content {
+	flex: auto;
 	display: flex;
 	flex-direction: column;
 }
 
 .chat-messages {
 	padding: .5rem 1rem;
-	width: 100%;
-	height: 100%;
+	flex: auto;
 	overflow-y: auto;
+	word-break: break-all;
 }
 
 .chat-videos {
 	display: flex;
 	flex-direction: row;
-	height: 50%;
 }
 
 .chat-videos video {
@@ -240,28 +247,25 @@ h3 {
 	object-fit: contain;
 }
 
-.chat-messages {
-	word-break: break-all;
-}
-
 .chat-sidebar {
 	padding: .5rem 1rem;
 	border-left: 2px dashed #db94b9;
 	width: 200px;
-	height: 100%;
+	flex: none;
 	overflow-y: auto;
 }
 
 .chat-header {
 	padding: .5rem 1rem;
 	background-color: #db94b9;
+	flex: none;
 	color: white;
 }
 
 .chat-footer {
 	border-top: 2px dashed #db94b9;
 	padding: .5rem 1rem;
-	height: 56px;
+	flex: none;
 	color: white;
 }
 

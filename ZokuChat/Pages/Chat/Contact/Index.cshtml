@@ -6,14 +6,16 @@
 
 @using ZokuChat.Models
 
-<partial name="_SiteHeader" />
-<div class="content-container">
-	<partial name="_ChatSidebar" />
-	<div class="content">
-		<h3>Contacts</h3>
-		@foreach (Contact contact in Model.Contacts)
-		{
-			<partial name="_ContactCard" model="contact" />
-		}
+<div class="page-body">
+	<partial name="_SiteHeader" />
+	<div class="content-container">
+		<partial name="_ChatSidebar" />
+		<div class="content">
+			<h3>Contacts</h3>
+			@foreach (Contact contact in Model.Contacts)
+			{
+				<partial name="_ContactCard" model="contact" />
+			}
+		</div>
 	</div>
 </div>

@@ -6,20 +6,22 @@
 
 @using ZokuChat.Models
 
-<partial name="_SiteHeader" />
-<div class="content-container">
-	<partial name="_ManageSidebar" />
-	<div class="content">
-		<h3>Blocked Users</h3>
-		@foreach (BlockedUser blockedUser in Model.BlockedUsers)
-		{
-			<partial name="_BlockedUserCard" model="blockedUser" />
-		}
-		@if (!Model.BlockedUsers.Any())
-		{
-			<div class="alert alert-primary float-left">
-				You do not currently have any blocked users.
-			</div>
-		}
+<div class="page-body">
+	<partial name="_SiteHeader" />
+	<div class="content-container">
+		<partial name="_ManageSidebar" />
+		<div class="content">
+			<h3>Blocked Users</h3>
+			@foreach (BlockedUser blockedUser in Model.BlockedUsers)
+			{
+				<partial name="_BlockedUserCard" model="blockedUser" />
+			}
+			@if (!Model.BlockedUsers.Any())
+			{
+				<div class="alert alert-primary float-left">
+					You do not currently have any blocked users.
+				</div>
+			}
+		</div>
 	</div>
 </div>
