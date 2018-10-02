@@ -30,7 +30,7 @@
 			<div id="messages-container"
 				 class="chat-messages">
 				<div v-for="message in messages">
-					<span :class="{ 'text-creator' : window.ZokuChat.chat.room.creatorId == message.userId, 'text-contact' : window.ZokuChat.chat.room.creatorId != message.userId }">
+					<span :class="{ 'text-creator' : window.ZokuChat.chat.room.creatorId === message.userId, 'text-contact' : window.ZokuChat.chat.room.creatorId !== message.userId }">
 						{{ message.userName }}:
 					</span>
 					<span v-if="!message.isDeleted">
