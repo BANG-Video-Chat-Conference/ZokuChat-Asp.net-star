@@ -4,11 +4,13 @@
 	ViewData["Title"] = "Logout";
 }
 
-<partial name="_SiteHeader" />
-<div class="content">
-	<h3>Sign Out</h3>
-	<form method="post">
-		@Html.AntiForgeryToken()
-		<input type="submit" value="Logout" class="btn btn-primary" />
-	</form>
+<div class="page-body">
+	<partial name="_SiteHeader" />
+	<div class="content">
+		<h3>Sign Out</h3>
+		<form method="post">
+			@Html.AntiForgeryToken()
+			<input type="submit" value="Logout" class="btn btn-primary" />
+		</form>
+	</div>
 </div>

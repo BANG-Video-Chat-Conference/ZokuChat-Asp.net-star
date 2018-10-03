@@ -16,7 +16,7 @@
 		<a class="float-right" href="@UrlHelper.GetRoomsUrl()">Exit Room</a>
 	</div>
 	<div class="chat-body">
-		<div class="chat-container">
+		<div class="chat-content">
 			<div v-if="broadcasts.length > 0" 
 				 id="video-container"
 				 class="chat-videos">
@@ -28,10 +28,9 @@
 				</video>
 			</div>
 			<div id="messages-container"
-				 class="chat-messages"
-				 :style="{ height: broadcasts.length > 0 ? '50%' : '100%' }">
+				 class="chat-messages">
 				<div v-for="message in messages">
-					<span :class="{ 'text-creator' : window.ZokuChat.chat.room.creatorId == message.userId, 'text-contact' : window.ZokuChat.chat.room.creatorId != message.userId }">
+					<span :class="{ 'text-creator' : window.ZokuChat.chat.room.creatorId === message.userId, 'text-contact' : window.ZokuChat.chat.room.creatorId !== message.userId }">
 						{{ message.userName }}:
 					</span>
 					<span v-if="!message.isDeleted">

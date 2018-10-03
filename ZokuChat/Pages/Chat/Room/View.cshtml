@@ -10,46 +10,48 @@
 @inject Context Context
 @inject IUserService UserService
 
-<partial name="_SiteHeader" />
-<div class="content-container">
-	<partial name="_ChatSidebar" />
-	<div class="content">
-		<h3>@Model.Room.Name</h3>
-		<div class="form-group">
-			<label for="created">Created Date</label>
-			<div id="created">
-				<partial name="_LocalDateTime" model="@Model.Room.CreatedDateUtc" />
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="description">Description</label>
-			<div id="description">
-				@Model.Room.Description
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="contacts">Contacts</label>
-			<div id="contacts" style="max-width: 500px; display: flex; flex-direction: row;">
-				<div class="room-creator margin-right margin-bottom">
-					@UserService.GetUserNameByUID(Model.Room.CreatedUID)
+<div class="page-body">
+	<partial name="_SiteHeader" />
+	<div class="content-container">
+		<partial name="_ChatSidebar" />
+		<div class="content">
+			<h3>@Model.Room.Name</h3>
+			<div class="form-group">
+				<label for="created">Created Date</label>
+				<div id="created">
+					<partial name="_LocalDateTime" model="@Model.Room.CreatedDateUtc" />
 				</div>
-				@foreach (RoomContact contact in Model.Room.Contacts)
-				{
-					<div class="room-contact margin-right margin-bottom">
-						@UserService.GetUserNameByUID(contact.ContactUID)
-					</div>
-				}
 			</div>
+			<div class="form-group">
+				<label for="description">Description</label>
+				<div id="description">
+					@Model.Room.Description
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="contacts">Contacts</label>
+				<div id="contacts" style="max-width: 500px; display: flex; flex-direction: row;">
+					<div class="room-creator margin-right margin-bottom">
+						@UserService.GetUserNameByUID(Model.Room.CreatedUID)
+					</div>
+					@foreach (RoomContact contact in Model.Room.Contacts)
+					{
+						<div class="room-contact margin-right margin-bottom">
+							@UserService.GetUserNameByUID(contact.ContactUID)
+						</div>
+					}
+				</div>
+			</div>
+			<a href="@UrlHelper.GetEnterRoomUrl(Model.Room.Id)" class="btn btn-outline-primary margin-right">Enter</a>
+			<a href="@UrlHelper.GetRoomsUrl()" class="btn btn-outline-primary margin-right">Rooms List</a>
+			@if (RoomPermissionHelper.CanEditRoom(Context.CurrentUser, Model.Room))
+			{
+				<a href="@UrlHelper.GetEditRoomUrl(Model.Room.Id)" class="btn btn-outline-primary margin-right">Edit</a>
+			}
+			@if (RoomPermissionHelper.CanDeleteRoom(Context.CurrentUser, Model.Room))
+			{
+				<button class="btn btn-outline-danger margin-right" onclick="window.ZokuChat.deleteRoom(@Model.Room.Id);">Delete</button>
+			}
 		</div>
-		<a href="@UrlHelper.GetEnterRoomUrl(Model.Room.Id)" class="btn btn-outline-primary margin-right">Enter</a>
-		<a href="@UrlHelper.GetRoomsUrl()" class="btn btn-outline-primary margin-right">Rooms List</a>
-		@if (RoomPermissionHelper.CanEditRoom(Context.CurrentUser, Model.Room))
-		{
-			<a href="@UrlHelper.GetEditRoomUrl(Model.Room.Id)" class="btn btn-outline-primary margin-right">Edit</a>
-		}
-		@if (RoomPermissionHelper.CanDeleteRoom(Context.CurrentUser, Model.Room))
-		{
-			<button class="btn btn-outline-danger margin-right" onclick="window.ZokuChat.deleteRoom(@Model.Room.Id);">Delete</button>
-		}
 	</div>
 </div>
