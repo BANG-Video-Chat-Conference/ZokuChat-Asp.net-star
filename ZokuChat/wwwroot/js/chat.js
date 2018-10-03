@@ -23,7 +23,7 @@ class Broadcast {
 window.ZokuChat.chat = {};
 window.ZokuChat.chat.room = null;
 
-var app = new Vue({
+const app = new Vue({
 	el: '#chat-app',
 	data: {
 		window: window,
@@ -80,7 +80,7 @@ var app = new Vue({
 			});
 
 			app.connection.on("ReceiveDeleteMessage", function (message) {
-				let index = app.messages.findIndex(function (m) {
+				const index = app.messages.findIndex(function (m) {
 					return m.id === message.id;
 				});
 
@@ -94,13 +94,13 @@ var app = new Vue({
 			});
 
 			app.connection.on("ReceiveDeleteBroadcast", function (broadcast) {
-				let index = app.broadcasts.findIndex(function (b) {
+				const index = app.broadcasts.findIndex(function (b) {
 					return b.userId === broadcast.userId;
 				});
 
 				if (index > -1) {
 					// Delete the stream
-					let streamIndex = app.streams.findIndex(function (s) {
+					const streamIndex = app.streams.findIndex(function (s) {
 						return s.id === app.broadcasts[index].streamId;
 					});
 
@@ -121,20 +121,20 @@ var app = new Vue({
 			app.connection.start()
 				.then(function (value) {
 					app.joinRoom().then(() => app.retrieveMessages());
-				})
+				});
 
 			// Setup rtc handlers
 			app.peerConnection.ontrack = function (e) {
 				if (app.streams.findIndex(s => s.id === e.streams[0].id) === -1) {
-					let stream = e.streams[0];
+					const stream = e.streams[0];
 					app.streams.push(stream);
 
-					let broadcastIndex = app.broadcasts.findIndex(function (b) {
+					const broadcastIndex = app.broadcasts.findIndex(function (b) {
 						return b.streamId === stream.id;
 					});
 
 					if (broadcastIndex > -1) {
-						let broadcast = app.broadcasts[broadcastIndex];
+						const broadcast = app.broadcasts[broadcastIndex];
 						app.$nextTick(() => {
 							document.querySelector(`video#broadcast-${broadcast.userId}`).srcObject = stream;
 						});
@@ -181,9 +181,10 @@ var app = new Vue({
 			return app.connection.invoke("SendMessage", window.ZokuChat.chat.room.id, text);
 		},
 		sendButtonClick: () => {
-			if ($('#message-input').val().length > 0) {
-				app.sendMessage($('#message-input').val());
-				$('#message-input').val('');
+			const input = $('#message-input');
+			if (input.val().length > 0) {
+				app.sendMessage(input.val());
+				input.val('');
 			}
 		},
 		sendOffer: () => {
@@ -202,12 +203,12 @@ var app = new Vue({
 			return app.connection.invoke("DeleteMessage", window.ZokuChat.chat.room.id, message.id);
 		},
 		canDeleteMessage: (message) => {
-			let currentUserId = window.ZokuChat.chat.room.currentUserId;
+			const currentUserId = window.ZokuChat.chat.room.currentUserId;
 			return currentUserId === message.userId || currentUserId === window.ZokuChat.chat.room.creatorId;
 		},
 		scrollToLatestMessage: () => {
-			let container = $('#messages-container');
-			container.scrollTop(container.height());
+			const container = $('#messages-container');
+			container.scrollTop(container.prop("scrollHeight"));
 		},
 		startBroadcast: () => {
 			navigator.mediaDevices.getUserMedia({
@@ -219,7 +220,7 @@ var app = new Vue({
 			}).then(function (stream) {
 				app.myStreamId = stream.id;
 
-				let broadcast = new Broadcast(stream.id, window.ZokuChat.chat.room.currentUserId);
+				const broadcast = new Broadcast(stream.id, window.ZokuChat.chat.room.currentUserId);
 				app.broadcasts.push(broadcast);
 
 				app.$nextTick(() => {

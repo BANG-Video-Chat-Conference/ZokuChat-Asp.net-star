@@ -232,7 +232,6 @@ h3 {
 
 .chat-messages {
 	padding: .5rem 1rem;
-	flex: auto;
 	overflow-y: auto;
 	word-break: break-all;
 }
