@@ -44,7 +44,7 @@ const app = new Vue({
 		errors: []
 	},
 	methods: {
-		init: () => {
+		init: function () {
 			// Initialize signalr handlers and connection
 			app.connection.on("ReceiveMessages", function (messages) {
 				messages.forEach(function (message) {
@@ -52,7 +52,7 @@ const app = new Vue({
 				});
 
 				// Scroll to latest
-				app.$nextTick(() => {
+				app.$nextTick(function () {
 					app.scrollToLatestMessage();
 				});
 			});
@@ -74,7 +74,7 @@ const app = new Vue({
 				app.messages.push(message);
 
 				// Scroll to latest
-				app.$nextTick(() => {
+				app.$nextTick(function() {
 					app.scrollToLatestMessage();
 				});
 			});
@@ -171,46 +171,46 @@ const app = new Vue({
 				app.peerConnection.addIceCandidate(new RTCIceCandidate(JSON.parse(candidate)));
 			});
 		},
-		joinRoom: () => {
+		joinRoom: function () {
 			return app.connection.invoke("JoinRoom", window.ZokuChat.chat.room.id);
 		},
-		retrieveMessages: () => {
+		retrieveMessages: function () {
 			return app.connection.invoke("GetMessages", window.ZokuChat.chat.room.id);
 		},
-		sendMessage: (text) => {
+		sendMessage: function (text) {
 			return app.connection.invoke("SendMessage", window.ZokuChat.chat.room.id, text);
 		},
-		sendButtonClick: () => {
+		sendButtonClick: function () {
 			const input = $('#message-input');
 			if (input.val().length > 0) {
 				app.sendMessage(input.val());
 				input.val('');
 			}
 		},
-		sendOffer: () => {
+		sendOffer: function () {
 			return app.connection.invoke("SendOffer", window.ZokuChat.chat.room.id, JSON.stringify(app.peerConnection.localDescription));
 		},
-		sendOfferToUser: (userId) => {
+		sendOfferToUser: function (userId) {
 			return app.connection.invoke("SendOfferToUser", window.ZokuChat.chat.room.id, userId, JSON.stringify(app.peerConnection.localDescription));
 		},
-		sendAnswer: (answer, userId) => {
+		sendAnswer: function (answer, userId) {
 			return app.connection.invoke("SendAnswer", window.ZokuChat.chat.room.id, userId, JSON.stringify(answer));
 		},
-		sendCandidate: (candidate) => {
+		sendCandidate: function (candidate) {
 			return app.connection.invoke("SendCandidate", window.ZokuChat.chat.room.id, JSON.stringify(candidate));
 		},
-		deleteMessage: (message) => {
+		deleteMessage: function (message) {
 			return app.connection.invoke("DeleteMessage", window.ZokuChat.chat.room.id, message.id);
 		},
-		canDeleteMessage: (message) => {
+		canDeleteMessage: function (message) {
 			const currentUserId = window.ZokuChat.chat.room.currentUserId;
 			return currentUserId === message.userId || currentUserId === window.ZokuChat.chat.room.creatorId;
 		},
-		scrollToLatestMessage: () => {
+		scrollToLatestMessage: function () {
 			const container = $('#messages-container');
 			container.scrollTop(container.prop("scrollHeight"));
 		},
-		startBroadcast: () => {
+		startBroadcast: function () {
 			navigator.mediaDevices.getUserMedia({
 				video: {
 					width: { min: 640, ideal: 1920, max: 1920 },
@@ -237,7 +237,7 @@ const app = new Vue({
 				logError(err);
 			});
 		},
-		stopBroadcast: () => {
+		stopBroadcast: function () {
 			if (app.mySenders.length > 0) {
 				app.mySenders.forEach(sender => app.peerConnection.removeTrack(sender));
 				app.mySenders.splice(0, app.mySenders.length);
@@ -246,7 +246,7 @@ const app = new Vue({
 			return app.connection.invoke("StopBroadcast", window.ZokuChat.chat.room.id)
 				.then(() => app.broadcasting = false);
 		},
-		logError: (err) => {
+		logError: function (err) {
 			console.log(err.name + ": " + err.message);
 		}
 	}
